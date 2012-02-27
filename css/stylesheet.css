@@ -1,0 +1,55 @@
+/* utf-8-marker: äöüß */
+
+form#translator-list ul {
+    list-style: none;
+}
+
+form#translator-list input[type="checkbox"] {
+    margin-right: 1em;
+}
+
+input#translator-download-link {
+    width: 99%;
+}
+
+form#translator {
+    overflow: auto;
+    position: relative;
+    background: white;
+    color: #555;
+    padding: 0.5em;
+    border: 1px solid #555;
+    
+    /* adjust the following to your template */
+    left: -200px;
+    width: 800px;
+}
+
+form#translator table {
+    margin-top: 1em;
+}
+
+form#translator td.key {
+    vertical-align: top;
+}
+
+form#translator textarea {
+    padding: 0;
+}
+
+form#translator td.from textarea {
+    /* adjust the following to your needs */
+    width: 20em;
+    height: 4em;
+}
+
+form#translator td.to textarea {
+    /* adjust the following to your needs */
+    width: 20em;
+    height: 4em;
+}
+
+form#translator td.to textarea.new {
+    background: yellow;
+    color: black;
+}
