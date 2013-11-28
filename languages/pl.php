@@ -20,7 +20,6 @@ $plugin_tx['translator']['label_translate_to']="Tłumacz na:";
 $plugin_tx['translator']['label_filename']="Nazwa pliku:";
 $plugin_tx['translator']['label_download_url']="Link do pliku:";
 $plugin_tx['translator']['error_no_plugin']="Musisz wybrać przynajmniej jedną wtyczkę!";
-$plugin_tx['translator']['utf-8-marker']="żółć";
 $plugin_tx['translator']['cf_translate_from']="Język z którego tłumaczysz";
 $plugin_tx['translator']['cf_translate_to']="Język na który będą tłumaczone pliki językowe. Domyślnie (jeżeli pusty) jest to język w którym aktualnie pracujesz w skrypcie)";
 $plugin_tx['translator']['cf_folder_download']="Folder w którym umieszczane będą zrzuty tłumaczeń n.p. \"downloads/translations/\".";
@@ -29,6 +28,5 @@ $plugin_tx['translator']['cf_translation_license']="Licencja, na podstawie któr
 $plugin_tx['translator']['cf_sort_load']="Czy posortować warości po wczytaniu? \"1\" (tak) or \"0\" (nie)";
 $plugin_tx['translator']['cf_sort_save']="Czy posortować warości przed zapisaniem? (wymaga opcji sortowania po wczytaniu)? \"1\" (tak) or \"0\" (nie)";
 $plugin_tx['translator']['cf_default_translation']="<p>Domyślne tłumaczenie dla nowych ciągów znaków. <strong> Uwaga </strong>: frazy z tej wartości nie zostaną zapisane! Wybierz więc bardzo szczególną wartość, aby uniknąć konfliktu z właściwymi frazami. </ P> Zostaw puste, aby użyć ciągu w języku źródłowym. Każda wartość zostanie zapisana w tym przypadku. </ P>";
-$plugin_tx['translator']['cf_utf-8-marker']="Do użytku wewnętrznego. <strong>Nie zmieniać!</strong>";
 
 ?>
