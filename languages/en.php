@@ -19,6 +19,7 @@ $plugin_tx['translator']['error_no_plugin']="You must select at least one plugin
 
 $plugin_tx['translator']['cf_translate_from']="The language to translate from.";
 $plugin_tx['translator']['cf_translate_to']="The language to translate to. Defaults to the current CMSimple language, if empty.";
+$plugin_tx['translator']['cf_translate_fullscreen']="Whether the translation form shall be displayed in full screen mode: \"1\" (yes) or \"0\" (no).";
 $plugin_tx['translator']['cf_folder_download']="A subfolder of the CMSimple root folder, e.g. \"downloads/translations/\".";
 $plugin_tx['translator']['cf_translation_author']="The name of the translator. Will be commented as copyright holder in the translated language file, if translation_license is not empty.";
 $plugin_tx['translator']['cf_translation_license']="The license under which to put the translated language file. It should fit to the license of the plugin.";

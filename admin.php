@@ -324,17 +324,20 @@ function Translator_administration()
 {
     global $pth, $sn, $sl, $tx, $plugin_cf, $plugin_tx;
     
-    $lang = empty($plugin_cf['translator']['translate_to'])
+    $pcf = $plugin_cf['translator'];
+    $ptx = $plugin_tx['translator'];
+    $lang = empty($pcf['translate_to'])
         ? $sl
-        : $plugin_cf['translator']['translate_to'];
+        : $pcf['translate_to'];
     $url = $sn . '?translator&amp;admin=plugin_main&amp;action=zip&amp;lang='
         . $lang;
     $o = '<form id="translator-list" action="' . $url . '" method="POST">' . PHP_EOL
-        . '<h1>' . $plugin_tx['translator']['label_plugins'] . '</h1>' . PHP_EOL
+        . '<h1>' . $ptx['label_plugins'] . '</h1>' . PHP_EOL
         . '<ul>' . PHP_EOL;
-    $url = $sn . '?translator&amp;admin=plugin_main&amp;action=edit&amp;from='
-        . $plugin_cf['translator']['translate_from'] . '&amp;to=' . $lang
-        . '&amp;plugin=';
+    $url = $sn . '?translator&amp;admin=plugin_main&amp;action=edit'
+        . ($pcf['translate_fullscreen'] ? '&amp;print' : '')
+        . '&amp;from=' . $pcf['translate_from'] . '&amp;to='
+        . $lang . '&amp;plugin=';
     $checked = (isset($_POST['translator-plugins'])
                 && in_array('CORE', $_POST['translator-plugins']))
         ? ' checked="checked"'
@@ -374,7 +377,7 @@ function Translator_administration()
             'input type="submit" class="submit" value="'
             . ucfirst($tx['action']['save']) . '"'
         )
-        . ' ' . $plugin_tx['translator']['label_filename'] . '&nbsp;'
+        . ' ' . $ptx['label_filename'] . '&nbsp;'
         . tag('input type="text" name="translator-filename" value="' . $fn . '"')
         .'.zip</form>' . PHP_EOL;
     return $o;

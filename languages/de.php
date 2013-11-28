@@ -15,6 +15,7 @@ $plugin_tx['translator']['label_download_url']="Download-URL:";
 $plugin_tx['translator']['error_no_plugin']="Sie müssen wenigstens ein Plugin wählen!";
 $plugin_tx['translator']['cf_translate_from']="Die Sprache von der übersetzt werden soll.";
 $plugin_tx['translator']['cf_translate_to']="Die Sprache in die übersetzt werden soll. Voreingestellt ist die aktuelle CMSimple-Sprache, falls das Feld leer ist.";
+$plugin_tx['translator']['translate_fullscreen']="Ob das Übersetzungsformular im Vollbildmodus angezeigt werden soll: \"1\" (ja) oder \"0\" (nein).";
 $plugin_tx['translator']['cf_folder_download']="Ein Unterverzeichnis des CMSimple-Wurzelverzeichnisses, z.B. \"downloads/translations/\".";
 $plugin_tx['translator']['cf_translation_author']="Der Name des Übersetzers. Dieser wird als Urheber in der übersetzten Sprachdatei angegeben, wenn translation_license nich leer ist.";
 $plugin_tx['translator']['cf_translation_license']="Die Lizenz unter der die übersetzte Sprachdatei steht. Diese sollte zur Lizenz des Plugins passen.";
