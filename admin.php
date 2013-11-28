@@ -32,10 +32,19 @@ define('TRANSLATOR_VERSION', '@TRANSLATOR_VERSION@');
  * Returns the plugin version information view.
  *
  * @return string
+ *
+ * @global array The paths of system files and folders.
  */
 function Translator_version()
 {
+    global $pth;
+    
+    $iconPath = $pth['folder']['plugins'] . 'translator/translator.png';
     return '<h1>Translator_XH</h1>' . PHP_EOL
+        . tag(
+            'img src="' . $iconPath . '" alt="Translate" width="128"'
+            . ' height="128" style="float:left; margin-right: 16px"'
+        )
         . '<p>Version: ' . TRANSLATOR_VERSION . '</p>' . PHP_EOL
         . '<p>Copyright &copy; 2011-2013 Christoph M. Becker</p>' . PHP_EOL
         . '<p style="text-align: justify">This program is free software:'
