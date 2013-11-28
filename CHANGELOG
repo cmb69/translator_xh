@@ -1,9 +1,3 @@
-TODO:
-config: default_language_pack plugins?
-change zip structure for single plugins?
-change question marks to exclamation marks
-check and document pl.php
-
 Version 1beta4 - released 2011-11-04
 cmb	changed use_defaults to default_translation (inspired by svasti)
 
