@@ -1,0 +1,28 @@
+TODO:
+config: default_language_pack plugins?
+change zip structure for single plugins?
+change question marks to exclamation marks
+check and document pl.php
+
+Version 1beta4 - released 2011-11-04
+cmb	changed use_defaults to default_translation (inspired by svasti)
+
+Version 1beta3 - released 2011-11-01
+cmb	fixed bug regarding translation-hints for the core
+
+Version 1beta2 - released 2011-11-01
+cmb	changed download language pack to save language pack and display URL for copy&paste (suggested by Tata)
+cmb	updated manual accordingly
+cmb	made some minor enhancements
+
+Version 1beta1 - released 2011-11-01
+cmb	added possibility to translate core language strings
+cmb	fixed bug regarding pluginloader translations
+cmb	added possibility to download properly arranged zip file as language pack for selected plugins
+cmb	added copyright section to the translated language files
+cmb	added configuration options and i18n
+cmb	added manual
+cmb	made several minor enhancements
+
+Version 1dev1 - released 2011-10-30
+cmb	initial release
