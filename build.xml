@@ -50,7 +50,7 @@
         <svnexport revision="" repositoryurl="." todir="export"/>
         <move todir="dist">
             <fileset dir="export">
-                <include name="index.php"/>
+                <include name="admin.php"/>
                 <include name="version.nfo"/>
             </fileset>
             <filterchain>
