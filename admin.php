@@ -72,10 +72,11 @@ function Translator_version()
  * @global array The paths of system files and folders.
  * @global array The localization of the core.
  * @global array The localization of the plugins.
+ * @global array The translator model.
  */
 function Translator_systemCheck()
 {
-    global $pth, $tx, $plugin_tx;
+    global $pth, $tx, $plugin_tx, $_Translator;
 
     $requiredVersion = '4.3.0';
     $ptx = $plugin_tx['translator'];
@@ -101,35 +102,15 @@ function Translator_systemCheck()
         '$plugin',
         'return \'' . $pth['folder']['plugins'] . '\' . $plugin . \'/languages/\';'
     );
-    $folders = array_map($func, Translator_plugins());
+    $folders = array_map($func, $_Translator->plugins());
     array_unshift($folders, $pth['folder']['language']);
-    array_push($folders, Translator_downloadFolder());
+    array_push($folders, $_Translator->downloadFolder());
     foreach ($folders as $folder) {
         $o .= (is_writable($folder) ? $ok : $warn)
             . '&nbsp;&nbsp;' . sprintf($ptx['syscheck_writable'], $folder)
             . tag('br') . PHP_EOL;
     }
     return $o;
-}
-
-/**
- * Returns the path of the download folder.
- *
- * @return string
- *
- * @global array The paths of system files and folders.
- * @global array The configuration of the plugins.
- */
-function Translator_downloadFolder()
-{
-    global $pth, $plugin_cf;
-    
-    $dn = trim($plugin_cf['translator']['folder_download'], '/');
-    $dn = $pth['folder']['base'] . (empty($dn) ? '' : $dn . '/');
-    if (!is_dir($dn)) {
-        mkdir($dn, 0777);
-    }
-    return $dn;
 }
 
 /**
@@ -164,35 +145,6 @@ function Translator_absoluteUrl($url)
 }
 
 /**
- * Returns all internationalized plugins.
- *
- * @return array
- *
- * @global array The paths of system files and folders.
- */
-function Translator_plugins()
-{
-    global $pth;
-    
-    $plugins = array();
-    $dn = $pth['folder']['plugins'];
-    if (($dh = opendir($dn)) === false) {
-        e('cntopen', 'folder', $dn);
-        return array();
-    }
-    while (($fn = readdir($dh)) !== false) {
-        if ($fn != '.' && $fn != '..'
-            && is_dir($dn.$fn) && is_dir($dn.$fn.'/languages/')
-        ) {
-            $plugins[] = $fn;
-        }
-    }
-    closedir($dh);
-    sort($plugins);
-    return $plugins;
-}
-
-/**
  * Reads a language file.
  *
  * @param string $plugin A plugin name.
@@ -202,22 +154,20 @@ function Translator_plugins()
  * @return void
  *
  * @global array The paths of system files and folders.
+ * @global object The translator model.
  *
  * @todo Refactor to return $texts.
  */
 function Translator_readLanguage($plugin, $lang, &$texts)
 {
-    global $pth;
+    global $pth, $_Translator;
     
     if ($plugin == 'pluginloader') {
         global $tx;
     }
         
     $texts = array();
-    $fn = ($plugin == 'CORE' || $plugin == 'CORE-LANGCONFIG')
-        ? $pth['folder']['language']
-        : $pth['folder']['plugins'] . $plugin . '/languages/';
-    $fn .= ($plugin == 'CORE-LANGCONFIG') ? $lang . 'config.php' : $lang . '.php';
+    $fn = $_Translator->filename($plugin, $lang);
     if (file_exists($fn)) {
         include $fn;
         if (in_array($plugin, array('CORE', 'CORE-LANGCONFIG', 'pluginloader'))) {
@@ -250,15 +200,16 @@ function Translator_readLanguage($plugin, $lang, &$texts)
  * 
  * @return void
  *
- * @global array The paths of system files and folders.
- * @global array The configuration of the plugins.
- *
+ * @global array  The paths of system files and folders.
+ * @global array  The configuration of the plugins.
+ * @global object The translator model.
+ * 
  * @todo What's with that "Input param"?
  * @todo Use utf8_wordwrap() ;)
  */
 function Translator_writeLanguage($plugin, $lang, &$texts)
 {
-    global $pth, $plugin_cf;
+    global $pth, $plugin_cf, $_Translator;
     
     $pcf = $plugin_cf['translator'];
     
@@ -296,10 +247,7 @@ function Translator_writeLanguage($plugin, $lang, &$texts)
     }
     $o .= PHP_EOL . '?>' . PHP_EOL;
     
-    $fn = ($plugin == 'CORE'|| $plugin == 'CORE-LANGCONFIG')
-        ? $pth['folder']['language']
-        : $pth['folder']['plugins'] . $plugin . '/languages/';
-    $fn .= ($plugin == 'CORE-LANGCONFIG') ? $lang . 'config.php' : $lang . '.php';
+    $fn = $_Translator->filename($plugin, $lang);
     if (($fh = fopen($fn, 'w')) === false || fwrite($fh, $o) === false) {
         e('cntsave', 'language', $fn);
     }
@@ -319,10 +267,11 @@ function Translator_writeLanguage($plugin, $lang, &$texts)
  * @global array  The localization of the core.
  * @global array  The configuration of the plugins.
  * @global array  The localization of the plugins.
+ * @global object The translator model.
  */
 function Translator_administration()
 {
-    global $pth, $sn, $sl, $tx, $plugin_cf, $plugin_tx;
+    global $pth, $sn, $sl, $tx, $plugin_cf, $plugin_tx, $_Translator;
     
     $pcf = $plugin_cf['translator'];
     $ptx = $plugin_tx['translator'];
@@ -358,7 +307,7 @@ function Translator_administration()
             . ' value="CORE-LANGCONFIG"' . $checked
         )
         . '<a href="' . $url . 'CORE-LANGCONFIG">CORE-LANGCONFIG</a></li>' . PHP_EOL;
-    foreach (Translator_plugins() as $plugin) {
+    foreach ($_Translator->plugins() as $plugin) {
         $checked = (isset($_POST['translator-plugins'])
                     && in_array($plugin, $_POST['translator-plugins']))
             ? ' checked="checked"'
@@ -525,10 +474,11 @@ function Translator_save($plugin, $from, $to)
  * @global array  The localization of the core.
  * @global array  The configuration of the plugins.
  * @global array  The localization of the plugins.
+ * @global object The translator model.
  */
 function Translator_zip($lang)
 {
-    global $pth, $e, $tx, $plugin_cf, $plugin_tx;
+    global $pth, $e, $tx, $plugin_cf, $plugin_tx, $_Translator;
 
     if (empty($_POST['translator-plugins'])) {
         $e .= '<li>' . $plugin_tx['translator']['error_no_plugin'] . '</li>'
@@ -538,24 +488,15 @@ function Translator_zip($lang)
     include_once $pth['folder']['plugins'] . 'translator/zip.lib.php';
     $zip = new zipfile();
     foreach ($_POST['translator-plugins'] as $plugin) {
-        $src = ($plugin == 'CORE' || $plugin == 'CORE-LANGCONFIG')
-            ? $pth['folder']['language']
-            : $pth['folder']['plugins'];
-        $dst = ($plugin == 'CORE' || $plugin == 'CORE-LANGCONFIG')
-            ? 'cmsimple/languages/'
-            : 'plugins/';
-        $fn = ($plugin == 'CORE')
-            ? $lang . '.php'
-            : (($plugin == 'CORE-LANGCONFIG')
-                ? $lang . 'config.php'
-                : $plugin . '/languages/' . $lang . '.php');
-        if (file_exists($src . $fn)) {
-            $cnt = file_get_contents($src . $fn);
+        $src = $_Translator->filename($plugin, $lang);
+        $dst = ltrim($src, './');
+        if (file_exists($src)) {
+            $cnt = file_get_contents($src);
         } else {
-            e('missing', 'language', $src . $fn);
+            e('missing', 'language', $src);
             return Translator_administration();
         }
-        $zip->addFile($cnt, $dst . $fn);
+        $zip->addFile($cnt, $dst);
     }
     $cnt = $zip->file();
     //header('Content-Type: application/save-as');
@@ -565,7 +506,7 @@ function Translator_zip($lang)
     //echo $cnt;
     //exit;
     $ok = true;
-    $fn = Translator_downloadFolder() . $_POST['translator-filename'] . '.zip';
+    $fn = $_Translator->downloadFolder() . $_POST['translator-filename'] . '.zip';
     //    if (file_exists($fn)) {
     //      e('alreadyexists', 'file', $fn);
     //      $ok = FALSE;
@@ -593,6 +534,8 @@ function Translator_zip($lang)
  * Handle the plugin administration.
  */
 if (isset($translator) && $translator == 'true') {
+    include_once $pth['folder']['plugin_classes'] . 'Model.php';
+    $_Translator = new Translator_Model();
     $o .= print_plugin_admin('on');
     switch ($admin) {
     case '':
