@@ -12,6 +12,7 @@
 
     <fileset id="php-sources" dir=".">
         <include name="admin.php"/>
+        <include name="classes/*.php"/>
     </fileset>
 
     <!-- Checks -->
@@ -65,7 +66,7 @@
     <target name="php-doc">
         <phpdoc title="Translator_XH Developer Documentation" destdir="doc/php"
                 output="HTML:frames:default" defaultpackagename="Translator"
-                defaultcategoryname="Translator_XH">
+                defaultcategoryname="CMSimple_XH">
             <fileset refid="php-sources"/>
             <projdocfileset dir=".">
                <include name="README"/>
