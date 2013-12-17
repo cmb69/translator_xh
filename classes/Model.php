@@ -3,7 +3,7 @@
 /**
  * The model class of Translator_XH.
  *
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * @category  CMSimple_XH
  * @package   Translator
@@ -30,7 +30,7 @@ class Translator_Model
      *
      * @var array
      */
-    var $specialModules = array('CORE', 'CORE-LANGCONFIG', 'pluginloader');
+    protected $specialModules = array('CORE', 'CORE-LANGCONFIG', 'pluginloader');
 
     /**
      * Returns the path of the download folder.
@@ -40,7 +40,7 @@ class Translator_Model
      * @global array The paths of system files and folders.
      * @global array The configuration of the plugins.
      */
-    function downloadFolder()
+    public function downloadFolder()
     {
         global $pth, $plugin_cf;
 
@@ -62,7 +62,7 @@ class Translator_Model
      *
      * @global array The paths of system files and folders.
      */
-    function plugins()
+    public function plugins()
     {
         global $pth;
 
@@ -91,7 +91,7 @@ class Translator_Model
      *
      * @global array The paths of system files and folders.
      */
-    function filename($module, $language)
+    protected function filename($module, $language)
     {
         global $pth;
 
@@ -113,7 +113,7 @@ class Translator_Model
      *
      * @return string
      */
-    function moduleVarname($module)
+    protected function moduleVarname($module)
     {
         switch ($module) {
         case 'CORE':
@@ -144,7 +144,7 @@ class Translator_Model
      *
      * @todo Refactor to return $texts.
      */
-    function readLanguage($module, $lang)
+    public function readLanguage($module, $lang)
     {
         global $pth;
         // The pluginloaders language file uses $tx.
@@ -189,7 +189,7 @@ class Translator_Model
      *
      * @todo Use utf8_wordwrap() ;)
      */
-    function writeLanguage($module, $lang, $texts)
+    public function writeLanguage($module, $lang, $texts)
     {
         global $plugin_cf;
 
@@ -206,7 +206,7 @@ class Translator_Model
                 . ' * ' . wordwrap($pcf['translation_license'], 75, PHP_EOL . ' * ')
                 . PHP_EOL . ' */' . PHP_EOL . PHP_EOL;
         }
-        if (in_array($module, $this->specialModules())) {
+        if (in_array($module, $this->specialModules)) {
             $varname = $this->moduleVarname($module);
             foreach ($texts as $key => $val) {
                 $keys = explode('_', $key, 2);

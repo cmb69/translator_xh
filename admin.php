@@ -3,7 +3,7 @@
 /**
  * Back-end functionality of Translator_XH.
  *
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * @category  CMSimple_XH
  * @package   Translator
@@ -78,7 +78,7 @@ function Translator_systemCheck()
 {
     global $pth, $tx, $plugin_tx, $_Translator;
 
-    $requiredVersion = '4.3.0';
+    $requiredVersion = '5.0.0';
     $ptx = $plugin_tx['translator'];
     $imgdir = $pth['folder']['plugins'] . 'translator/images/';
     $ok = tag('img src="' . $imgdir . 'ok.png" alt="ok"');
