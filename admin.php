@@ -347,7 +347,9 @@ function Translator_save($plugin, $from, $to)
             }
         }
     }
-    $_Translator->writeLanguage($plugin, $to, $texts);
+    if (!$_Translator->writeLanguage($plugin, $to, $texts)) {
+        e('cntsave', 'language', $_Translator->filename($plugin, $to));
+    }
     return Translator_administration();
 }
 

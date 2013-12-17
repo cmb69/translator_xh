@@ -91,7 +91,7 @@ class Translator_Model
      *
      * @global array The paths of system files and folders.
      */
-    protected function filename($module, $language)
+    public function filename($module, $language)
     {
         global $pth;
 
@@ -182,6 +182,8 @@ class Translator_Model
      * @return string
      *
      * @global array The configuration of the plugins.
+     *
+     * @todo Use utf8_wordwrap() ;)
      */
     public function copyrightHeader()
     {
@@ -200,8 +202,6 @@ class Translator_Model
  *
  * $license
  */
-
-
 EOT;
         }
         return $o;
@@ -222,53 +222,61 @@ EOT;
         $value = addcslashes($value, "\r\n\t\v\f\\\$\"");
         return <<<EOT
 \${$varname}['$key1']['$key2']="$value";
-
 EOT;
     }
 
     /**
-     * Writes a language file.
+     * Returns the PHP code for a language file.
+     *
+     * @param string $module A module name.
+     * @param array  $texts  A language array.
+     *
+     * @return string
+     */
+    public function phpCode($module, $texts)
+    {
+        $o = '<?php' . PHP_EOL . PHP_EOL
+            . $this->copyrightHeader() . PHP_EOL . PHP_EOL;
+        if (in_array($module, $this->specialModules)) {
+            $varname = $this->moduleVarname($module);
+            foreach ($texts as $key => $val) {
+                $keys = explode('_', $key, 2);
+                $o .= $this->elementDefinition($varname, $keys[0], $keys[1], $val)
+                    . PHP_EOL;
+            }
+            if ($module == 'pluginloader') {
+                $specialKeys = array('cntopen', 'cntwriteto', 'notreadable');
+                foreach ($specialKeys as $key2) {
+                    $o .= <<<EOT
+\$pluginloader_tx['error']['$key2']=\$tx['error']['$key2'];
+
+EOT;
+                }
+            }
+        } else {
+            foreach ($texts as $key => $val) {
+                $o .= $this->elementDefinition('plugin_tx', $module, $key, $val)
+                    . PHP_EOL;
+            }
+        }
+        $o .= PHP_EOL . '?>' . PHP_EOL;
+        return $o;
+    }
+
+    /**
+     * Writes a language file and returns whether that succeeded.
      *
      * @param string $module A module name.
      * @param string $lang   A language code.
      * @param array  $texts  A language array.
      *
-     * @return void
-     *
-     * @todo Use utf8_wordwrap() ;)
+     * @return bool
      */
     public function writeLanguage($module, $lang, $texts)
     {
-        $o = '<?php' . PHP_EOL . PHP_EOL;
-        $o .= $this->copyrightHeader();
-        if (in_array($module, $this->specialModules)) {
-            $varname = $this->moduleVarname($module);
-            foreach ($texts as $key => $val) {
-                $keys = explode('_', $key, 2);
-                $o .= $this->elementDefinition($varname, $keys[0], $keys[1], $val);
-            }
-            if ($module == 'pluginloader') {
-                foreach (array('cntopen', 'cntwriteto', 'notreadable') as $k2) {
-                    $o .= '$pluginloader_tx[\'error\'][\'' . $k2 . '\']='
-                        . '$tx[\'error\'][\'' . $k2 . '\'].\' \';' . PHP_EOL;
-                }
-            }
-        } else {
-            foreach ($texts as $key => $val) {
-                $o .= $this->elementDefinition('plugin_tx', $module, $key, $val);
-            }
-        }
-        $o .= PHP_EOL . '?>' . PHP_EOL;
-
         $filename = $this->filename($module, $lang);
-        if (($stream = fopen($filename, 'w')) === false
-            || fwrite($stream, $o) === false
-        ) {
-            e('cntsave', 'language', $filename);
-        }
-        if ($stream !== false) {
-            fclose($stream);
-        }
+        $contents = $this->phpCode($module, $texts);
+        return file_put_contents($filename, $contents) !== false;
     }
 }
 
