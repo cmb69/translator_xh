@@ -82,6 +82,20 @@ class Translator_Model
     }
 
     /**
+     * Returns all translatable modules.
+     *
+     * @return array
+     */
+    public function modules()
+    {
+        $modules = array_merge(
+            array('CORE', 'CORE-LANGCONFIG'),
+            $this->plugins()
+        );
+        return $modules;
+    }
+
+    /**
      * Returns the path of a language file.
      *
      * @param string $module   A module name.

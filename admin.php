@@ -120,6 +120,8 @@ function Translator_absoluteUrl($url)
  * @global array  The configuration of the plugins.
  * @global array  The localization of the plugins.
  * @global object The translator model.
+ *
+ * @todo fix empty elements
  */
 function Translator_administration()
 {
@@ -130,57 +132,43 @@ function Translator_administration()
     $lang = empty($pcf['translate_to'])
         ? $sl
         : $pcf['translate_to'];
-    $url = $sn . '?translator&amp;admin=plugin_main&amp;action=zip&amp;lang='
+    $action = $sn . '?translator&amp;admin=plugin_main&amp;action=zip&amp;lang='
         . $lang;
-    $o = '<form id="translator-list" action="' . $url . '" method="POST">' . PHP_EOL
-        . '<h1>' . $ptx['label_plugins'] . '</h1>' . PHP_EOL
-        . '<ul>' . PHP_EOL;
     $url = $sn . '?translator&amp;admin=plugin_main&amp;action=edit'
         . ($pcf['translate_fullscreen'] ? '&amp;print' : '')
         . '&amp;from=' . $pcf['translate_from'] . '&amp;to='
         . $lang . '&amp;plugin=';
-    $checked = (isset($_POST['translator-plugins'])
-                && in_array('CORE', $_POST['translator-plugins']))
-        ? ' checked="checked"'
-        : '';
-    $o .= '<li>'
-        . tag(
-            'input type="checkbox" name="translator-plugins[]" value="CORE"'
-            . $checked
-        )
-        . '<a href="' . $url . 'CORE">CORE</a></li>' . PHP_EOL;
-    $checked = (isset($_POST['translator-plugins'])
-                && in_array('CORE-LANGCONFIG', $_POST['translator-plugins']))
-        ? ' checked="checked"'
-        : '';
-    $o .= '<li>'
-        . tag(
-            'input type="checkbox" name="translator-plugins[]"'
-            . ' value="CORE-LANGCONFIG"' . $checked
-        )
-        . '<a href="' . $url . 'CORE-LANGCONFIG">CORE-LANGCONFIG</a></li>' . PHP_EOL;
-    foreach ($_Translator->plugins() as $plugin) {
+    $fn = isset($_POST['translator-filename']) ? $_POST['translator-filename'] : '';
+    $submitLabel = ucfirst($tx['action']['save']);
+    $o = <<<EOT
+<!-- Translator_XH: Administration -->
+<form id="translator-list" action="$action" method="post">
+    <h1>$ptx[label_plugins]</h1>
+    <ul>
+
+EOT;
+    foreach ($_Translator->modules() as $plugin) {
+        $name = ucfirst($plugin);
         $checked = (isset($_POST['translator-plugins'])
                     && in_array($plugin, $_POST['translator-plugins']))
             ? ' checked="checked"'
             : '';
-        $o .= '<li>'
-            . tag(
-                'input type="checkbox" name="translator-plugins[]" value="'
-                . $plugin . '"' . $checked
-            )
-            . '<a href="' . $url . $plugin . '">' . ucfirst($plugin) . '</a></li>'
-            . PHP_EOL;
+        $o .= <<<EOT
+        <li>
+            <input type="checkbox" name="translator-plugins[]" value="$plugin"$checked />
+            <a href="$url$plugin">$name</a>
+        </li>
+
+EOT;
     }
-    $fn = isset($_POST['translator-filename']) ? $_POST['translator-filename'] : '';
-    $o .= '</ul>' . PHP_EOL
-        . tag(
-            'input type="submit" class="submit" value="'
-            . ucfirst($tx['action']['save']) . '"'
-        )
-        . ' ' . $ptx['label_filename'] . '&nbsp;'
-        . tag('input type="text" name="translator-filename" value="' . $fn . '"')
-        .'.zip</form>' . PHP_EOL;
+    $o .= <<<EOT
+    </ul>
+    $ptx[label_filename]
+    <input type="text" name="translator-filename" value="$fn" />.zip
+    <input type="submit" class="submit" value="$submitLabel" />
+</form>
+
+EOT;
     return $o;
 }
 
