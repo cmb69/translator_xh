@@ -145,71 +145,6 @@ function Translator_absoluteUrl($url)
 }
 
 /**
- * Writes a language file.
- *
- * @param string $plugin A plugin name.
- * @param string $lang   A language code.
- * @param array  &$texts Input param.
- *
- * @return void
- *
- * @global array  The paths of system files and folders.
- * @global array  The configuration of the plugins.
- * @global object The translator model.
- *
- * @todo What's with that "Input param"?
- * @todo Use utf8_wordwrap() ;)
- */
-function Translator_writeLanguage($plugin, $lang, &$texts)
-{
-    global $pth, $plugin_cf, $_Translator;
-
-    $pcf = $plugin_cf['translator'];
-
-    $o = '<?php' . PHP_EOL . PHP_EOL;
-    if (!empty($pcf['translation_author'])
-        && !empty($pcf['translation_license'])
-    ) {
-        $o .= '/*' . PHP_EOL
-            . ' * Copyright (c) ' . date('Y') . ' ' . $pcf['translation_author']
-            . PHP_EOL
-            . ' *' . PHP_EOL
-            . ' * ' . wordwrap($pcf['translation_license'], 75, PHP_EOL . ' * ')
-            . PHP_EOL . ' */' . PHP_EOL . PHP_EOL;
-    }
-    if (in_array($plugin, array('CORE', 'CORE-LANGCONFIG', 'pluginloader'))) {
-        $tx_name = ($plugin == 'CORE')
-            ? 'tx'
-            : (($plugin == 'CORE-LANGCONFIG') ? 'txc' : 'pluginloader_tx');
-        foreach ($texts as $key => $val) {
-            $keys = explode('_', $key, 2);
-            $o .= '$' . $tx_name . '[\'' . $keys[0] . '\'][\'' . $keys[1] . '\']="'
-                . addcslashes($val, "\r\n\t\v\f\\\$\"") . '";' . PHP_EOL;
-        }
-        if ($plugin == 'pluginloader') {
-            foreach (array('cntopen', 'cntwriteto', 'notreadable') as $k2) {
-                $o .= '$pluginloader_tx[\'error\'][\'' . $k2 . '\']='
-                    . '$tx[\'error\'][\'' . $k2 . '\'].\' \';' . PHP_EOL;
-            }
-        }
-    } else {
-        foreach ($texts as $key => $val) {
-            $o .= '$plugin_tx[\'' . $plugin . '\'][\'' . $key . '\']="'
-                . addcslashes($val, "\r\n\t\v\f\\\$\"") . '";' . PHP_EOL;
-        }
-    }
-    $o .= PHP_EOL . '?>' . PHP_EOL;
-
-    $fn = $_Translator->filename($plugin, $lang);
-    if (($fh = fopen($fn, 'w')) === false || fwrite($fh, $o) === false) {
-        e('cntsave', 'language', $fn);
-    }
-    if ($fh !== false) {
-        fclose($fh);
-    }
-}
-
-/**
  * Returns available plugins view.
  *
  * @return string
@@ -412,7 +347,7 @@ function Translator_save($plugin, $from, $to)
             }
         }
     }
-    Translator_writeLanguage($plugin, $to, $texts);
+    $_Translator->writeLanguage($plugin, $to, $texts);
     return Translator_administration();
 }
 

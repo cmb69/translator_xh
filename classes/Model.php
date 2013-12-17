@@ -100,6 +100,31 @@ class Translator_Model
     }
 
     /**
+     * Returns the name of the language variable of a module.
+     *
+     * @param string $module A module name.
+     *
+     * @return string
+     */
+    function moduleVarname($module)
+    {
+        switch ($module) {
+        case 'CORE':
+            $varname = 'tx';
+            break;
+        case 'CORE-LANGCONFIG':
+            $varname = 'txc';
+            break;
+        case 'pluginloader':
+            $varname = 'pluginloader_tx';
+            break;
+        default:
+            $varname = 'plugin_tx';
+        }
+        return $varname;
+    }
+
+    /**
      * Reads a language file and returns the value of the variable defined in it.
      *
      * @param string $module A module name.
@@ -126,19 +151,7 @@ class Translator_Model
             include $filename;
             $specialModules = array('CORE', 'CORE-LANGCONFIG', 'pluginloader');
             if (in_array($module, $specialModules)) {
-                switch ($module) {
-                case 'CORE':
-                    $varname = 'tx';
-                    break;
-                case 'CORE-LANGCONFIG':
-                    $varname = 'txc';
-                    break;
-                default:
-                    $varname = 'pluginloader_tx';
-                }
-                $varname = ($module == 'CORE')
-                    ? 'tx'
-                    : (($module == 'CORE-LANGCONFIG') ? 'txc' : 'pluginloader_tx');
+                $varname = $this->moduleVarname($module);
                 foreach ($$varname as $key1 => $val1) {
                     foreach ($val1 as $key2 => $val2) {
                         if ($module != 'pluginloader'
@@ -155,6 +168,68 @@ class Translator_Model
             }
         }
         return $texts;
+    }
+
+    /**
+     * Writes a language file.
+     *
+     * @param string $module A module name.
+     * @param string $lang   A language code.
+     * @param array  $texts  A language array.
+     *
+     * @return void
+     *
+     * @global array  The configuration of the plugins.
+     *
+     * @todo Use utf8_wordwrap() ;)
+     */
+    function writeLanguage($module, $lang, $texts)
+    {
+        global $plugin_cf;
+
+        $pcf = $plugin_cf['translator'];
+
+        $o = '<?php' . PHP_EOL . PHP_EOL;
+        if (!empty($pcf['translation_author'])
+            && !empty($pcf['translation_license'])
+        ) {
+            $o .= '/*' . PHP_EOL
+                . ' * Copyright (c) ' . date('Y') . ' ' . $pcf['translation_author']
+                . PHP_EOL
+                . ' *' . PHP_EOL
+                . ' * ' . wordwrap($pcf['translation_license'], 75, PHP_EOL . ' * ')
+                . PHP_EOL . ' */' . PHP_EOL . PHP_EOL;
+        }
+        if (in_array($module, array('CORE', 'CORE-LANGCONFIG', 'pluginloader'))) {
+            $varname = $this->moduleVarname($module);
+            foreach ($texts as $key => $val) {
+                $keys = explode('_', $key, 2);
+                $o .= '$' . $varname . '[\'' . $keys[0] . '\'][\'' . $keys[1] . '\']="'
+                    . addcslashes($val, "\r\n\t\v\f\\\$\"") . '";' . PHP_EOL;
+            }
+            if ($module == 'pluginloader') {
+                foreach (array('cntopen', 'cntwriteto', 'notreadable') as $k2) {
+                    $o .= '$pluginloader_tx[\'error\'][\'' . $k2 . '\']='
+                        . '$tx[\'error\'][\'' . $k2 . '\'].\' \';' . PHP_EOL;
+                }
+            }
+        } else {
+            foreach ($texts as $key => $val) {
+                $o .= '$plugin_tx[\'' . $module . '\'][\'' . $key . '\']="'
+                    . addcslashes($val, "\r\n\t\v\f\\\$\"") . '";' . PHP_EOL;
+            }
+        }
+        $o .= PHP_EOL . '?>' . PHP_EOL;
+
+        $filename = $this->filename($module, $lang);
+        if (($stream = fopen($filename, 'w')) === false
+            || fwrite($stream, $o) === false
+        ) {
+            e('cntsave', 'language', $filename);
+        }
+        if ($stream !== false) {
+            fclose($stream);
+        }
     }
 }
 
