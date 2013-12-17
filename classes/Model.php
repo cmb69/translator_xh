@@ -177,6 +177,37 @@ class Translator_Model
     }
 
     /**
+     * Returns the copyright header for a translated language file.
+     *
+     * @return string
+     *
+     * @global array The configuration of the plugins.
+     */
+    public function copyrightHeader()
+    {
+        global $plugin_cf;
+
+        $pcf = $plugin_cf['translator'];
+        $o = '';
+        if (!empty($pcf['translation_author'])
+            && !empty($pcf['translation_license'])
+        ) {
+            $year = date('Y');
+            $license = wordwrap($pcf['translation_license'], 75, PHP_EOL . ' * ');
+            $o .= <<<EOT
+/*
+ * Copyright (c) $year $pcf[translation_author]
+ *
+ * $license
+ */
+
+
+EOT;
+        }
+        return $o;
+    }
+
+    /**
      * Returns an array element definition line.
      *
      * @param string $varname A variable name.
@@ -204,27 +235,12 @@ EOT;
      *
      * @return void
      *
-     * @global array  The configuration of the plugins.
-     *
      * @todo Use utf8_wordwrap() ;)
      */
     public function writeLanguage($module, $lang, $texts)
     {
-        global $plugin_cf;
-
-        $pcf = $plugin_cf['translator'];
-
         $o = '<?php' . PHP_EOL . PHP_EOL;
-        if (!empty($pcf['translation_author'])
-            && !empty($pcf['translation_license'])
-        ) {
-            $o .= '/*' . PHP_EOL
-                . ' * Copyright (c) ' . date('Y') . ' ' . $pcf['translation_author']
-                . PHP_EOL
-                . ' *' . PHP_EOL
-                . ' * ' . wordwrap($pcf['translation_license'], 75, PHP_EOL . ' * ')
-                . PHP_EOL . ' */' . PHP_EOL . PHP_EOL;
-        }
+        $o .= $this->copyrightHeader();
         if (in_array($module, $this->specialModules)) {
             $varname = $this->moduleVarname($module);
             foreach ($texts as $key => $val) {
