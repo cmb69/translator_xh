@@ -26,6 +26,13 @@
 class Translator_Model
 {
     /**
+     * The names of special modules.
+     *
+     * @var array
+     */
+    var $specialModules = array('CORE', 'CORE-LANGCONFIG', 'pluginloader');
+
+    /**
      * Returns the path of the download folder.
      *
      * @return string
@@ -149,8 +156,7 @@ class Translator_Model
         $filename = $this->filename($module, $lang);
         if (file_exists($filename)) {
             include $filename;
-            $specialModules = array('CORE', 'CORE-LANGCONFIG', 'pluginloader');
-            if (in_array($module, $specialModules)) {
+            if (in_array($module, $this->specialModules)) {
                 $varname = $this->moduleVarname($module);
                 foreach ($$varname as $key1 => $val1) {
                     foreach ($val1 as $key2 => $val2) {
@@ -200,7 +206,7 @@ class Translator_Model
                 . ' * ' . wordwrap($pcf['translation_license'], 75, PHP_EOL . ' * ')
                 . PHP_EOL . ' */' . PHP_EOL . PHP_EOL;
         }
-        if (in_array($module, array('CORE', 'CORE-LANGCONFIG', 'pluginloader'))) {
+        if (in_array($module, $this->specialModules())) {
             $varname = $this->moduleVarname($module);
             foreach ($texts as $key => $val) {
                 $keys = explode('_', $key, 2);
