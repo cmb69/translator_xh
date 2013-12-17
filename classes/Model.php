@@ -177,6 +177,25 @@ class Translator_Model
     }
 
     /**
+     * Returns an array element definition line.
+     *
+     * @param string $varname A variable name.
+     * @param string $key1    A key of the array.
+     * @param string $key2    A key of the subarray.
+     * @param mixed  $value   A value.
+     *
+     * @return string
+     */
+    public function elementDefinition($varname, $key1, $key2, $value)
+    {
+        $value = addcslashes($value, "\r\n\t\v\f\\\$\"");
+        return <<<EOT
+\${$varname}['$key1']['$key2']="$value";
+
+EOT;
+    }
+
+    /**
      * Writes a language file.
      *
      * @param string $module A module name.
@@ -210,8 +229,7 @@ class Translator_Model
             $varname = $this->moduleVarname($module);
             foreach ($texts as $key => $val) {
                 $keys = explode('_', $key, 2);
-                $o .= '$' . $varname . '[\'' . $keys[0] . '\'][\'' . $keys[1] . '\']="'
-                    . addcslashes($val, "\r\n\t\v\f\\\$\"") . '";' . PHP_EOL;
+                $o .= $this->elementDefinition($varname, $keys[0], $keys[1], $val);
             }
             if ($module == 'pluginloader') {
                 foreach (array('cntopen', 'cntwriteto', 'notreadable') as $k2) {
@@ -221,8 +239,7 @@ class Translator_Model
             }
         } else {
             foreach ($texts as $key => $val) {
-                $o .= '$plugin_tx[\'' . $module . '\'][\'' . $key . '\']="'
-                    . addcslashes($val, "\r\n\t\v\f\\\$\"") . '";' . PHP_EOL;
+                $o .= $this->elementDefinition('plugin_tx', $module, $key, $val);
             }
         }
         $o .= PHP_EOL . '?>' . PHP_EOL;
