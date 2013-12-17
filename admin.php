@@ -29,42 +29,6 @@ define('TRANSLATOR_VERSION', '@TRANSLATOR_VERSION@');
 
 
 /**
- * Returns the plugin version information view.
- *
- * @return string
- *
- * @global array The paths of system files and folders.
- */
-function Translator_version()
-{
-    global $pth;
-
-    $iconPath = $pth['folder']['plugins'] . 'translator/translator.png';
-    return '<h1>Translator_XH</h1>' . PHP_EOL
-        . tag(
-            'img src="' . $iconPath . '" alt="Translate" width="128"'
-            . ' height="128" style="float:left; margin-right: 16px"'
-        )
-        . '<p>Version: ' . TRANSLATOR_VERSION . '</p>' . PHP_EOL
-        . '<p>Copyright &copy; 2011-2013 Christoph M. Becker</p>' . PHP_EOL
-        . '<p style="text-align: justify">This program is free software:'
-        . ' you can redistribute it and/or modify'
-        . ' it under the terms of the GNU General Public License as published by'
-        . ' the Free Software Foundation, either version 3 of the License, or'
-        . ' (at your option) any later version.</p>' . PHP_EOL
-        . '<p style="text-align: justify">This program is distributed'
-        . ' in the hope that it will be useful,'
-        . ' but WITHOUT ANY WARRANTY; without even the implied warranty of'
-        . ' MERCHAN&shy;TABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the'
-        . ' GNU General Public License for more details.</p>' . PHP_EOL
-        . '<p style="text-align: justify">You should have received a copy of'
-        . ' the GNU General Public License along with this program.  If not, see'
-        . ' <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/'
-        . '</a>.</p>' . PHP_EOL;
-}
-
-
-/**
  * Returns the system check view.
  *
  * @return string
@@ -427,11 +391,16 @@ function Translator_zip($lang)
  */
 if (isset($translator) && $translator == 'true') {
     include_once $pth['folder']['plugin_classes'] . 'Model.php';
+    include_once $pth['folder']['plugin_classes'] . 'Views.php';
     $_Translator = new Translator_Model();
+    $_Translator_views = new Translator_Views();
     $o .= print_plugin_admin('on');
     switch ($admin) {
     case '':
-        $o .= Translator_version() . Translator_systemCheck();
+        $o .= $_Translator_views->about(
+            TRANSLATOR_VERSION, $pth['folder']['plugin'] . 'translator.png'
+            )
+            . Translator_systemCheck();
         break;
     case 'plugin_main':
         switch ($action) {
