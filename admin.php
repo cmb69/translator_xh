@@ -116,7 +116,6 @@ function Translator_absoluteUrl($url)
  * @global array  The paths of system files and folders.
  * @global string The script name.
  * @global string The current language.
- * @global array  The localization of the core.
  * @global array  The configuration of the plugins.
  * @global array  The localization of the plugins.
  * @global object The translator model.
@@ -125,7 +124,7 @@ function Translator_absoluteUrl($url)
  */
 function Translator_administration()
 {
-    global $pth, $sn, $sl, $tx, $plugin_cf, $plugin_tx, $_Translator;
+    global $pth, $sn, $sl, $plugin_cf, $plugin_tx, $_Translator;
 
     $pcf = $plugin_cf['translator'];
     $ptx = $plugin_tx['translator'];
@@ -139,7 +138,6 @@ function Translator_administration()
         . '&amp;from=' . $pcf['translate_from'] . '&amp;to='
         . $lang . '&amp;plugin=';
     $fn = isset($_POST['translator-filename']) ? $_POST['translator-filename'] : '';
-    $submitLabel = ucfirst($tx['action']['save']);
     $o = <<<EOT
 <!-- Translator_XH: Administration -->
 <form id="translator-list" action="$action" method="post">
@@ -165,7 +163,7 @@ EOT;
     </ul>
     $ptx[label_filename]
     <input type="text" name="translator-filename" value="$fn" />.zip
-    <input type="submit" class="submit" value="$submitLabel" />
+    <input type="submit" class="submit" value="$ptx[label_generate]" />
 </form>
 
 EOT;
@@ -183,14 +181,13 @@ EOT;
  *
  * @global array            The paths of system files and folders.
  * @global string           The script name.
- * @global array            The localization of the core.
  * @global array            The configuration of the plugins.
  * @global array            The localization of the plugins.
  * @global Translator_Model The translator model.
  */
 function Translator_edit($plugin, $from, $to)
 {
-    global $pth, $sn, $tx, $plugin_cf, $plugin_tx, $_Translator;
+    global $pth, $sn, $plugin_cf, $plugin_tx, $_Translator;
 
     $pcf = $plugin_cf['translator'];
     $ptx = $plugin_tx['translator'];
@@ -201,7 +198,7 @@ function Translator_edit($plugin, $from, $to)
         //.'Translator&nbsp;'.tag('input type="text" name="translator"')."\n"
         . tag(
             'input type="submit" class="submit" value="'
-            . ucfirst($tx['action']['save']) . '"'
+            . $ptx['label_save'] . '"'
         )
         . PHP_EOL
         . '<table>' . PHP_EOL;
@@ -252,7 +249,7 @@ function Translator_edit($plugin, $from, $to)
     $o .= '</table>' . PHP_EOL
         . tag(
             'input type="submit" class="submit" value="'
-            . ucfirst($tx['action']['save']) . '"'
+            . $ptx['label_save'] . '"'
         )
         . PHP_EOL
         . '</form>' . PHP_EOL;
@@ -315,14 +312,13 @@ function Translator_save($plugin, $from, $to)
  *
  * @global array            The paths of system files and folders.
  * @global string           The (X)HTML fragment containing error messages.
- * @global array            The localization of the core.
  * @global array            The configuration of the plugins.
  * @global array            The localization of the plugins.
  * @global Translator_Model The translator model.
  */
 function Translator_zip($lang)
 {
-    global $pth, $e, $tx, $plugin_cf, $plugin_tx, $_Translator;
+    global $pth, $e, $plugin_cf, $plugin_tx, $_Translator;
 
     if (empty($_POST['translator-plugins'])) {
         $e .= '<li>' . $plugin_tx['translator']['error_no_plugin'] . '</li>'
