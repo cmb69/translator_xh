@@ -36,7 +36,7 @@ class Translator_Model
     function downloadFolder()
     {
         global $pth, $plugin_cf;
-        
+
         $path = $pth['folder']['base'];
         if ($plugin_cf['translator']['folder_download'] != '') {
             $path .= rtrim($plugin_cf['translator']['folder_download'] , '/')
@@ -47,7 +47,7 @@ class Translator_Model
         }
         return $path;
     }
-    
+
     /**
      * Returns all internationalized plugins.
      *
@@ -58,7 +58,7 @@ class Translator_Model
     function plugins()
     {
         global $pth;
-        
+
         $plugins = array();
         $dir = $pth['folder']['plugins'];
         $handle = opendir($dir);
@@ -73,7 +73,7 @@ class Translator_Model
         sort($plugins);
         return $plugins;
     }
-    
+
     /**
      * Returns the path of a language file.
      *
@@ -87,7 +87,7 @@ class Translator_Model
     function filename($module, $language)
     {
         global $pth;
-        
+
         $filename = ($module == 'CORE'|| $module == 'CORE-LANGCONFIG')
             ? $pth['folder']['language']
             : $pth['folder']['plugins'] . $module . '/languages/';
@@ -98,7 +98,64 @@ class Translator_Model
         $filename .= '.php';
         return $filename;
     }
+
+    /**
+     * Reads a language file and returns the value of the variable defined in it.
+     *
+     * @param string $module A module name.
+     * @param string $lang   A language code.
+     *
+     * @return array
+     *
+     * @global array The paths of system files and folders.
+     * @global array The localization of the core.
+     *
+     * @todo Refactor to return $texts.
+     */
+    function readLanguage($module, $lang)
+    {
+        global $pth;
+        // The pluginloaders language file uses $tx.
+        if ($module == 'pluginloader') {
+            global $tx;
+        }
+
+        $texts = array();
+        $filename = $this->filename($module, $lang);
+        if (file_exists($filename)) {
+            include $filename;
+            $specialModules = array('CORE', 'CORE-LANGCONFIG', 'pluginloader');
+            if (in_array($module, $specialModules)) {
+                switch ($module) {
+                case 'CORE':
+                    $varname = 'tx';
+                    break;
+                case 'CORE-LANGCONFIG':
+                    $varname = 'txc';
+                    break;
+                default:
+                    $varname = 'pluginloader_tx';
+                }
+                $varname = ($module == 'CORE')
+                    ? 'tx'
+                    : (($module == 'CORE-LANGCONFIG') ? 'txc' : 'pluginloader_tx');
+                foreach ($$varname as $key1 => $val1) {
+                    foreach ($val1 as $key2 => $val2) {
+                        if ($module != 'pluginloader'
+                            || $key1 != 'error' || $key2 == 'plugin_error'
+                        ) {
+                            $texts[$key1 . '_' . $key2] = $val2;
+                        }
+                    }
+                }
+            } else {
+                foreach ($plugin_tx[$module] as $key => $val) {
+                    $texts[$key] = $val;
+                }
+            }
+        }
+        return $texts;
+    }
 }
 
 ?>
-

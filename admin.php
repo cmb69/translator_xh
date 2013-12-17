@@ -38,7 +38,7 @@ define('TRANSLATOR_VERSION', '@TRANSLATOR_VERSION@');
 function Translator_version()
 {
     global $pth;
-    
+
     $iconPath = $pth['folder']['plugins'] . 'translator/translator.png';
     return '<h1>Translator_XH</h1>' . PHP_EOL
         . tag(
@@ -117,7 +117,7 @@ function Translator_systemCheck()
  * Returns an absolute URL.
  *
  * @param string $url A relative URL.
- * 
+ *
  * @return string
  *
  * @global string The script name.
@@ -125,7 +125,7 @@ function Translator_systemCheck()
 function Translator_absoluteUrl($url)
 {
     global $sn;
-    
+
     $parts = explode('/', $sn . $url);
     $i = 0;
     while ($i < count($parts)) {
@@ -145,74 +145,27 @@ function Translator_absoluteUrl($url)
 }
 
 /**
- * Reads a language file.
- *
- * @param string $plugin A plugin name.
- * @param string $lang   A language code.
- * @param array  &$texts Output param.
- * 
- * @return void
- *
- * @global array The paths of system files and folders.
- * @global object The translator model.
- *
- * @todo Refactor to return $texts.
- */
-function Translator_readLanguage($plugin, $lang, &$texts)
-{
-    global $pth, $_Translator;
-    
-    if ($plugin == 'pluginloader') {
-        global $tx;
-    }
-        
-    $texts = array();
-    $fn = $_Translator->filename($plugin, $lang);
-    if (file_exists($fn)) {
-        include $fn;
-        if (in_array($plugin, array('CORE', 'CORE-LANGCONFIG', 'pluginloader'))) {
-            $tx_name = ($plugin == 'CORE')
-                ? 'tx'
-                : (($plugin == 'CORE-LANGCONFIG') ? 'txc' : 'pluginloader_tx');
-            foreach ($$tx_name as $k1 => $v1) {
-                foreach ($v1 as $k2 => $v2) {
-                    if ($plugin != 'pluginloader'
-                        || $k1 != 'error' || $k2 == 'plugin_error'
-                    ) {
-                        $texts[$k1 . '_' . $k2] = $v2;
-                    }
-                }
-            }
-        } else {
-            foreach ($plugin_tx[$plugin] as $key => $val) {
-                $texts[$key] = $val;
-            }
-        }
-    }
-}
-
-/**
  * Writes a language file.
  *
  * @param string $plugin A plugin name.
  * @param string $lang   A language code.
  * @param array  &$texts Input param.
- * 
+ *
  * @return void
  *
  * @global array  The paths of system files and folders.
  * @global array  The configuration of the plugins.
  * @global object The translator model.
- * 
+ *
  * @todo What's with that "Input param"?
  * @todo Use utf8_wordwrap() ;)
  */
 function Translator_writeLanguage($plugin, $lang, &$texts)
 {
     global $pth, $plugin_cf, $_Translator;
-    
+
     $pcf = $plugin_cf['translator'];
-    
+
     $o = '<?php' . PHP_EOL . PHP_EOL;
     if (!empty($pcf['translation_author'])
         && !empty($pcf['translation_license'])
@@ -246,7 +199,7 @@ function Translator_writeLanguage($plugin, $lang, &$texts)
         }
     }
     $o .= PHP_EOL . '?>' . PHP_EOL;
-    
+
     $fn = $_Translator->filename($plugin, $lang);
     if (($fh = fopen($fn, 'w')) === false || fwrite($fh, $o) === false) {
         e('cntsave', 'language', $fn);
@@ -272,7 +225,7 @@ function Translator_writeLanguage($plugin, $lang, &$texts)
 function Translator_administration()
 {
     global $pth, $sn, $sl, $tx, $plugin_cf, $plugin_tx, $_Translator;
-    
+
     $pcf = $plugin_cf['translator'];
     $ptx = $plugin_tx['translator'];
     $lang = empty($pcf['translate_to'])
@@ -338,19 +291,20 @@ function Translator_administration()
  * @param string $plugin A plugin name.
  * @param string $from   A language code to translate from.
  * @param string $to     A language code to translate to.
- * 
+ *
  * @return string
  *
- * @global array  The paths of system files and folders.
- * @global string The script name.
- * @global array  The localization of the core.
- * @global array  The configuration of the plugins.
- * @global array  The localization of the plugins.
+ * @global array            The paths of system files and folders.
+ * @global string           The script name.
+ * @global array            The localization of the core.
+ * @global array            The configuration of the plugins.
+ * @global array            The localization of the plugins.
+ * @global Translator_Model The translator model.
  */
 function Translator_edit($plugin, $from, $to)
 {
-    global $pth, $sn, $tx, $plugin_cf, $plugin_tx;
-    
+    global $pth, $sn, $tx, $plugin_cf, $plugin_tx, $_Translator;
+
     $pcf = $plugin_cf['translator'];
     $ptx = $plugin_tx['translator'];
     $url = $sn . '?translator&amp;admin=plugin_main&amp;action=save&amp;from='
@@ -371,15 +325,15 @@ function Translator_edit($plugin, $from, $to)
             ? tag(
                 'img src="' . $fn . '" alt="' . $$lang . '" title="' . $$lang . '"'
             )
-            : $$lang;       
+            : $$lang;
     }
     $o .= '<tr><th></th><th>' . $ptx['label_translate_from'] . '&nbsp;' . $from_h
         . '</th>'
         . '<th>' . $ptx['label_translate_to'] . '&nbsp;' . $to_h . '</th></tr>'
         . PHP_EOL;
-    Translator_readLanguage($plugin, $from, $from_tx);
-    Translator_readLanguage($plugin, $to, $to_tx);
-    Translator_readLanguage($plugin, 'translation-hints', $hints);
+    $from_tx = $_Translator->readLanguage($plugin, $from);
+    $to_tx = $_Translator->readLanguage($plugin, $to);
+    $hints = $_Translator->readLanguage($plugin, 'translation-hints');
     //if ($plugin != 'CORE') {ksort($from_tx);}
     if ($pcf['sort_load']) {
         ksort($from_tx);
@@ -415,7 +369,7 @@ function Translator_edit($plugin, $from, $to)
         )
         . PHP_EOL
         . '</form>' . PHP_EOL;
-    
+
     return $o;
 }
 
@@ -425,15 +379,16 @@ function Translator_edit($plugin, $from, $to)
  * @param string $plugin A plugin name.
  * @param string $from   A language code to translate from.
  * @param string $to     A language code to translate to.
- * 
+ *
  * @return string
  *
- * @global array The configuration of the plugins.
+ * @global array            The configuration of the plugins.
+ * @global Translator_Model The translator model.
  */
 function Translator_save($plugin, $from, $to)
 {
-    global $plugin_cf;
-    
+    global $plugin_cf, $_Translator;
+
     $pcf = $plugin_cf['translator'];
     $texts = array();
     if ($pcf['sort_save']) {
@@ -447,7 +402,7 @@ function Translator_save($plugin, $from, $to)
             }
         }
     } else {
-        Translator_readLanguage($plugin, $from, $from_tx);
+        $from_tx = $_Translator->readLanguage($plugin, $from);
         foreach ($from_tx as $key => $_) {
             $newval = stsl($_POST['translator-' . $key]);
             if (empty($pcf['default_translation'])
@@ -466,15 +421,15 @@ function Translator_save($plugin, $from, $to)
  * returns the main administration view.
  *
  * @param string $lang A language code.
- * 
+ *
  * @return string
  *
- * @global array The paths of system files and folders.
- * @global string The (X)HTML fragment containing error messages.
- * @global array  The localization of the core.
- * @global array  The configuration of the plugins.
- * @global array  The localization of the plugins.
- * @global object The translator model.
+ * @global array            The paths of system files and folders.
+ * @global string           The (X)HTML fragment containing error messages.
+ * @global array            The localization of the core.
+ * @global array            The configuration of the plugins.
+ * @global array            The localization of the plugins.
+ * @global Translator_Model The translator model.
  */
 function Translator_zip($lang)
 {
