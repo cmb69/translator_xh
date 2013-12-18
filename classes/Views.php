@@ -160,6 +160,79 @@ EOT;
     }
 
     /**
+     * Returns a single table row of the translation editor.
+     *
+     * @param string $key
+     * @param array  $sourceText
+     * @param array  $destinationTexts
+     *
+     * @return string XHTML.
+     *
+     * @global array The configuration of the plugins.
+     */
+    protected function editorRow($key, $sourceText, $destinationTexts)
+    {
+        global $plugin_cf;
+
+        $pcf = $plugin_cf['translator'];
+        if (isset($destinationTexts[$key])) {
+            $destinationText = $destinationTexts[$key];
+        } elseif ($pcf['default_translation'] != '') {
+            $destinationText = $pcf['default_translation'];
+        } else {
+            $destinationText = $sourceText;
+        }
+        $class = isset($destinationTexts[$key]) ? '' : ' class="new"';
+        $sourceText = $this->hsc($sourceText);
+        $destinationText = $this->hsc($destinationText);
+        return <<<EOT
+        <tr>
+            <td class="key">$key</td>
+            <td class="from">
+                <textarea rows="2" cols="40" readonly="readonly"
+                    >$sourceText</textarea>
+            </td>
+            <td class="to">
+                <textarea name="translator-$key"$class rows="2" cols="40"
+                    >$destinationText</textarea>
+            </td>
+        </tr>
+
+EOT;
+    }
+
+    /**
+     * Returns all table rows of the translation editor.
+     *
+     * @param string $module              A module name.
+     * @param string $sourceLanguage      A language code.
+     * @param string $destinationLanguage A language code.
+     *
+     * @return string XHTML.
+     *
+     * @global array            The configuration of the plugins.
+     * @global Translator_Model The translator model.
+     */
+    protected function editorRows($module, $sourceLanguage, $destinationLanguage)
+    {
+        global $plugin_cf, $_Translator;
+
+        $pcf = $plugin_cf['translator'];
+        $sourceTexts = $_Translator->readLanguage($module, $sourceLanguage);
+        $destinationTexts = $_Translator->readLanguage(
+            $module, $destinationLanguage
+        );
+        if ($pcf['sort_load']) {
+            ksort($sourceTexts);
+        }
+        $o = '';
+        foreach ($sourceTexts as $key => $sourceText) {
+            $o .= $this->editorRow($key, $sourceText, $destinationTexts);
+        }
+        return $o;
+    }
+
+    /**
      * Returns the translation editor view.
      *
      * @param string $action              A URL to submit to.
@@ -175,13 +248,14 @@ EOT;
      */
     public function editor($action, $module, $sourceLanguage, $destinationLanguage)
     {
-        global $plugin_cf, $plugin_tx, $_Translator;
+        global $plugin_cf, $plugin_tx;
 
         $pcf = $plugin_cf['translator'];
         $ptx = $plugin_tx['translator'];
         $moduleName = ucfirst($module);
         $sourceLabel = Translator_languageMarker($sourceLanguage);
         $destinationLabel = Translator_languageMarker($destinationLanguage);
+        $rows = $this->editorRows($module, $sourceLanguage, $destinationLanguage);
         $o = <<<EOT
 <!-- Translation_XH: Translation Editor -->
 <form id="translator" method="post" action="$action">
@@ -193,42 +267,7 @@ EOT;
             <th>$ptx[label_translate_from] $sourceLabel</th>
             <th>$ptx[label_translate_to] $destinationLabel</th>
         </tr>
-
-EOT;
-        $sourceTexts = $_Translator->readLanguage($module, $sourceLanguage);
-        $destinationTexts = $_Translator->readLanguage(
-            $module, $destinationLanguage
-        );
-        if ($pcf['sort_load']) {
-            ksort($sourceTexts);
-        }
-        foreach ($sourceTexts as $key => $sourceText) {
-            if (isset($destinationTexts[$key])) {
-                $destinationText = $destinationTexts[$key];
-            } elseif ($pcf['default_translation'] != '') {
-                $destinationText = $pcf['default_translation'];
-            } else {
-                $destinationText = $sourceTexts[$key];
-            }
-            $class = isset($destinationTexts[$key]) ? '' : ' class="new"';
-            $sourceText = $this->hsc($sourceText);
-            $destinationText = $this->hsc($destinationText);
-            $o .= <<<EOT
-        <tr>
-            <td class="key">$key</td>
-            <td class="from">
-                <textarea rows="2" cols="40" readonly="readonly"
-                    >$sourceText</textarea>
-            </td>
-            <td class="to">
-                <textarea name="translator-$key"$class rows="2" cols="40"
-                    >$destinationText</textarea>
-            </td>
-        </tr>
-
-EOT;
-        }
-        $o .= <<<EOT
+$rows
     </table>
     <input type="submit" class="submit" value="$ptx[label_save]" />
 </form>
