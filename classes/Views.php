@@ -26,18 +26,35 @@
 class Translator_Views
 {
     /**
+     * Returns a string with ETAGCs adjusted to the configured markup language.
+     *
+     * @param string $string A string.
+     *
+     * @return string (X)HTML.
+     *
+     * @global array The configuration of the core.
+     */
+    protected function xhtml($string)
+    {
+        global $cf;
+
+        if (!$cf['xhtml']['endtags']) {
+            $string = str_replace(' />', '>', $string);
+        }
+        return $string;
+    }
+
+    /**
      * Returns the about view.
      *
      * @param string $version  A version number.
      * @param string $iconPath A file path.
      *
      * @return string (X)HTML.
-     *
-     * @todo fix empty elements
      */
     public function about($version, $iconPath)
     {
-        return <<<EOT
+        $o = <<<EOT
 <!-- Translator_XH: About -->
 <h1>Translator_XH</h1>
 <img src="$iconPath" alt="Plugin icon" width="128" height="128"
@@ -60,6 +77,7 @@ class Translator_Views
     <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>.</p>
 
 EOT;
+    return $this->xhtml($o);
     }
 
     /**
@@ -69,9 +87,7 @@ EOT;
      * @param string $url     A URL to link to.
      * @param array  $modules An array of checked modules.
      *
-     * @return string (X)HTML.
-     *
-     * @todo fix empty elements
+     * @return string XHTML.
      */
     protected function module($module, $url, $modules)
     {
@@ -100,8 +116,6 @@ EOT;
      *
      * @global array  The localization of the plugins.
      * @global object The translator model.
-     *
-     * @todo fix empty elements
      */
     public function main($action, $url, $fn, $modules)
     {
@@ -126,7 +140,7 @@ EOT;
 </form>
 
 EOT;
-        return $o;
+        return $this->xhtml($o);
     }
 }
 
