@@ -63,6 +63,33 @@ EOT;
     }
 
     /**
+     * Returns a <li> element for a module.
+     *
+     * @param string $module  A module name.
+     * @param string $url     A URL to link to.
+     * @param array  $modules An array of checked modules.
+     *
+     * @return string (X)HTML.
+     *
+     * @todo fix empty elements
+     */
+    protected function module($module, $url, $modules)
+    {
+        $name = ucfirst($module);
+        $checked = in_array($module, $modules)
+            ? ' checked="checked"'
+            : '';
+        return <<<EOT
+        <li>
+            <input type="checkbox" name="translator-plugins[]"
+                   value="$module"$checked />
+            <a href="$url$module">$name</a>
+        </li>
+
+EOT;
+    }
+
+    /**
      * Returns the main administration view.
      *
      * @param string $action A URL to submit to.
@@ -89,17 +116,7 @@ EOT;
 
 EOT;
         foreach ($_Translator->modules() as $plugin) {
-            $name = ucfirst($plugin);
-            $checked = in_array($plugin, $modules)
-                ? ' checked="checked"'
-                : '';
-            $o .= <<<EOT
-        <li>
-            <input type="checkbox" name="translator-plugins[]" value="$plugin"$checked />
-            <a href="$url$plugin">$name</a>
-        </li>
-
-EOT;
+            $o .= $this->module($plugin, $url, $modules);
         }
         $o .= <<<EOT
     </ul>
