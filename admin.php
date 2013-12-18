@@ -189,7 +189,7 @@ function Translator_edit($plugin, $from, $to)
 /**
  * Saves the translated language file and returns the main administration view.
  *
- * @param string $plugin A plugin name.
+ * @param string $module A module name.
  * @param string $from   A language code to translate from.
  * @param string $to     A language code to translate to.
  *
@@ -198,35 +198,30 @@ function Translator_edit($plugin, $from, $to)
  * @global array            The configuration of the plugins.
  * @global Translator_Model The translator model.
  */
-function Translator_save($plugin, $from, $to)
+function Translator_save($module, $sourceLanguage, $destinationLanguage)
 {
     global $plugin_cf, $_Translator;
 
     $pcf = $plugin_cf['translator'];
-    $texts = array();
+    $destinationTexts = array();
+    $sourceTexts = $_Translator->readLanguage($module, $sourceLanguage);
     if ($pcf['sort_save']) {
-        foreach ($_POST as $key => $val) {
-            $newval = stsl($val);
-            if (strpos($key, 'translator-') === 0
-                && (empty($pcf['default_translation'])
-                || $newval != $pcf['default_translation'])
-            ) {
-                $texts[substr($key, 11)] = $newval;
-            }
-        }
-    } else {
-        $from_tx = $_Translator->readLanguage($plugin, $from);
-        foreach ($from_tx as $key => $_) {
-            $newval = stsl($_POST['translator-' . $key]);
-            if (empty($pcf['default_translation'])
-                || $newval != $pcf['default_translation']
-            ) {
-                $texts[$key] = $newval;
-            }
+        ksort($sourceTexts);
+    }
+    foreach ($sourceTexts as $key => $dummy) {
+        $value = stsl($_POST['translator-' . $key]);
+        if ($value != '' || $value != $pcf['default_translation']) {
+            $destinationTexts[$key] = $value;
         }
     }
-    if (!$_Translator->writeLanguage($plugin, $to, $texts)) {
-        e('cntsave', 'language', $_Translator->filename($plugin, $to));
+    $saved = $_Translator->writeLanguage(
+        $module, $destinationLanguage, $destinationTexts
+    );
+    if (!$saved) {
+        e(
+            'cntsave', 'language',
+            $_Translator->filename($module, $destinationLanguage)
+        );
     }
     return Translator_administration();
 }
