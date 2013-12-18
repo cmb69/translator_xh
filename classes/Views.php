@@ -122,8 +122,6 @@ EOT;
      *
      * @global array The paths of system files and folders.
      * @global array The localization of the plugins.
-     *
-     * @todo fix empty elements
      */
     public function systemCheck($checks)
     {
@@ -317,7 +315,6 @@ EOT;
      *
      * @global array            The configuration of the plugins.
      * @global array            The localization of the plugins.
-     * @global Translator_Model The translator model.
      */
     public function editor($action, $module, $sourceLanguage, $destinationLanguage)
     {

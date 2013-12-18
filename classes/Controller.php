@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The controller of Translator_XH.
+ * The controller.
  *
  * PHP version 5
  *
@@ -15,7 +15,7 @@
  */
 
 /**
- * The controller class of Translator_XH.
+ * The controller class.
  *
  * @category CMSimple_XH
  * @package  Translator

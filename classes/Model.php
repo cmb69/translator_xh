@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The model class of Translator_XH.
+ * The model.
  *
  * PHP version 5
  *
@@ -15,7 +15,7 @@
  */
 
 /**
- * The model class of Translator_XH.
+ * The model class.
  *
  * @category CMSimple_XH
  * @package  Translator
@@ -201,16 +201,13 @@ class Translator_Model
      * @return array
      *
      * @global array The paths of system files and folders.
-     * @global array The localization of the core.
-     *
-     * @todo Refactor to return $texts.
      */
     public function readLanguage($module, $lang)
     {
         global $pth;
-        // The pluginloaders language file uses $tx.
+
         if ($module == 'pluginloader') {
-            global $tx;
+            $tx = $GLOBALS['tx'];
         }
 
         $texts = array();

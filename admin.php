@@ -32,6 +32,6 @@ define('TRANSLATOR_VERSION', '@TRANSLATOR_VERSION@');
  */
 require_once $pth['folder']['plugin_classes'] . 'Controller.php';
 
-$_Translator = new Translator_Controller();
+new Translator_Controller();
 
 ?>
