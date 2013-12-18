@@ -174,66 +174,16 @@ function Translator_languageMarker($language)
  *
  * @return string
  *
- * @global array            The paths of system files and folders.
  * @global string           The script name.
- * @global array            The configuration of the plugins.
- * @global array            The localization of the plugins.
- * @global Translator_Model The translator model.
+ * @global Translator_Views The translator views.
  */
 function Translator_edit($plugin, $from, $to)
 {
-    global $pth, $sn, $plugin_cf, $plugin_tx, $_Translator;
+    global $sn, $_Translator_views;
 
-    $pcf = $plugin_cf['translator'];
-    $ptx = $plugin_tx['translator'];
     $url = $sn . '?translator&amp;admin=plugin_main&amp;action=save&amp;from='
         . $from . '&amp;to=' . $to . '&amp;plugin=' . $plugin;
-    $o = '<form id="translator" method="post" action="' . $url . '">' . PHP_EOL
-        . '<h1>' . ucfirst($plugin) . '</h1>' . PHP_EOL
-        //.'Translator&nbsp;'.tag('input type="text" name="translator"')."\n"
-        . tag(
-            'input type="submit" class="submit" value="'
-            . $ptx['label_save'] . '"'
-        )
-        . PHP_EOL
-        . '<table>' . PHP_EOL;
-    $from_h = Translator_languageMarker($from);
-    $to_h = Translator_languageMarker($to);
-    $o .= '<tr><th></th><th>' . $ptx['label_translate_from'] . '&nbsp;' . $from_h
-        . '</th>'
-        . '<th>' . $ptx['label_translate_to'] . '&nbsp;' . $to_h . '</th></tr>'
-        . PHP_EOL;
-    $from_tx = $_Translator->readLanguage($plugin, $from);
-    $to_tx = $_Translator->readLanguage($plugin, $to);
-    //if ($plugin != 'CORE') {ksort($from_tx);}
-    if ($pcf['sort_load']) {
-        ksort($from_tx);
-    }
-    foreach ($from_tx as $key => $from_val) {
-        $to_val = isset($to_tx[$key])
-            ? $to_tx[$key]
-            : (empty($pcf['default_translation'])
-                ? $from_tx[$key]
-                : $pcf['default_translation']);
-        $class = isset($to_tx[$key]) ? '' : ' class="new"';
-        $o .= '<tr>'
-            . '<td class="key">' . $key . '</td>'
-            . '<td class="from"><textarea rows="2" cols="40" readonly="readonly">'
-            . htmlspecialchars($from_val) . '</textarea></td>'
-            . '<td class="to"><textarea name="translator-' . $key . '"' . $class
-            . ' rows="2" cols="40">'
-            . htmlspecialchars($to_val) . '</textarea></td>'
-            . '</tr>' . PHP_EOL;
-    }
-    $o .= '</table>' . PHP_EOL
-        . tag(
-            'input type="submit" class="submit" value="'
-            . $ptx['label_save'] . '"'
-        )
-        . PHP_EOL
-        . '</form>' . PHP_EOL;
-
-    return $o;
+    return $_Translator_views->editor($url, $plugin, $from, $to);
 }
 
 /**

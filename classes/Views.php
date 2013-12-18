@@ -142,6 +142,86 @@ EOT;
 EOT;
         return $this->xhtml($o);
     }
+
+    /**
+     * Returns the translation editor view.
+     *
+     * @param string $action              A URL to submit to.
+     * @param string $module              A module name.
+     * @param string $sourceLanguage      A language code.
+     * @param string $destinationLanguage A language code.
+     *
+     * @return string (X)HTML.
+     *
+     * @global array            The configuration of the plugins.
+     * @global array            The localization of the plugins.
+     * @global Translator_Model The translator model.
+     */
+    public function editor($action, $module, $sourceLanguage, $destinationLanguage)
+    {
+        global $plugin_cf, $plugin_tx, $_Translator;
+
+        $pcf = $plugin_cf['translator'];
+        $ptx = $plugin_tx['translator'];
+        $moduleName = ucfirst($module);
+        $sourceLabel = Translator_languageMarker($sourceLanguage);
+        $destinationLabel = Translator_languageMarker($destinationLanguage);
+        $o = <<<EOT
+<!-- Translation_XH: Translation Editor -->
+<form id="translator" method="post" action="$action">
+    <h1>$moduleName</h1>
+    <input type="submit" class="submit" value="$ptx[label_save]" />
+    <table>
+        <tr>
+            <th></th>
+            <th>$ptx[label_translate_from] $sourceLabel</th>
+            <th>$ptx[label_translate_to] $destinationLabel</th>
+        </tr>
+
+EOT;
+        $sourceTexts = $_Translator->readLanguage($module, $sourceLanguage);
+        $destinationTexts = $_Translator->readLanguage(
+            $module, $destinationLanguage
+        );
+        if ($pcf['sort_load']) {
+            ksort($sourceTexts);
+        }
+        foreach ($sourceTexts as $key => $sourceText) {
+            if (isset($destinationTexts[$key])) {
+                $destinationText = $destinationTexts[$key];
+            } elseif ($pcf['default_translation'] != '') {
+                $destinationText = $pcf['default_translation'];
+            } else {
+                $destinationText = $sourceTexts[$key];
+            }
+            $class = isset($destinationTexts[$key]) ? '' : ' class="new"';
+            $sourceText = htmlspecialchars($sourceText, ENT_COMPAT, 'UTF-8');
+            $destinationText = htmlspecialchars(
+                $destinationText, ENT_COMPAT, 'UTF-8'
+            );
+            $o .= <<<EOT
+        <tr>
+            <td class="key">$key</td>
+            <td class="from">
+                <textarea rows="2" cols="40" readonly="readonly"
+                    >$sourceText</textarea>
+            </td>
+            <td class="to">
+                <textarea name="translator-$key"$class rows="2" cols="40"
+                    >$destinationText</textarea>
+            </td>
+        </tr>
+
+EOT;
+        }
+        $o .= <<<EOT
+    </table>
+    <input type="submit" class="submit" value="$ptx[label_save]" />
+</form>
+
+EOT;
+        return $this->xhtml($o);
+    }
 }
 
 ?>
