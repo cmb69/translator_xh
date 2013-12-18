@@ -205,7 +205,6 @@ function Translator_edit($plugin, $from, $to)
         . PHP_EOL;
     $from_tx = $_Translator->readLanguage($plugin, $from);
     $to_tx = $_Translator->readLanguage($plugin, $to);
-    $hints = $_Translator->readLanguage($plugin, 'translation-hints');
     //if ($plugin != 'CORE') {ksort($from_tx);}
     if ($pcf['sort_load']) {
         ksort($from_tx);
@@ -217,16 +216,8 @@ function Translator_edit($plugin, $from, $to)
                 ? $from_tx[$key]
                 : $pcf['default_translation']);
         $class = isset($to_tx[$key]) ? '' : ' class="new"';
-        $help = isset($hints[$key])
-            ? '<a class="pl_tooltip" href="javascript:return false">'
-                . tag(
-                    'img src="' . $pth['folder']['plugins']
-                    . 'translator/images/help.png" alt="Help"'
-                )
-                . '<span>' . $hints[$key] . '</span></a>'
-            : '';
         $o .= '<tr>'
-            . '<td class="key">' . $help . $key . '</td>'
+            . '<td class="key">' . $key . '</td>'
             . '<td class="from"><textarea rows="2" cols="40" readonly="readonly">'
             . htmlspecialchars($from_val) . '</textarea></td>'
             . '<td class="to"><textarea name="translator-' . $key . '"' . $class

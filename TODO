@@ -3,3 +3,6 @@
 * change question marks to exclamation marks
 * check and document pl.php
 * lock files
+
+* fix for XH 1.6
+* remove translation-hints support
