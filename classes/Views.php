@@ -97,6 +97,42 @@ EOT;
     }
 
     /**
+     * Returns the system check view.
+     *
+     * @return string (X)HTML.
+     *
+     * @global array The paths of system files and folders.
+     * @global array The localization of the plugins.
+     *
+     * @todo fix empty elements
+     */
+    public function systemCheck()
+    {
+        global $pth, $plugin_tx;
+
+        $ptx = $plugin_tx['translator'];
+        $imgdir = $pth['folder']['plugins'] . 'translator/images/';
+        $checks = Translator_systemChecks();
+        $o = <<<EOT
+<!-- Translator_XH: System Check -->
+<h4>$ptx[syscheck_title]</h4>
+<ul style="list-style: none">
+
+EOT;
+        foreach ($checks as $check => $state) {
+            $o .= <<<EOT
+    <li><img src="$imgdir$state.png" alt="$state" /> $check</li>
+
+EOT;
+        }
+        $o .= <<<EOT
+</ul>
+
+EOT;
+        return $this->xhtml($o);
+    }
+
+    /**
      * Returns a <li> element for a module.
      *
      * @param string $module  A module name.

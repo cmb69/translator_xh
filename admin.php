@@ -27,54 +27,44 @@ if (!defined('CMSIMPLE_XH_VERSION')) {
  */
 define('TRANSLATOR_VERSION', '@TRANSLATOR_VERSION@');
 
-
 /**
- * Returns the system check view.
+ * Returns the system checks.
  *
- * @return string
+ * @return array
  *
- * @global array The paths of system files and folders.
- * @global array The localization of the core.
- * @global array The localization of the plugins.
- * @global array The translator model.
+ * @global array            The paths of system files and folders.
+ * @global array            The localization of the core.
+ * @global array            The localization of the plugins.
+ * @global Translator_Model The translator model.
  */
-function Translator_systemCheck()
+function Translator_systemChecks()
 {
     global $pth, $tx, $plugin_tx, $_Translator;
 
-    $requiredVersion = '5.0.0';
     $ptx = $plugin_tx['translator'];
-    $imgdir = $pth['folder']['plugins'] . 'translator/images/';
-    $ok = tag('img src="' . $imgdir . 'ok.png" alt="ok"');
-    $warn = tag('img src="' . $imgdir . 'warn.png" alt="warning"');
-    $fail = tag('img src="' . $imgdir . 'fail.png" alt="failure"');
-    $o = tag('hr') . '<h4>' . $ptx['syscheck_title'] . '</h4>'
-        . (version_compare(PHP_VERSION, $requiredVersion) >= 0 ? $ok : $fail)
-        . '&nbsp;&nbsp;' . sprintf($ptx['syscheck_phpversion'], $requiredVersion)
-        . tag('br') . tag('br') . PHP_EOL;
-    foreach (array('zlib') as $ext) {
-        $o .= (extension_loaded($ext) ? $ok : $fail)
-            . '&nbsp;&nbsp;' . sprintf($ptx['syscheck_extension'], $ext)
-            . tag('br') . PHP_EOL;
+    $requiredVersion = '5.0.0';
+    $checks = array();
+    $checks[sprintf($ptx['syscheck_phpversion'], $requiredVersion)]
+        = version_compare(PHP_VERSION, $requiredVersion, 'ge') ? 'ok' : 'fail';
+    foreach (array('zlib') as $extension) {
+        $checks[sprintf($ptx['syscheck_extension'], $extension)]
+            = extension_loaded($extension) ? 'ok' : 'fail';
     }
-    $o .= (!get_magic_quotes_runtime() ? $ok : $fail)
-        . '&nbsp;&nbsp;' . $ptx['syscheck_magic_quotes'] . tag('br') . PHP_EOL;
-    $o .= (strtoupper($tx['meta']['codepage']) == 'UTF-8' ? $ok : $warn)
-        . '&nbsp;&nbsp;' . $ptx['syscheck_encoding']
-        . tag('br') . tag('br') . PHP_EOL;
-    $func = create_function(
-        '$plugin',
-        'return \'' . $pth['folder']['plugins'] . '\' . $plugin . \'/languages/\';'
-    );
-    $folders = array_map($func, $_Translator->plugins());
+    $checks[$ptx['syscheck_magic_quotes']]
+        = !get_magic_quotes_runtime() ? 'ok' : 'fail';
+    $checks[$ptx['syscheck_encoding']]
+        = (strtoupper($tx['meta']['codepage']) == 'UTF-8') ? 'ok' : 'warn';
+    $folders = array();
+    foreach ($_Translator->plugins() as $plugin) {
+        $folders[] = $pth['folder']['plugins'] . $plugin . '/languages/';
+    }
     array_unshift($folders, $pth['folder']['language']);
     array_push($folders, $_Translator->downloadFolder());
     foreach ($folders as $folder) {
-        $o .= (is_writable($folder) ? $ok : $warn)
-            . '&nbsp;&nbsp;' . sprintf($ptx['syscheck_writable'], $folder)
-            . tag('br') . PHP_EOL;
+        $checks[sprintf($ptx['syscheck_writable'], $folder)]
+            = is_writable($folder) ? 'ok' : 'warn';
     }
-    return $o;
+    return $checks;
 }
 
 /**
@@ -255,7 +245,7 @@ if (isset($translator) && $translator == 'true') {
         $o .= $_Translator_views->about(
             $pth['folder']['plugin'] . 'translator.png'
         );
-        $o .= Translator_systemCheck();
+        $o .= tag('hr') . $_Translator_views->systemCheck();
         break;
     case 'plugin_main':
         switch ($action) {
