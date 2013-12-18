@@ -35,7 +35,7 @@ class Translator_Views
      *
      * @todo fix empty elements
      */
-    function about($version, $iconPath)
+    public function about($version, $iconPath)
     {
         return <<<EOT
 <!-- Translator_XH: About -->
@@ -60,6 +60,56 @@ class Translator_Views
     <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>.</p>
 
 EOT;
+    }
+
+    /**
+     * Returns the main administration view.
+     *
+     * @param string $action A URL to submit to.
+     * @param string $url    A URL to link to.
+     * @param string $fn     A language pack file name.
+     *
+     * @return string (X)HTML.
+     *
+     * @global array  The localization of the plugins.
+     * @global object The translator model.
+     *
+     * @todo fix empty elements
+     */
+    public function main($action, $url, $fn, $modules)
+    {
+        global $plugin_tx, $_Translator;
+
+        $ptx = $plugin_tx['translator'];
+        $o = <<<EOT
+<!-- Translator_XH: Administration -->
+<form id="translator-list" action="$action" method="post">
+    <h1>$ptx[label_plugins]</h1>
+    <ul>
+
+EOT;
+        foreach ($_Translator->modules() as $plugin) {
+            $name = ucfirst($plugin);
+            $checked = in_array($plugin, $modules)
+                ? ' checked="checked"'
+                : '';
+            $o .= <<<EOT
+        <li>
+            <input type="checkbox" name="translator-plugins[]" value="$plugin"$checked />
+            <a href="$url$plugin">$name</a>
+        </li>
+
+EOT;
+        }
+        $o .= <<<EOT
+    </ul>
+    $ptx[label_filename]
+    <input type="text" name="translator-filename" value="$fn" />.zip
+    <input type="submit" class="submit" value="$ptx[label_generate]" />
+</form>
+
+EOT;
+        return $o;
     }
 }
 

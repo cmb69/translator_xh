@@ -119,12 +119,11 @@ function Translator_absoluteUrl($url)
  * @global array  The configuration of the plugins.
  * @global array  The localization of the plugins.
  * @global object The translator model.
- *
- * @todo fix empty elements
+ * @global object The translator views.
  */
 function Translator_administration()
 {
-    global $pth, $sn, $sl, $plugin_cf, $plugin_tx, $_Translator;
+    global $pth, $sn, $sl, $plugin_cf, $plugin_tx, $_Translator, $_Translator_views;
 
     $pcf = $plugin_cf['translator'];
     $ptx = $plugin_tx['translator'];
@@ -138,36 +137,10 @@ function Translator_administration()
         . '&amp;from=' . $pcf['translate_from'] . '&amp;to='
         . $lang . '&amp;plugin=';
     $fn = isset($_POST['translator-filename']) ? $_POST['translator-filename'] : '';
-    $o = <<<EOT
-<!-- Translator_XH: Administration -->
-<form id="translator-list" action="$action" method="post">
-    <h1>$ptx[label_plugins]</h1>
-    <ul>
-
-EOT;
-    foreach ($_Translator->modules() as $plugin) {
-        $name = ucfirst($plugin);
-        $checked = (isset($_POST['translator-plugins'])
-                    && in_array($plugin, $_POST['translator-plugins']))
-            ? ' checked="checked"'
-            : '';
-        $o .= <<<EOT
-        <li>
-            <input type="checkbox" name="translator-plugins[]" value="$plugin"$checked />
-            <a href="$url$plugin">$name</a>
-        </li>
-
-EOT;
-    }
-    $o .= <<<EOT
-    </ul>
-    $ptx[label_filename]
-    <input type="text" name="translator-filename" value="$fn" />.zip
-    <input type="submit" class="submit" value="$ptx[label_generate]" />
-</form>
-
-EOT;
-    return $o;
+    $modules = isset($_POST['translator-plugins'])
+        ? $_POST['translator-plugins']
+        : array();
+    return $_Translator_views->main($action, $url, $fn, $modules);
 }
 
 /**
