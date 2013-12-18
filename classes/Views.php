@@ -275,6 +275,30 @@ $rows
 EOT;
         return $this->xhtml($o);
     }
+
+    /**
+     * Returns the download URL view.
+     *
+     * @param string A URL.
+     *
+     * @return string (X)HTML.
+     *
+     * @global array The localization of the plugins.
+     */
+    public function downloadUrl($url)
+    {
+        global $plugin_tx;
+
+        $ptx = $plugin_tx['translator'];
+        $o .= <<<EOT
+<p>
+    $ptx[label_download_url]<br />
+    <input id="translator-download-link" type="text" disabled="disabled" value="$url" />
+</p>
+
+EOT;
+        return $this->xhtml($o);
+    }
 }
 
 ?>

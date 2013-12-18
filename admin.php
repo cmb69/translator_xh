@@ -236,13 +236,13 @@ function Translator_save($module, $sourceLanguage, $destinationLanguage)
  *
  * @global array            The paths of system files and folders.
  * @global string           The (X)HTML fragment containing error messages.
- * @global array            The configuration of the plugins.
  * @global array            The localization of the plugins.
  * @global Translator_Model The translator model.
+ * @global object The translator views.
  */
 function Translator_zip($lang)
 {
-    global $pth, $e, $plugin_cf, $plugin_tx, $_Translator;
+    global $pth, $e, $plugin_tx, $_Translator, $_Translator_views;
 
     if (empty($_POST['translator-plugins'])) {
         $e .= '<li>' . $plugin_tx['translator']['error_no_plugin'] . '</li>'
@@ -251,31 +251,21 @@ function Translator_zip($lang)
     }
     try {
         $cnt = $_Translator->zipArchive($_POST['translator-plugins'], $lang);
-    } catch (Exception $e) {
-        $e .= '<li>' . $e->getMessage() . '</li>' . PHP_EOL;
+    } catch (Exception $ex) {
+        $e .= '<li>' . $ex->getMessage() . '</li>' . PHP_EOL;
         return Translator_administration();
     }
     $ok = true;
-    $fn = $_Translator->downloadFolder() . $_POST['translator-filename'] . '.zip';
-    //    if (file_exists($fn)) {
-    //      e('alreadyexists', 'file', $fn);
-    //      $ok = FALSE;
-    //    }
-    if (($fh = fopen($fn, 'w')) === false || fwrite($fh, $cnt) === false) {
-        e('cntsave', 'file', $fn);
+    $filename = $_Translator->downloadFolder() . $_POST['translator-filename']
+        . '.zip';
+    if (file_put_contents($filename, $cnt) === false) {
+        e('cntsave', 'file', $filename);
         $ok = false;
-    }
-    if ($fh !== false) {
-        fclose($fh);
     }
     $o = Translator_administration();
     if ($ok) {
-        $o .= '<p>' . $plugin_tx['translator']['label_download_url'] . tag('br')
-            . tag(
-                'input id="translator-download-link" type="text" disabled="disabled"'
-                . ' value="http://' . Translator_absoluteUrl($fn) . '"'
-            )
-            . '</p>' . PHP_EOL;
+        $url = 'http://' . Translator_absoluteUrl($filename);
+        $o .= $_Translator_views->downloadUrl($url);
     }
     return $o;
 }
