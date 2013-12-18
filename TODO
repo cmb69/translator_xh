@@ -5,3 +5,5 @@
 * lock files
 
 * fix for XH 1.6
+* check usage of empty()
+* success message after save

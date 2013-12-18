@@ -60,6 +60,26 @@ class Translator_Model
     }
 
     /**
+     * Returns the paths of a flag icon if it exists; <var>false</var> otherwise.
+     *
+     * @param string $language A language code.
+     *
+     * @return string
+     *
+     * @global array The paths of system files and folders.
+     */
+    public function flagIconPath($language)
+    {
+        global $pth;
+
+        $filename = $pth['folder']['flags'] . $language . '.gif';
+        if (!file_exists($filename)) {
+            $filename = false;
+        }
+        return $filename;
+    }
+
+    /**
      * Returns the path of the download folder.
      *
      * @return string
@@ -331,16 +351,15 @@ EOT;
      * @throws Exception
      *
      * @global array The paths of system files and folders.
-     * @global Translator_Model The translator model.
      */
     public function zipArchive($modules, $language)
     {
-        global $pth, $_Translator;
+        global $pth;
 
         include_once $pth['folder']['plugins'] . 'translator/zip.lib.php';
         $zip = new zipfile();
         foreach ($modules as $module) {
-            $source = $_Translator->filename($module, $language);
+            $source = $this->filename($module, $language);
             $destination = ltrim($source, './');
             if (file_exists($source)) {
                 $contents = file_get_contents($source);

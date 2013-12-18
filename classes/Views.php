@@ -26,6 +26,23 @@
 class Translator_Views
 {
     /**
+     * The translator model.
+     *
+     * @var Translator_Model
+     */
+    protected $model;
+
+    /**
+     * Initializes a new instance.
+     *
+     * @param Translator_Model $model A translator model.
+     */
+    public function __construct(Translator_Model $model)
+    {
+        $this->model = $model;
+    }
+
+    /**
      * Returns a string with special (X)HTML characters escaped as entities.
      *
      * @param string $string A string.
@@ -99,6 +116,8 @@ EOT;
     /**
      * Returns the system check view.
      *
+     * @param array $checks An array of system checks.
+     *
      * @return string (X)HTML.
      *
      * @global array The paths of system files and folders.
@@ -106,13 +125,12 @@ EOT;
      *
      * @todo fix empty elements
      */
-    public function systemCheck()
+    public function systemCheck($checks)
     {
         global $pth, $plugin_tx;
 
         $ptx = $plugin_tx['translator'];
         $imgdir = $pth['folder']['plugins'] . 'translator/images/';
-        $checks = Translator_systemChecks();
         $o = <<<EOT
 <!-- Translator_XH: System Check -->
 <h4>$ptx[syscheck_title]</h4>
@@ -130,6 +148,26 @@ EOT;
 
 EOT;
         return $this->xhtml($o);
+    }
+
+    /**
+     * Returns a language label.
+     *
+     * @param string $language A language code.
+     *
+     * @return string (X)HTML.
+     */
+    protected function languageLabel($language)
+    {
+        $filename = $this->model->flagIconPath($language);
+        if ($filename !== false) {
+            return tag(
+                'img src="' . $filename . '" alt="' . $language
+                . '" title="' . $language . '"'
+            );
+        } else {
+            return $language;
+        }
     }
 
     /**
@@ -167,12 +205,11 @@ EOT;
      *
      * @return string (X)HTML.
      *
-     * @global array  The localization of the plugins.
-     * @global object The translator model.
+     * @global array The localization of the plugins.
      */
     public function main($action, $url, $filename, $modules)
     {
-        global $plugin_tx, $_Translator;
+        global $plugin_tx;
 
         $ptx = $plugin_tx['translator'];
         $o = <<<EOT
@@ -182,7 +219,7 @@ EOT;
     <ul>
 
 EOT;
-        foreach ($_Translator->modules() as $plugin) {
+        foreach ($this->model->modules() as $plugin) {
             $o .= $this->module($plugin, $url, $modules);
         }
         $o .= <<<EOT
@@ -247,16 +284,15 @@ EOT;
      *
      * @return string XHTML.
      *
-     * @global array            The configuration of the plugins.
-     * @global Translator_Model The translator model.
+     * @global array The configuration of the plugins.
      */
     protected function editorRows($module, $sourceLanguage, $destinationLanguage)
     {
-        global $plugin_cf, $_Translator;
+        global $plugin_cf;
 
         $pcf = $plugin_cf['translator'];
-        $sourceTexts = $_Translator->readLanguage($module, $sourceLanguage);
-        $destinationTexts = $_Translator->readLanguage(
+        $sourceTexts = $this->model->readLanguage($module, $sourceLanguage);
+        $destinationTexts = $this->model->readLanguage(
             $module, $destinationLanguage
         );
         if ($pcf['sort_load']) {
@@ -290,8 +326,8 @@ EOT;
         $pcf = $plugin_cf['translator'];
         $ptx = $plugin_tx['translator'];
         $moduleName = ucfirst($module);
-        $sourceLabel = Translator_languageMarker($sourceLanguage);
-        $destinationLabel = Translator_languageMarker($destinationLanguage);
+        $sourceLabel = $this->languageLabel($sourceLanguage);
+        $destinationLabel = $this->languageLabel($destinationLanguage);
         $rows = $this->editorRows($module, $sourceLanguage, $destinationLanguage);
         $o = <<<EOT
 <!-- Translation_XH: Translation Editor -->
