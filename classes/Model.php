@@ -33,6 +33,33 @@ class Translator_Model
     protected $specialModules = array('CORE', 'CORE-LANGCONFIG', 'pluginloader');
 
     /**
+     * Returns a canonical URL, i.e. a URL with all . and .. resolved.
+     *
+     * @param string $url A URL.
+     *
+     * @return string
+     */
+    public function canonicalUrl($url)
+    {
+        $parts = explode('/', $url);
+        $i = 0;
+        while ($i < count($parts)) {
+            switch ($parts[$i]) {
+            case '.':
+                array_splice($parts, $i, 1);
+                break;
+            case '..':
+                array_splice($parts, $i-1, 2);
+                $i--;
+                break;
+            default:
+                $i++;
+            }
+        }
+        return implode('/', $parts);
+    }
+
+    /**
      * Returns the path of the download folder.
      *
      * @return string

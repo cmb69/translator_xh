@@ -290,7 +290,7 @@ EOT;
         global $plugin_tx;
 
         $ptx = $plugin_tx['translator'];
-        $o .= <<<EOT
+        $o = <<<EOT
 <p>
     $ptx[label_download_url]<br />
     <input id="translator-download-link" type="text" disabled="disabled" value="$url" />

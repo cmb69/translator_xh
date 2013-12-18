@@ -78,37 +78,6 @@ function Translator_systemCheck()
 }
 
 /**
- * Returns an absolute URL.
- *
- * @param string $url A relative URL.
- *
- * @return string
- *
- * @global string The script name.
- */
-function Translator_absoluteUrl($url)
-{
-    global $sn;
-
-    $parts = explode('/', $sn . $url);
-    $i = 0;
-    while ($i < count($parts)) {
-        switch ($parts[$i]) {
-        case '.':
-            array_splice($parts, $i, 1);
-            break;
-        case '..':
-            array_splice($parts, $i-1, 2);
-            $i--;
-            break;
-        default:
-            $i++;
-        }
-    }
-    return $_SERVER['SERVER_NAME'] . implode('/', $parts);
-}
-
-/**
  * Returns available plugins view.
  *
  * @return string
@@ -236,13 +205,14 @@ function Translator_save($module, $sourceLanguage, $destinationLanguage)
  *
  * @global array            The paths of system files and folders.
  * @global string           The (X)HTML fragment containing error messages.
+ * @global string           The script name.
  * @global array            The localization of the plugins.
  * @global Translator_Model The translator model.
  * @global object The translator views.
  */
 function Translator_zip($lang)
 {
-    global $pth, $e, $plugin_tx, $_Translator, $_Translator_views;
+    global $pth, $e, $sn, $plugin_tx, $_Translator, $_Translator_views;
 
     if (empty($_POST['translator-plugins'])) {
         $e .= '<li>' . $plugin_tx['translator']['error_no_plugin'] . '</li>'
@@ -264,7 +234,8 @@ function Translator_zip($lang)
     }
     $o = Translator_administration();
     if ($ok) {
-        $url = 'http://' . Translator_absoluteUrl($filename);
+        $url = 'http://' . $_SERVER['SERVER_NAME'] . $sn . $filename; // TODO
+        $url = $_Translator->canonicalUrl($url);
         $o .= $_Translator_views->downloadUrl($url);
     }
     return $o;
