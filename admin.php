@@ -253,7 +253,7 @@ if (isset($translator) && $translator == 'true') {
     switch ($admin) {
     case '':
         $o .= $_Translator_views->about(
-            TRANSLATOR_VERSION, $pth['folder']['plugin'] . 'translator.png'
+            $pth['folder']['plugin'] . 'translator.png'
         );
         $o .= Translator_systemCheck();
         break;

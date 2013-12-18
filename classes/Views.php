@@ -63,13 +63,13 @@ class Translator_Views
     /**
      * Returns the about view.
      *
-     * @param string $version  A version number.
      * @param string $iconPath A file path.
      *
      * @return string (X)HTML.
      */
-    public function about($version, $iconPath)
+    public function about($iconPath)
     {
+        $version = TRANSLATOR_VERSION;
         $o = <<<EOT
 <!-- Translator_XH: About -->
 <h1>Translator_XH</h1>
