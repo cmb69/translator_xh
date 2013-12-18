@@ -249,26 +249,12 @@ function Translator_zip($lang)
             . PHP_EOL;
         return Translator_administration();
     }
-    include_once $pth['folder']['plugins'] . 'translator/zip.lib.php';
-    $zip = new zipfile();
-    foreach ($_POST['translator-plugins'] as $plugin) {
-        $src = $_Translator->filename($plugin, $lang);
-        $dst = ltrim($src, './');
-        if (file_exists($src)) {
-            $cnt = file_get_contents($src);
-        } else {
-            e('missing', 'language', $src);
-            return Translator_administration();
-        }
-        $zip->addFile($cnt, $dst);
+    try {
+        $cnt = $_Translator->zipArchive($_POST['translator-plugins'], $lang);
+    } catch (Exception $e) {
+        $e .= '<li>' . $e->getMessage() . '</li>' . PHP_EOL;
+        return Translator_administration();
     }
-    $cnt = $zip->file();
-    //header('Content-Type: application/save-as');
-    //header('Content-Disposition: attachment; filename="'.$lang.'.zip"');
-    //header('Content-Length:'.strlen($cnt));
-    //header('Content-Transfer-Encoding: binary');
-    //echo $cnt;
-    //exit;
     $ok = true;
     $fn = $_Translator->downloadFolder() . $_POST['translator-filename'] . '.zip';
     //    if (file_exists($fn)) {

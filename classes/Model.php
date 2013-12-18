@@ -292,6 +292,38 @@ EOT;
         $contents = $this->phpCode($module, $texts);
         return file_put_contents($filename, $contents) !== false;
     }
+
+    /**
+     * Returns a ZIP archive.
+     *
+     * @param string $module   A module name.
+     * @param string $language A language code.
+     *
+     * @return string
+     *
+     * @throws Exception
+     *
+     * @global array The paths of system files and folders.
+     */
+    public function zipArchive($modules, $language)
+    {
+        global $pth;
+
+        include_once $pth['folder']['plugins'] . 'translator/zip.lib.php';
+        $zip = new zipfile();
+        foreach ($modules as $module) {
+            $source = $_Translator->filename($module, $language);
+            $destination = ltrim($source, './');
+            if (file_exists($source)) {
+                $contents = file_get_contents($source);
+            } else {
+                throw new Exception('missing language: ' . $source);
+            }
+            $zip->addFile($contents, $destination);
+        }
+        $contents = $zip->file();
+        return $contents;
+    }
 }
 
 ?>
