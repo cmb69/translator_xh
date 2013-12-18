@@ -255,11 +255,12 @@ EOT;
             $destinationText = $sourceText;
         }
         $class = isset($destinationTexts[$key]) ? '' : ' class="new"';
+        $displayKey = str_replace('_', ' ', $key);
         $sourceText = $this->hsc($sourceText);
         $destinationText = $this->hsc($destinationText);
         return <<<EOT
         <tr>
-            <td class="key">$key</td>
+            <td class="key">$displayKey</td>
             <td class="from">
                 <textarea rows="2" cols="40" readonly="readonly"
                     >$sourceText</textarea>

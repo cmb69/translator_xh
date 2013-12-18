@@ -2,7 +2,7 @@
 
 $plugin_cf['translator']['translate_from']="en";
 $plugin_cf['translator']['translate_to']="de";
-$plugin_cf['translator']['translate_fullscreen']="1";
+$plugin_cf['translator']['translate_fullscreen']="";
 
 $plugin_cf['translator']['folder_download']="downloads/";
 

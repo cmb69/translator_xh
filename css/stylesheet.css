@@ -1,44 +1,49 @@
-form#translator-list ul {
+#translator-list ul {
     list-style: none;
 }
 
-form#translator-list input[type="checkbox"] {
+#translator-list input[type="checkbox"] {
     margin-right: 1em;
 }
 
-input#translator-download-link {
+#translator-download-link {
     width: 99%;
 }
 
-form#translator {
+#translator {
     overflow: auto;
 }
 
-form#translator table {
+#translator table {
+    width: 100%;
     margin-top: 1em;
 }
 
-form#translator td.key {
+#translator td {
     vertical-align: top;
 }
 
-form#translator textarea {
+#translator td.key {
+    width: 5em;
+}
+
+#translator textarea {
     padding: 0;
 }
 
-form#translator td.from textarea {
+#translator td.from textarea {
     /* adjust the following to your needs */
-    width: 20em;
+    width: 100%;
     height: 4em;
 }
 
-form#translator td.to textarea {
+#translator td.to textarea {
     /* adjust the following to your needs */
-    width: 20em;
+    width: 100%;
     height: 4em;
 }
 
-form#translator td.to textarea.new {
+#translator td.to textarea.new {
     background: yellow;
     color: black;
 }
