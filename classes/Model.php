@@ -246,7 +246,7 @@ class Translator_Model
      *
      * @todo Use utf8_wordwrap() ;)
      */
-    public function copyrightHeader()
+    protected function copyrightHeader()
     {
         global $plugin_cf;
 
@@ -263,6 +263,8 @@ class Translator_Model
  *
  * $license
  */
+
+
 EOT;
         }
         return $o;
@@ -278,7 +280,7 @@ EOT;
      *
      * @return string
      */
-    public function elementDefinition($varname, $key1, $key2, $value)
+    protected function elementDefinition($varname, $key1, $key2, $value)
     {
         $value = addcslashes($value, "\r\n\t\v\f\\\$\"");
         return <<<EOT
@@ -294,10 +296,10 @@ EOT;
      *
      * @return string
      */
-    public function phpCode($module, $texts)
+    protected function phpCode($module, $texts)
     {
         $o = '<?php' . PHP_EOL . PHP_EOL
-            . $this->copyrightHeader() . PHP_EOL . PHP_EOL;
+            . $this->copyrightHeader();
         if (in_array($module, $this->specialModules)) {
             $varname = $this->moduleVarname($module);
             foreach ($texts as $key => $val) {
