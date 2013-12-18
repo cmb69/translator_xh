@@ -304,10 +304,11 @@ EOT;
      * @throws Exception
      *
      * @global array The paths of system files and folders.
+     * @global Translator_Model The translator model.
      */
     public function zipArchive($modules, $language)
     {
-        global $pth;
+        global $pth, $_Translator;
 
         include_once $pth['folder']['plugins'] . 'translator/zip.lib.php';
         $zip = new zipfile();
