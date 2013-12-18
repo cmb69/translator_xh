@@ -10,3 +10,4 @@
 * better headings (especially for translation editor)
 * mark changed language strings (compare with default.php)? (problem: works only for en->?? translation)
 * (de)select all translation for ZIP
+* add CSRF protection

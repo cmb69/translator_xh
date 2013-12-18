@@ -85,21 +85,12 @@ class Translator_Model
      * @return string
      *
      * @global array The paths of system files and folders.
-     * @global array The configuration of the plugins.
      */
     public function downloadFolder()
     {
-        global $pth, $plugin_cf;
+        global $pth;
 
-        $path = $pth['folder']['base'];
-        if ($plugin_cf['translator']['folder_download'] != '') {
-            $path .= rtrim($plugin_cf['translator']['folder_download'], '/')
-                . '/';
-        }
-        if (!file_exists($path)) {
-            mkdir($path, 0777, true);
-        }
-        return $path;
+        return $pth['folder']['downloads'];
     }
 
     /**
