@@ -144,6 +144,28 @@ function Translator_administration()
 }
 
 /**
+ * Returns a language marker.
+ *
+ * @param string $language A language code.
+ *
+ * @return string (X)HTML.
+ */
+function Translator_languageMarker($language)
+{
+    global $pth;
+
+    $filename = $pth['folder']['flags'] . $language . '.gif';
+    if (file_exists($filename)) {
+        return tag(
+            'img src="' . $filename . '" alt="' . $language
+            . '" title="' . $language . '"'
+        );
+    } else {
+        return $language;
+    }
+}
+
+/**
  * Returns the translation editor view.
  *
  * @param string $plugin A plugin name.
@@ -175,15 +197,8 @@ function Translator_edit($plugin, $from, $to)
         )
         . PHP_EOL
         . '<table>' . PHP_EOL;
-    foreach (array('from', 'to') as $lang) {
-        $fn = $pth['folder']['flags'] . $$lang . '.gif';
-        $lang_h = $lang . '_h';
-        $$lang_h = file_exists($fn)
-            ? tag(
-                'img src="' . $fn . '" alt="' . $$lang . '" title="' . $$lang . '"'
-            )
-            : $$lang;
-    }
+    $from_h = Translator_languageMarker($from);
+    $to_h = Translator_languageMarker($to);
     $o .= '<tr><th></th><th>' . $ptx['label_translate_from'] . '&nbsp;' . $from_h
         . '</th>'
         . '<th>' . $ptx['label_translate_to'] . '&nbsp;' . $to_h . '</th></tr>'
