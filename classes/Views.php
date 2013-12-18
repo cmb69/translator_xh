@@ -26,6 +26,22 @@
 class Translator_Views
 {
     /**
+     * Returns a string with special (X)HTML characters escaped as entities.
+     *
+     * @param string $string A string.
+     *
+     * @return string (X)HTML.
+     */
+    protected function hsc($string)
+    {
+        if (function_exists('XH_hsc')) {
+            return XH_hsc($string);
+        } else {
+            return htmlspecialchars($string, ENT_COMPAT, 'UTF-8');
+        }
+    }
+
+    /**
      * Returns a string with ETAGCs adjusted to the configured markup language.
      *
      * @param string $string A string.
@@ -195,10 +211,8 @@ EOT;
                 $destinationText = $sourceTexts[$key];
             }
             $class = isset($destinationTexts[$key]) ? '' : ' class="new"';
-            $sourceText = htmlspecialchars($sourceText, ENT_COMPAT, 'UTF-8');
-            $destinationText = htmlspecialchars(
-                $destinationText, ENT_COMPAT, 'UTF-8'
-            );
+            $sourceText = $this->hsc($sourceText);
+            $destinationText = $this->hsc($destinationText);
             $o .= <<<EOT
         <tr>
             <td class="key">$key</td>
