@@ -73,7 +73,7 @@ class Translator_Model
 
         $path = $pth['folder']['base'];
         if ($plugin_cf['translator']['folder_download'] != '') {
-            $path .= rtrim($plugin_cf['translator']['folder_download'] , '/')
+            $path .= rtrim($plugin_cf['translator']['folder_download'], '/')
                 . '/';
         }
         if (!file_exists($path)) {
@@ -323,7 +323,7 @@ EOT;
     /**
      * Returns a ZIP archive.
      *
-     * @param string $module   A module name.
+     * @param array  $modules  An array of module names.
      * @param string $language A language code.
      *
      * @return string

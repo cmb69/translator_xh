@@ -93,7 +93,7 @@ class Translator_Views
     <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>.</p>
 
 EOT;
-    return $this->xhtml($o);
+        return $this->xhtml($o);
     }
 
     /**
@@ -124,16 +124,17 @@ EOT;
     /**
      * Returns the main administration view.
      *
-     * @param string $action A URL to submit to.
-     * @param string $url    A URL to link to.
-     * @param string $fn     A language pack file name.
+     * @param string $action   A URL to submit to.
+     * @param string $url      A URL to link to.
+     * @param string $filename A language pack file name.
+     * @param array  $modules  An array of module names.
      *
      * @return string (X)HTML.
      *
      * @global array  The localization of the plugins.
      * @global object The translator model.
      */
-    public function main($action, $url, $fn, $modules)
+    public function main($action, $url, $filename, $modules)
     {
         global $plugin_tx, $_Translator;
 
@@ -151,7 +152,7 @@ EOT;
         $o .= <<<EOT
     </ul>
     $ptx[label_filename]
-    <input type="text" name="translator-filename" value="$fn" />.zip
+    <input type="text" name="translator-filename" value="$filename" />.zip
     <input type="submit" class="submit" value="$ptx[label_generate]" />
 </form>
 
@@ -162,9 +163,9 @@ EOT;
     /**
      * Returns a single table row of the translation editor.
      *
-     * @param string $key
-     * @param array  $sourceText
-     * @param array  $destinationTexts
+     * @param string $key              A language key.
+     * @param array  $sourceText       An array of original texts.
+     * @param array  $destinationTexts An array of translated texts.
      *
      * @return string XHTML.
      *
@@ -279,7 +280,7 @@ EOT;
     /**
      * Returns the download URL view.
      *
-     * @param string A URL.
+     * @param string $url A URL.
      *
      * @return string (X)HTML.
      *
@@ -293,7 +294,8 @@ EOT;
         $o = <<<EOT
 <p>
     $ptx[label_download_url]<br />
-    <input id="translator-download-link" type="text" disabled="disabled" value="$url" />
+    <input id="translator-download-link" type="text" disabled="disabled"
+           value="$url" />
 </p>
 
 EOT;

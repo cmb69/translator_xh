@@ -158,9 +158,9 @@ function Translator_edit($plugin, $from, $to)
 /**
  * Saves the translated language file and returns the main administration view.
  *
- * @param string $module A module name.
- * @param string $from   A language code to translate from.
- * @param string $to     A language code to translate to.
+ * @param string $module              A module name.
+ * @param string $sourceLanguage      A language code to translate from.
+ * @param string $destinationLanguage A language code to translate to.
  *
  * @return string
  *
@@ -254,8 +254,8 @@ if (isset($translator) && $translator == 'true') {
     case '':
         $o .= $_Translator_views->about(
             TRANSLATOR_VERSION, $pth['folder']['plugin'] . 'translator.png'
-            )
-            . Translator_systemCheck();
+        );
+        $o .= Translator_systemCheck();
         break;
     case 'plugin_main':
         switch ($action) {
