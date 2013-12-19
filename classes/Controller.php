@@ -189,7 +189,7 @@ class Translator_Controller
         $pcf = $plugin_cf['translator'];
         $module = $_GET['translator_module'];
         $sourceLanguage = $_GET['translator_from'];
-        $destinationLanugage = $_GET['translator_to'];
+        $destinationLanguage = $_GET['translator_to'];
         $destinationTexts = array();
         $sourceTexts = $this->model->readLanguage($module, $sourceLanguage);
         if ($pcf['sort_save']) {
