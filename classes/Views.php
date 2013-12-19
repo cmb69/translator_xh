@@ -213,7 +213,7 @@ EOT;
         $o = <<<EOT
 <!-- Translator_XH: Administration -->
 <form id="translator_list" action="$action" method="post">
-    <h1>$ptx[label_plugins]</h1>
+    <h1>$ptx[label_modules]</h1>
     <ul>
 
 EOT;
