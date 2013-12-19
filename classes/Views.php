@@ -293,7 +293,7 @@ EOT;
     {
         global $plugin_tx;
 
-        $ptx = $plugin_cf['translator'];
+        $ptx = $plugin_tx['translator'];
         if (isset($destinationTexts[$key])) {
             $destinationText = $destinationTexts[$key];
         } elseif ($ptx['default_translation'] != '') {
