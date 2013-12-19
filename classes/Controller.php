@@ -111,7 +111,7 @@ class Translator_Controller
 
         $pcf = $plugin_cf['translator'];
         $ptx = $plugin_tx['translator'];
-        $lang = empty($pcf['translate_to'])
+        $lang = ($pcf['translate_to'] == '')
             ? $sl
             : $pcf['translate_to'];
         $action = $sn . '?translator&amp;admin=plugin_main&amp;action=zip&amp;lang='

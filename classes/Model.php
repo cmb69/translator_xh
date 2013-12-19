@@ -240,9 +240,7 @@ class Translator_Model
 
         $pcf = $plugin_cf['translator'];
         $o = '';
-        if (!empty($pcf['translation_author'])
-            && !empty($pcf['translation_license'])
-        ) {
+        if ($pcf['translation_author'] != '' && $pcf['translation_license'] != '') {
             $year = date('Y');
             $license = wordwrap($pcf['translation_license'], 75, PHP_EOL . ' * ');
             $o .= <<<EOT

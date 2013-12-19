@@ -5,7 +5,6 @@
 * lock files
 
 * fix for XH 1.6
-* check usage of empty()
 * success message after save
 * better headings (especially for translation editor)
 * mark changed language strings (compare with default.php)? (problem: works only
@@ -13,3 +12,4 @@
 * (de)select all translation for ZIP
 * add CSRF protection
 * add system check for minimum XH version
+* properly namespace G/P parameters and CSS ids and classes
