@@ -75,6 +75,26 @@ class Translator_Controller
     }
 
     /**
+     * Returns a sanitized name resp. an array of sanitized names.
+     *
+     * Sanitizing means, that all invalid characters are stripped; valid
+     * characters are the 26 roman letters, the 10 arabic digits, the hyphen
+     * and the underscore.
+     *
+     * @param mixed $input A name resp. an array of names.
+     *
+     * @return mixed
+     */
+    protected function sanitizedName($input)
+    {
+        if (is_array($input)) {
+            return array_map(array($this, 'sanitizedName'), $input);
+        } else {
+            return preg_replace('/[^a-z0-9_-]/i', '', $input);
+        }
+    }
+
+    /**
      * Returns the system checks.
      *
      * @return array
@@ -147,10 +167,10 @@ class Translator_Controller
             . '&amp;translator_from=' . $pcf['translate_from']
             . '&amp;translator_to=' . $lang . '&amp;translator_module=';
         $filename = isset($_POST['translator_filename'])
-            ? $_POST['translator_filename']
+            ? $this->sanitizedName($_POST['translator_filename'])
             : '';
         $modules = isset($_POST['translator_modules'])
-            ? $_POST['translator_modules']
+            ? $this->sanitizedName($_POST['translator_modules'])
             : array();
         return $this->views->main($action, $url, $filename, $modules);
     }
@@ -181,9 +201,9 @@ class Translator_Controller
     {
         global $sn;
 
-        $module = $_GET['translator_module'];
-        $from = $_GET['translator_from'];
-        $to = $_GET['translator_to'];
+        $module = $this->sanitizedName($_GET['translator_module']);
+        $from = $this->sanitizedName($_GET['translator_from']);
+        $to = $this->sanitizedName($_GET['translator_to']);
         $url = $sn . '?translator&amp;admin=plugin_main&amp;action=save'
             . '&amp;translator_from=' . $from . '&amp;translator_to=' . $to
             . '&amp;translator_module=' . $module;
@@ -204,9 +224,9 @@ class Translator_Controller
 
         $pcf = $plugin_cf['translator'];
         $ptx = $plugin_tx['translator'];
-        $module = $_GET['translator_module'];
-        $sourceLanguage = $_GET['translator_from'];
-        $destinationLanguage = $_GET['translator_to'];
+        $module = $this->sanitizedName($_GET['translator_module']);
+        $sourceLanguage = $this->sanitizedName($_GET['translator_from']);
+        $destinationLanguage = $this->sanitizedName($_GET['translator_to']);
         $destinationTexts = array();
         $sourceTexts = $this->model->readLanguage($module, $sourceLanguage);
         if ($pcf['sort_save']) {
@@ -242,21 +262,20 @@ class Translator_Controller
         global $pth, $sn, $plugin_tx;
 
         $ptx = $plugin_tx['translator'];
-        $language = $_GET['translator_lang'];
+        $language = $this->sanitizedName($_GET['translator_lang']);
         if (empty($_POST['translator_modules'])) {
             return $this->views->message('warning', $ptx['error_no_module'])
                 . $this->administration();
         }
+        $modules = $this->sanitizedName($_POST['translator_modules']);
         try {
-            $contents = $this->model->zipArchive(
-                $_POST['translator_modules'], $language
-            );
+            $contents = $this->model->zipArchive($modules, $language);
         } catch (Exception $exception) {
             return $this->views->message('fail', $exception->getMessage())
                 . $this->administration();
         }
-        $filename = $this->model->downloadFolder()
-            . $_POST['translator_filename'] . '.zip';
+        $filename = $this->sanitizedName($_POST['translator_filename']);
+        $filename = $this->model->downloadFolder() . $filename . '.zip';
         $saved = file_put_contents($filename, $contents) !== false;
         $o = $this->views->saveMessage($saved, $filename)
             . $this->administration();

@@ -10,5 +10,4 @@
   for en->?? translation)
 * (de)select all translation for ZIP
 * add CSRF protection
-* sanitize input
 * explicitely guard Conroller::dispatch() (admin mode only)?
