@@ -158,18 +158,17 @@ class Translator_Controller
     /**
      * Returns the translation editor view.
      *
-     * @param string $module A module name.
-     * @param string $from   A language code to translate from.
-     * @param string $to     A language code to translate to.
-     *
      * @return string
      *
      * @global string The script name.
      */
-    protected function edit($module, $from, $to)
+    protected function edit()
     {
         global $sn;
 
+        $module = $_GET['translator_module'];
+        $from = $_GET['translator_from'];
+        $to = $_GET['translator_to'];
         $url = $sn . '?translator&amp;admin=plugin_main&amp;action=save'
             . '&amp;translator_from=' . $from . '&amp;translator_to=' . $to
             . '&amp;translator_module=' . $module;
@@ -179,19 +178,18 @@ class Translator_Controller
     /**
      * Saves the translated language file and returns the main administration view.
      *
-     * @param string $module              A module name.
-     * @param string $sourceLanguage      A language code to translate from.
-     * @param string $destinationLanguage A language code to translate to.
-     *
      * @return string
      *
      * @global array The configuration of the plugins.
      */
-    protected function save($module, $sourceLanguage, $destinationLanguage)
+    protected function save()
     {
         global $plugin_cf;
 
         $pcf = $plugin_cf['translator'];
+        $module = $_GET['translator_module'];
+        $sourceLanguage = $_GET['translator_from'];
+        $destinationLanugage = $_GET['translator_to'];
         $destinationTexts = array();
         $sourceTexts = $this->model->readLanguage($module, $sourceLanguage);
         if ($pcf['sort_save']) {
@@ -219,8 +217,6 @@ class Translator_Controller
      * Creates a ZIP file with the language files of the selected modules, and
      * returns the main administration view.
      *
-     * @param string $lang A language code.
-     *
      * @return string
      *
      * @global array  The paths of system files and folders.
@@ -228,10 +224,11 @@ class Translator_Controller
      * @global string The script name.
      * @global array  The localization of the plugins.
      */
-    protected function zip($lang)
+    protected function zip()
     {
         global $pth, $e, $sn, $plugin_tx;
 
+        $lang = $_GET['translator_lang'];
         if (empty($_POST['translator_modules'])) {
             $e .= '<li>' . $plugin_tx['translator']['error_no_module'] . '</li>'
                 . PHP_EOL;
@@ -289,21 +286,13 @@ class Translator_Controller
                     $o .= $this->administration();
                     break;
                 case 'edit':
-                    $o .= $this->edit(
-                        $_GET['translator_module'], $_GET['translator_from'],
-                        $_GET['translator_to']
-                    );
+                    $o .= $this->edit();
                     break;
                 case 'save':
-                    $o .= $this->save(
-                        $_GET['translator_module'], $_GET['translator_from'],
-                        $_GET['translator_to']
-                    );
+                    $o .= $this->save();
                     break;
                 case 'zip':
-                    $o .= $this->zip(
-                        $_GET['translator_lang']
-                    );
+                    $o .= $this->zip();
                     break;
                 }
                 break;
