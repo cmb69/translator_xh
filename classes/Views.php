@@ -78,6 +78,26 @@ class Translator_Views
     }
 
     /**
+     * Returns a message.
+     *
+     * @param string $type    A message type ('success', 'info', 'warning', 'fail').
+     * @param string $message A message.
+     *
+     * @return (X)HTML.
+     */
+    public function message($type, $message)
+    {
+        if (function_exists('XH_message')) {
+            return XH_message($type, $message);
+        } else {
+            $class = in_array($type, array('warning', 'fail'))
+                ? 'cmsimplecore_warning'
+                : '';
+            return '<p class="' . $class . '">' . $message . '</p>' . PHP_EOL;
+        }
+    }
+
+    /**
      * Returns the about view.
      *
      * @param string $iconPath A file path.

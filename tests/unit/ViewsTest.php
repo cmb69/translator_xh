@@ -32,6 +32,31 @@ class ViewsTest extends PHPUnit_Framework_TestCase
         $this->views = new Translator_Views($model);
     }
 
+    public function dataForMessage()
+    {
+        return array(
+            array('success', ''),
+            array('info', ''),
+            array('warning', 'cmsimplecore_warning'),
+            array('fail', 'cmsimplecore_warning')
+        );
+    }
+
+    /**
+     * @dataProvider dataForMessage
+     */
+    public function testMessage($type, $class)
+    {
+        $message = 'foo bar';
+        $matcher = array(
+            'tag' => 'p',
+            'attributes' => array('class' => $class),
+            'content' => $message
+        );
+        $actual = $this->views->message($type, $message);
+        $this->assertTag($matcher, $actual);
+    }
+
     public function testAboutShowsVersionInfo()
     {
         $matcher = array('tag' => 'p', 'content' => 'Version: test');
