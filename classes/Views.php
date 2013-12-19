@@ -287,17 +287,17 @@ EOT;
      *
      * @return string XHTML.
      *
-     * @global array The configuration of the plugins.
+     * @global array The localization of the plugins.
      */
     protected function editorRow($key, $sourceText, $destinationTexts)
     {
-        global $plugin_cf;
+        global $plugin_tx;
 
-        $pcf = $plugin_cf['translator'];
+        $ptx = $plugin_cf['translator'];
         if (isset($destinationTexts[$key])) {
             $destinationText = $destinationTexts[$key];
-        } elseif ($pcf['default_translation'] != '') {
-            $destinationText = $pcf['default_translation'];
+        } elseif ($ptx['default_translation'] != '') {
+            $destinationText = $ptx['default_translation'];
         } else {
             $destinationText = $sourceText;
         }

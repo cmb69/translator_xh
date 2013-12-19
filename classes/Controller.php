@@ -255,7 +255,7 @@ class Translator_Controller
         }
         foreach ($sourceTexts as $key => $dummy) {
             $value = stsl($_POST['translator_string_' . $key]);
-            if ($value != '' || $value != $pcf['default_translation']) {
+            if ($value != '' || $value != $ptx['default_translation']) {
                 $destinationTexts[$key] = $value;
             }
         }
@@ -285,7 +285,7 @@ class Translator_Controller
         $ptx = $plugin_tx['translator'];
         $language = $this->sanitizedName($_GET['translator_lang']);
         if (empty($_POST['translator_modules'])) {
-            return $this->views->message('warning', $ptx['error_no_module'])
+            return $this->views->message('warning', $ptx['message_no_module'])
                 . $this->administration();
         }
         $modules = $this->sanitizedName($_POST['translator_modules']);

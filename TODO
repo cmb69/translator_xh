@@ -1,5 +1,4 @@
 * config: default_language_pack plugins?
-* lock files
 * mark changed language strings (compare with default.php)? (problem: works only
   for en->?? translation)
 * explicitely guard Controller::dispatch() (admin mode only)?
@@ -7,5 +6,6 @@
 * add CSRF protection
 * fix for XH 1.6
 * better headings (especially for translation editor)
+* lock files
 
 * change zip structure for single plugins?
