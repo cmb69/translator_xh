@@ -83,7 +83,7 @@ class Translator_Views
      * @param string $type    A message type ('success', 'info', 'warning', 'fail').
      * @param string $message A message.
      *
-     * @return (X)HTML.
+     * @return string (X)HTML.
      */
     public function message($type, $message)
     {
@@ -95,6 +95,26 @@ class Translator_Views
                 : '';
             return '<p class="' . $class . '">' . $message . '</p>' . PHP_EOL;
         }
+    }
+
+    /**
+     * Returns a message after saving a file.
+     *
+     * @param bool   $success  Whether saving succeeded.
+     * @param string $filename A filename.
+     *
+     * @return string (X)HTML.
+     *
+     * @global array The localization of the plugins.
+     */
+    public function saveMessage($success, $filename)
+    {
+        global $plugin_tx;
+
+        $ptx = $plugin_tx['translator'];
+        $type = $success ? 'success' : 'fail';
+        $message = sprintf($ptx['message_save_' . $type], $filename);
+        return $this->message($type, $message);
     }
 
     /**

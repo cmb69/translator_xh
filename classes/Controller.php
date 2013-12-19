@@ -196,12 +196,14 @@ class Translator_Controller
      * @return string
      *
      * @global array The configuration of the plugins.
+     * @global array The localization of the plugins.
      */
     protected function save()
     {
-        global $plugin_cf;
+        global $plugin_cf, $plugin_tx;
 
         $pcf = $plugin_cf['translator'];
+        $ptx = $plugin_tx['translator'];
         $module = $_GET['translator_module'];
         $sourceLanguage = $_GET['translator_from'];
         $destinationLanguage = $_GET['translator_to'];
@@ -219,13 +221,10 @@ class Translator_Controller
         $saved = $this->model->writeLanguage(
             $module, $destinationLanguage, $destinationTexts
         );
-        if (!$saved) {
-            e(
-                'cntsave', 'language',
-                $this->model->filename($module, $destinationLanguage)
-            );
-        }
-        return $this->administration();
+        $filename = $this->model->filename($module, $destinationLanguage);
+        $o = $this->views->saveMessage($saved, $filename);
+        $o .= $this->administration();
+        return $o;
     }
 
     /**
@@ -235,37 +234,33 @@ class Translator_Controller
      * @return string
      *
      * @global array  The paths of system files and folders.
-     * @global string The (X)HTML fragment containing error messages.
      * @global string The script name.
      * @global array  The localization of the plugins.
      */
     protected function zip()
     {
-        global $pth, $e, $sn, $plugin_tx;
+        global $pth, $sn, $plugin_tx;
 
+        $ptx = $plugin_tx['translator'];
         $language = $_GET['translator_lang'];
         if (empty($_POST['translator_modules'])) {
-            $e .= '<li>' . $plugin_tx['translator']['error_no_module'] . '</li>'
-                . PHP_EOL;
-            return $this->administration();
+            return $this->views->message('warning', $ptx['error_no_module'])
+                . $this->administration();
         }
         try {
             $contents = $this->model->zipArchive(
                 $_POST['translator_modules'], $language
             );
         } catch (Exception $exception) {
-            $e .= '<li>' . $exception->getMessage() . '</li>' . PHP_EOL;
-            return $this->administration();
+            return $this->views->message('fail', $exception->getMessage())
+                . $this->administration();
         }
-        $ok = true;
-        $filename = $this->model->downloadFolder() . $_POST['translator_filename']
-            . '.zip';
-        if (file_put_contents($filename, $contents) === false) {
-            e('cntsave', 'file', $filename);
-            $ok = false;
-        }
-        $o = $this->administration();
-        if ($ok) {
+        $filename = $this->model->downloadFolder()
+            . $_POST['translator_filename'] . '.zip';
+        $saved = file_put_contents($filename, $contents) !== false;
+        $o = $this->views->saveMessage($saved, $filename)
+            . $this->administration();
+        if ($saved) {
             $url = 'http://' . $_SERVER['SERVER_NAME'] . $sn . $filename; // TODO
             $url = $this->model->canonicalUrl($url);
             $o .= $this->views->downloadUrl($url);

@@ -18,6 +18,9 @@ $plugin_tx['translator']['label_download_url']="Download url:";
 $plugin_tx['translator']['label_generate']="Generate Language Pack";
 $plugin_tx['translator']['label_save']="Save";
 
+$plugin_tx['translator']['message_save_success']="The file \"%s\" has been successfully saved.";
+$plugin_tx['translator']['message_save_fail']="The file \"%s\" couldn't be saved.";
+
 $plugin_tx['translator']['error_no_module']="You must select at least one module!";
 
 $plugin_tx['translator']['cf_translate_from']="The language to translate from.";
