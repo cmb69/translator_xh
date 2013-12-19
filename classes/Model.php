@@ -33,6 +33,25 @@ class Translator_Model
     protected $specialModules = array('CORE', 'CORE-LANGCONFIG', 'pluginloader');
 
     /**
+     * Returns the CMSimple_XH version.
+     *
+     * Unfortunately, we can't use CMSIMPLE_XH_VERSION directly, as this is set
+     * by CMSimple v4.
+     *
+     * @return string
+     */
+    public function xhVersion()
+    {
+        $version = CMSIMPLE_XH_VERSION;
+        if (strpos($version, 'CMSimple_XH') === 0) {
+            $version = substr($version, strlen('CMSimple_XH '));
+        } else {
+            $version = '0';
+        }
+        return $version;
+    }
+
+    /**
      * Returns a canonical URL, i.e. a URL with all . and .. resolved.
      *
      * @param string $url A URL.

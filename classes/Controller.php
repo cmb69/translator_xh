@@ -73,25 +73,6 @@ class Translator_Controller
     }
 
     /**
-     * Returns the CMSimple_XH version.
-     *
-     * Unfortunately, we can't use CMSIMPLE_XH_VERSION directly, as this is set
-     * by CMSimple v4.
-     *
-     * @return string
-     */
-    protected function xhVersion()
-    {
-        $version = CMSIMPLE_XH_VERSION;
-        if (strpos($version, 'CMSimple_XH') === 0) {
-            $version = substr($version, strlen('CMSimple_XH '));
-        } else {
-            $version = '0';
-        }
-        return $version;
-    }
-
-    /**
      * Returns a sanitized name resp. an array of sanitized names.
      *
      * Sanitizing means, that all invalid characters are stripped; valid
@@ -138,7 +119,7 @@ class Translator_Controller
         $checks[$ptx['syscheck_magic_quotes']]
             = !get_magic_quotes_runtime() ? 'ok' : 'fail';
         $checks[sprintf($ptx['syscheck_xhversion'], $requiredXhVersion)]
-            = version_compare($this->xhVersion(), $requiredXhVersion, 'ge')
+            = version_compare($this->model->xhVersion(), $requiredXhVersion, 'ge')
                 ? 'ok' : 'warn';
         $checks[$ptx['syscheck_encoding']]
             = (strtoupper($tx['meta']['codepage']) == 'UTF-8') ? 'ok' : 'warn';
