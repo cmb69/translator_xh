@@ -3,7 +3,6 @@
 
 * add CSRF protection
 * fix for XH 1.6
-* better headings (especially for translation editor)
 * lock files
 
 * change zip structure for single plugins?

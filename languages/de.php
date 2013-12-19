@@ -1,6 +1,6 @@
 <?php
 
-$plugin_tx['translator']['label_modules']="Übersetzbare Module:";
+$plugin_tx['translator']['default_translation']="*** NEUER SPRACH-TEXT ***";
 $plugin_tx['translator']['label_translate_from']="Übersetzen von:";
 $plugin_tx['translator']['label_translate_to']="Übersetzen nach:";
 $plugin_tx['translator']['label_filename']="Dateiname:";

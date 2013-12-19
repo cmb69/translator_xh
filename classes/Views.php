@@ -253,7 +253,7 @@ EOT;
         $o = <<<EOT
 <!-- Translator_XH: Administration -->
 <form id="translator_list" action="$action" method="post">
-    <h1>$ptx[label_modules]</h1>
+    <h1>Translator &ndash; $ptx[menu_main]</h1>
     <ul>
 
 EOT;
@@ -377,7 +377,7 @@ EOT;
         $o = <<<EOT
 <!-- Translation_XH: Translation Editor -->
 <form id="translator" method="post" action="$action">
-    <h1>$moduleName</h1>
+    <h1>Translator &ndash; $moduleName</h1>
     <input type="submit" class="submit" value="$ptx[label_save]" />
     <table>
         <tr>

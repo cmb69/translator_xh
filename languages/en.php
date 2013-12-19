@@ -4,7 +4,6 @@ $plugin_tx['translator']['default_translation']="*** NEW LANGUAGE STRING ***";
 $plugin_tx['translator']['label_download_url']="Download url:";
 $plugin_tx['translator']['label_filename']="Filename:";
 $plugin_tx['translator']['label_generate']="Generate Language Pack";
-$plugin_tx['translator']['label_modules']="Translatable Modules";
 $plugin_tx['translator']['label_save']="Save";
 $plugin_tx['translator']['label_translate_from']="Translate from:";
 $plugin_tx['translator']['label_translate_to']="Translate to:";
