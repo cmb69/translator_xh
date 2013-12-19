@@ -8,6 +8,8 @@
 * check usage of empty()
 * success message after save
 * better headings (especially for translation editor)
-* mark changed language strings (compare with default.php)? (problem: works only for en->?? translation)
+* mark changed language strings (compare with default.php)? (problem: works only
+  for en->?? translation)
 * (de)select all translation for ZIP
 * add CSRF protection
+* add system check for minimum XH version
