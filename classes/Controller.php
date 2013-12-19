@@ -156,6 +156,21 @@ class Translator_Controller
     }
 
     /**
+     * Returns the plugin info view.
+     *
+     * @return string (X)HTML.
+     *
+     * @global array The paths of system files and folders.
+     */
+    protected function info()
+    {
+        global $pth;
+
+        return $this->views->about($pth['folder']['plugin'] . 'translator.png')
+            . tag('hr') . $this->views->systemCheck($this->systemChecks());
+    }
+
+    /**
      * Returns the translation editor view.
      *
      * @return string
@@ -277,10 +292,7 @@ class Translator_Controller
             $o .= print_plugin_admin('on');
             switch ($admin) {
             case '':
-                $o .= $this->views->about(
-                    $pth['folder']['plugin'] . 'translator.png'
-                );
-                $o .= tag('hr') . $this->views->systemCheck($this->systemChecks());
+                $o .= $this->info();
                 break;
             case 'plugin_main':
                 switch ($action) {
