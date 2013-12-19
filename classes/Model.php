@@ -145,10 +145,11 @@ class Translator_Model
      */
     public function modules()
     {
-        $modules = array_merge(
-            array('CORE', 'CORE-LANGCONFIG'),
-            $this->plugins()
-        );
+        $modules = $this->plugins();
+        if (version_compare($this->xhVersion(), '1.6', 'lt')) {
+            array_unshift($modules, 'CORE-LANGCONFIG');
+        }
+        array_unshift($modules, 'CORE');
         return $modules;
     }
 

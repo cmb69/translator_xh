@@ -1,5 +1,4 @@
 * add CSRF protection
-* fix for XH 1.6
 * lock files
 
 * save via Ajax
