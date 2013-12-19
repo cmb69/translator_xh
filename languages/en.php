@@ -10,7 +10,7 @@ $plugin_tx['translator']['syscheck_xhversion']="CMSimple_XH version &ge; %s";
 
 $plugin_tx['translator']['menu_main']="Translations";
 
-$plugin_tx['translator']['label_plugins']="Translatable Plugins";
+$plugin_tx['translator']['label_modules']="Translatable Modules";
 $plugin_tx['translator']['label_translate_from']="Translate from:";
 $plugin_tx['translator']['label_translate_to']="Translate to:";
 $plugin_tx['translator']['label_filename']="Filename:";
@@ -18,7 +18,7 @@ $plugin_tx['translator']['label_download_url']="Download url:";
 $plugin_tx['translator']['label_generate']="Generate Language Pack";
 $plugin_tx['translator']['label_save']="Save";
 
-$plugin_tx['translator']['error_no_plugin']="You must select at least one plugin!";
+$plugin_tx['translator']['error_no_module']="You must select at least one module!";
 
 $plugin_tx['translator']['cf_translate_from']="The language to translate from.";
 $plugin_tx['translator']['cf_translate_to']="The language to translate to. Defaults to the current CMSimple language, if empty.";

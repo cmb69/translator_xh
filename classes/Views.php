@@ -185,7 +185,7 @@ EOT;
             : '';
         return <<<EOT
         <li>
-            <input type="checkbox" name="translator_plugins[]"
+            <input type="checkbox" name="translator_modules[]"
                    value="$module"$checked />
             <a href="$url$module">$name</a>
         </li>
@@ -217,8 +217,8 @@ EOT;
     <ul>
 
 EOT;
-        foreach ($this->model->modules() as $plugin) {
-            $o .= $this->module($plugin, $url, $modules);
+        foreach ($this->model->modules() as $module) {
+            $o .= $this->module($module, $url, $modules);
         }
         $o .= <<<EOT
     </ul>
@@ -314,8 +314,8 @@ EOT;
      *
      * @return string (X)HTML.
      *
-     * @global array            The configuration of the plugins.
-     * @global array            The localization of the plugins.
+     * @global array The configuration of the plugins.
+     * @global array The localization of the plugins.
      */
     public function editor($action, $module, $sourceLanguage, $destinationLanguage)
     {

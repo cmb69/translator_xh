@@ -117,7 +117,7 @@ class Translator_Controller
     }
 
     /**
-     * Returns available plugins view.
+     * Returns available modules view.
      *
      * @return string
      *
@@ -145,8 +145,8 @@ class Translator_Controller
         $filename = isset($_POST['translator_filename'])
             ? $_POST['translator_filename']
             : '';
-        $modules = isset($_POST['translator_plugins'])
-            ? $_POST['translator_plugins']
+        $modules = isset($_POST['translator_modules'])
+            ? $_POST['translator_modules']
             : array();
         return $this->views->main($action, $url, $filename, $modules);
     }
@@ -154,7 +154,7 @@ class Translator_Controller
     /**
      * Returns the translation editor view.
      *
-     * @param string $plugin A plugin name.
+     * @param string $module A module name.
      * @param string $from   A language code to translate from.
      * @param string $to     A language code to translate to.
      *
@@ -162,13 +162,13 @@ class Translator_Controller
      *
      * @global string The script name.
      */
-    protected function edit($plugin, $from, $to)
+    protected function edit($module, $from, $to)
     {
         global $sn;
 
         $url = $sn . '?translator&amp;admin=plugin_main&amp;action=save&amp;translator_from='
-            . $from . '&amp;translator_to=' . $to . '&amp;translator_module=' . $plugin;
-        return $this->views->editor($url, $plugin, $from, $to);
+            . $from . '&amp;translator_to=' . $to . '&amp;translator_module=' . $module;
+        return $this->views->editor($url, $module, $from, $to);
     }
 
     /**
@@ -211,7 +211,7 @@ class Translator_Controller
     }
 
     /**
-     * Creates a ZIP file with the language files of the selected plugins, and
+     * Creates a ZIP file with the language files of the selected modules, and
      * returns the main administration view.
      *
      * @param string $lang A language code.
@@ -227,13 +227,13 @@ class Translator_Controller
     {
         global $pth, $e, $sn, $plugin_tx;
 
-        if (empty($_POST['translator_plugins'])) {
-            $e .= '<li>' . $plugin_tx['translator']['error_no_plugin'] . '</li>'
+        if (empty($_POST['translator_modules'])) {
+            $e .= '<li>' . $plugin_tx['translator']['error_no_module'] . '</li>'
                 . PHP_EOL;
             return $this->administration();
         }
         try {
-            $cnt = $this->model->zipArchive($_POST['translator_plugins'], $lang);
+            $cnt = $this->model->zipArchive($_POST['translator_modules'], $lang);
         } catch (Exception $ex) {
             $e .= '<li>' . $ex->getMessage() . '</li>' . PHP_EOL;
             return $this->administration();
