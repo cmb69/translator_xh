@@ -228,22 +228,24 @@ class Translator_Controller
     {
         global $pth, $e, $sn, $plugin_tx;
 
-        $lang = $_GET['translator_lang'];
+        $language = $_GET['translator_lang'];
         if (empty($_POST['translator_modules'])) {
             $e .= '<li>' . $plugin_tx['translator']['error_no_module'] . '</li>'
                 . PHP_EOL;
             return $this->administration();
         }
         try {
-            $cnt = $this->model->zipArchive($_POST['translator_modules'], $lang);
-        } catch (Exception $ex) {
-            $e .= '<li>' . $ex->getMessage() . '</li>' . PHP_EOL;
+            $contents = $this->model->zipArchive(
+                $_POST['translator_modules'], $language
+            );
+        } catch (Exception $exception) {
+            $e .= '<li>' . $exception->getMessage() . '</li>' . PHP_EOL;
             return $this->administration();
         }
         $ok = true;
         $filename = $this->model->downloadFolder() . $_POST['translator_filename']
             . '.zip';
-        if (file_put_contents($filename, $cnt) === false) {
+        if (file_put_contents($filename, $contents) === false) {
             e('cntsave', 'file', $filename);
             $ok = false;
         }
