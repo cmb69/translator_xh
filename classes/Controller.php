@@ -56,6 +56,25 @@ class Translator_Controller
     }
 
     /**
+     * Returns the CMSimple_XH version.
+     *
+     * Unfortunately, we can't use CMSIMPLE_XH_VERSION directly, as this is set
+     * by CMSimple v4.
+     *
+     * @return string
+     */
+    protected function xhVersion()
+    {
+        $version = CMSIMPLE_XH_VERSION;
+        if (strpos($version, 'CMSimple_XH') === 0) {
+            $version = substr($version, strlen('CMSimple_XH '));
+        } else {
+            $version = '0';
+        }
+        return $version;
+    }
+
+    /**
      * Returns the system checks.
      *
      * @return array
@@ -69,16 +88,19 @@ class Translator_Controller
         global $pth, $tx, $plugin_tx;
 
         $ptx = $plugin_tx['translator'];
-        $requiredVersion = '5.0.0';
+        $requiredPhpVersion = '5.0.0';
+        $requiredXhVersion = '1.5';
         $checks = array();
-        $checks[sprintf($ptx['syscheck_phpversion'], $requiredVersion)]
-            = version_compare(PHP_VERSION, $requiredVersion, 'ge') ? 'ok' : 'fail';
+        $checks[sprintf($ptx['syscheck_phpversion'], $requiredPhpVersion)]
+            = version_compare(PHP_VERSION, $requiredPhpVersion, 'ge') ? 'ok' : 'fail';
         foreach (array('zlib') as $extension) {
             $checks[sprintf($ptx['syscheck_extension'], $extension)]
                 = extension_loaded($extension) ? 'ok' : 'fail';
         }
         $checks[$ptx['syscheck_magic_quotes']]
             = !get_magic_quotes_runtime() ? 'ok' : 'fail';
+        $checks[sprintf($ptx['syscheck_xhversion'], $requiredXhVersion)]
+            = version_compare($this->xhVersion(), $requiredXhVersion, 'ge') ? 'ok' : 'warn';
         $checks[$ptx['syscheck_encoding']]
             = (strtoupper($tx['meta']['codepage']) == 'UTF-8') ? 'ok' : 'warn';
         $folders = array();

@@ -6,6 +6,7 @@ $plugin_tx['translator']['syscheck_extension']="Extension '%s' loaded";
 $plugin_tx['translator']['syscheck_encoding']="Encoding 'UTF-8' configured";
 $plugin_tx['translator']['syscheck_magic_quotes']="magic_quotes_runtime off";
 $plugin_tx['translator']['syscheck_writable']="'%s' writable";
+$plugin_tx['translator']['syscheck_xhversion']="CMSimple_XH version &ge; %s";
 
 $plugin_tx['translator']['menu_main']="Translations";
 

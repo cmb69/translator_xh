@@ -6,6 +6,7 @@ $plugin_tx['translator']['syscheck_extension']="Erweiterung '%s' geladen";
 $plugin_tx['translator']['syscheck_encoding']="UTF-8-Kodierung eingestellt";
 $plugin_tx['translator']['syscheck_magic_quotes']="magic_quotes_runtime off";
 $plugin_tx['translator']['syscheck_writable']="'%s' beschreibbar";
+$plugin_tx['translator']['syscheck_xhversion']="CMSimple_XH Version &ge; %s";
 $plugin_tx['translator']['menu_main']="Übersetzungen";
 $plugin_tx['translator']['label_plugins']="Übersetzbare Plugins:";
 $plugin_tx['translator']['label_translate_from']="Übersetzen von:";

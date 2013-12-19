@@ -11,5 +11,4 @@
   for en->?? translation)
 * (de)select all translation for ZIP
 * add CSRF protection
-* add system check for minimum XH version
 * properly namespace G/P parameters and CSS ids and classes
