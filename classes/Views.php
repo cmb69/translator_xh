@@ -301,18 +301,18 @@ EOT;
         } else {
             $destinationText = $sourceText;
         }
-        $class = isset($destinationTexts[$key]) ? '' : ' class="new"';
+        $class = isset($destinationTexts[$key]) ? '' : ' class="translator_new"';
         $displayKey = str_replace('_', ' ', $key);
         $sourceText = $this->hsc($sourceText);
         $destinationText = $this->hsc($destinationText);
         return <<<EOT
         <tr>
-            <td class="key">$displayKey</td>
-            <td class="from">
+            <td class="translator_key">$displayKey</td>
+            <td class="translator_from">
                 <textarea rows="2" cols="40" readonly="readonly"
                     >$sourceText</textarea>
             </td>
-            <td class="to">
+            <td class="translator_to">
                 <textarea name="translator_string_$key"$class rows="2" cols="40"
                     >$destinationText</textarea>
             </td>

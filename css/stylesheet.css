@@ -23,7 +23,7 @@
     vertical-align: top;
 }
 
-#translator td.key {
+#translator .translator_key {
     width: 5em;
 }
 
@@ -31,19 +31,19 @@
     padding: 0;
 }
 
-#translator td.from textarea {
+#translator .translator_from textarea {
     /* adjust the following to your needs */
     width: 100%;
     height: 4em;
 }
 
-#translator td.to textarea {
+#translator .translator_to textarea {
     /* adjust the following to your needs */
     width: 100%;
     height: 4em;
 }
 
-#translator td.to textarea.new {
+#translator .translator_to .translator_new {
     background: yellow;
     color: black;
 }
