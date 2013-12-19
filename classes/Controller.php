@@ -92,7 +92,8 @@ class Translator_Controller
         $requiredXhVersion = '1.5';
         $checks = array();
         $checks[sprintf($ptx['syscheck_phpversion'], $requiredPhpVersion)]
-            = version_compare(PHP_VERSION, $requiredPhpVersion, 'ge') ? 'ok' : 'fail';
+            = version_compare(PHP_VERSION, $requiredPhpVersion, 'ge')
+                ? 'ok' : 'fail';
         foreach (array('zlib') as $extension) {
             $checks[sprintf($ptx['syscheck_extension'], $extension)]
                 = extension_loaded($extension) ? 'ok' : 'fail';
@@ -100,7 +101,8 @@ class Translator_Controller
         $checks[$ptx['syscheck_magic_quotes']]
             = !get_magic_quotes_runtime() ? 'ok' : 'fail';
         $checks[sprintf($ptx['syscheck_xhversion'], $requiredXhVersion)]
-            = version_compare($this->xhVersion(), $requiredXhVersion, 'ge') ? 'ok' : 'warn';
+            = version_compare($this->xhVersion(), $requiredXhVersion, 'ge')
+                ? 'ok' : 'warn';
         $checks[$ptx['syscheck_encoding']]
             = (strtoupper($tx['meta']['codepage']) == 'UTF-8') ? 'ok' : 'warn';
         $folders = array();
@@ -126,6 +128,8 @@ class Translator_Controller
      * @global string The current language.
      * @global array  The configuration of the plugins.
      * @global array  The localization of the plugins.
+     *
+     * @todo Improve variable names.
      */
     protected function administration()
     {
@@ -136,12 +140,12 @@ class Translator_Controller
         $lang = ($pcf['translate_to'] == '')
             ? $sl
             : $pcf['translate_to'];
-        $action = $sn . '?translator&amp;admin=plugin_main&amp;action=zip&amp;translator_lang='
-            . $lang;
+        $action = $sn . '?translator&amp;admin=plugin_main&amp;action=zip'
+            . '&amp;translator_lang=' . $lang;
         $url = $sn . '?translator&amp;admin=plugin_main&amp;action=edit'
             . ($pcf['translate_fullscreen'] ? '&amp;print' : '')
-            . '&amp;translator_from=' . $pcf['translate_from'] . '&amp;translator_to='
-            . $lang . '&amp;translator_module=';
+            . '&amp;translator_from=' . $pcf['translate_from']
+            . '&amp;translator_to=' . $lang . '&amp;translator_module=';
         $filename = isset($_POST['translator_filename'])
             ? $_POST['translator_filename']
             : '';
@@ -166,8 +170,9 @@ class Translator_Controller
     {
         global $sn;
 
-        $url = $sn . '?translator&amp;admin=plugin_main&amp;action=save&amp;translator_from='
-            . $from . '&amp;translator_to=' . $to . '&amp;translator_module=' . $module;
+        $url = $sn . '?translator&amp;admin=plugin_main&amp;action=save'
+            . '&amp;translator_from=' . $from . '&amp;translator_to=' . $to
+            . '&amp;translator_module=' . $module;
         return $this->views->editor($url, $module, $from, $to);
     }
 
@@ -284,13 +289,21 @@ class Translator_Controller
                     $o .= $this->administration();
                     break;
                 case 'edit':
-                    $o .= $this->edit($_GET['translator_module'], $_GET['translator_from'], $_GET['translator_to']);
+                    $o .= $this->edit(
+                        $_GET['translator_module'], $_GET['translator_from'],
+                        $_GET['translator_to']
+                    );
                     break;
                 case 'save':
-                    $o .= $this->save($_GET['translator_module'], $_GET['translator_from'], $_GET['translator_to']);
+                    $o .= $this->save(
+                        $_GET['translator_module'], $_GET['translator_from'],
+                        $_GET['translator_to']
+                    );
                     break;
                 case 'zip':
-                    $o .= $this->zip($_GET['translator_lang']);
+                    $o .= $this->zip(
+                        $_GET['translator_lang']
+                    );
                     break;
                 }
                 break;

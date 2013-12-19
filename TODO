@@ -11,3 +11,5 @@
   for en->?? translation)
 * (de)select all translation for ZIP
 * add CSRF protection
+* improve abbrev'd variables in Controller::zip()
+* replace params of Controller::edit(), ::save() and ::zip()
