@@ -76,7 +76,7 @@
     </target>
 
 <!--    <target name="js-doc">
-        <exec command="jsdoc -destination doc/js pagemanager.js" checkreturn="true"/>
+        <exec command="jsdoc -d doc/js translator.js" checkreturn="true"/>
     </target>
 -->
     <target name="doc" depends="php-doc"/>
@@ -97,11 +97,17 @@
                 </replacetokens>
             </filterchain>
         </move>
+        <jsMin targetDir="dist" suffix="" failonerror="true">
+            <fileset dir="export">
+                <include name="translator.js"/>
+            </fileset>
+        </jsMin>
         <move todir="dist">
             <fileset dir="export">
                 <exclude name="translator.komodoproject"/>
                 <exclude name="build.xml"/>
                 <exclude name="phpcompatinfo.xml"/>
+                <exclude name="translator.js"/>
             </fileset>
         </move>
         <delete dir="export"/>

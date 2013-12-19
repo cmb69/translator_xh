@@ -163,6 +163,7 @@ class Translator_Controller
      * @global array  The paths of system files and folders.
      * @global string The script name.
      * @global string The current language.
+     * @global string The document fragment to insert into the head element.
      * @global array  The configuration of the plugins.
      * @global array  The localization of the plugins.
      *
@@ -170,10 +171,13 @@ class Translator_Controller
      */
     protected function administration()
     {
-        global $pth, $sn, $sl, $plugin_cf, $plugin_tx;
+        global $pth, $sn, $sl, $hjs, $plugin_cf, $plugin_tx;
 
         $pcf = $plugin_cf['translator'];
         $ptx = $plugin_tx['translator'];
+        $filename = $pth['folder']['plugins'] . 'translator/translator.js';
+        $hjs .= '<script type="text/javascript" src="' . $filename
+            . '"></script>' . PHP_EOL;
         $lang = ($pcf['translate_to'] == '')
             ? $sl
             : $pcf['translate_to'];

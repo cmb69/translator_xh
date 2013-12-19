@@ -6,7 +6,6 @@
 
 * mark changed language strings (compare with default.php)? (problem: works only
   for en->?? translation)
-* (de)select all translation for ZIP
 * explicitely guard Conroller::dispatch() (admin mode only)?
 
 * add CSRF protection

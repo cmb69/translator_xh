@@ -262,9 +262,16 @@ EOT;
         }
         $o .= <<<EOT
     </ul>
-    $ptx[label_filename]
-    <input type="text" name="translator_filename" value="$filename" />.zip
-    <input type="submit" class="submit" value="$ptx[label_generate]" />
+    <p>
+        <button id="translator_select_all" type="button">Select all</button>
+        <button id="translator_deselect_all" type="button" disabled="disabled"
+            >Deselect all</button>
+    </p>
+    <p>
+        $ptx[label_filename]
+        <input type="text" name="translator_filename" value="$filename" />.zip
+        <input type="submit" class="submit" value="$ptx[label_generate]" />
+    </p>
 </form>
 
 EOT;
