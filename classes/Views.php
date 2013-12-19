@@ -185,7 +185,7 @@ EOT;
             : '';
         return <<<EOT
         <li>
-            <input type="checkbox" name="translator-plugins[]"
+            <input type="checkbox" name="translator_plugins[]"
                    value="$module"$checked />
             <a href="$url$module">$name</a>
         </li>
@@ -212,7 +212,7 @@ EOT;
         $ptx = $plugin_tx['translator'];
         $o = <<<EOT
 <!-- Translator_XH: Administration -->
-<form id="translator-list" action="$action" method="post">
+<form id="translator_list" action="$action" method="post">
     <h1>$ptx[label_plugins]</h1>
     <ul>
 
@@ -223,7 +223,7 @@ EOT;
         $o .= <<<EOT
     </ul>
     $ptx[label_filename]
-    <input type="text" name="translator-filename" value="$filename" />.zip
+    <input type="text" name="translator_filename" value="$filename" />.zip
     <input type="submit" class="submit" value="$ptx[label_generate]" />
 </form>
 
@@ -266,7 +266,7 @@ EOT;
                     >$sourceText</textarea>
             </td>
             <td class="to">
-                <textarea name="translator-$key"$class rows="2" cols="40"
+                <textarea name="translator_string_$key"$class rows="2" cols="40"
                     >$destinationText</textarea>
             </td>
         </tr>
@@ -364,7 +364,7 @@ EOT;
         $o = <<<EOT
 <p>
     $ptx[label_download_url]<br />
-    <input id="translator-download-link" type="text" disabled="disabled"
+    <input id="translator_download_link" type="text" disabled="disabled"
            value="$url" />
 </p>
 

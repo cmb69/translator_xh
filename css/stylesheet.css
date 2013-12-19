@@ -1,12 +1,12 @@
-#translator-list ul {
+#translator_list ul {
     list-style: none;
 }
 
-#translator-list input[type="checkbox"] {
+#translator_list input[type="checkbox"] {
     margin-right: 1em;
 }
 
-#translator-download-link {
+#translator_download_link {
     width: 99%;
 }
 

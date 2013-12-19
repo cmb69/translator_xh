@@ -136,17 +136,17 @@ class Translator_Controller
         $lang = ($pcf['translate_to'] == '')
             ? $sl
             : $pcf['translate_to'];
-        $action = $sn . '?translator&amp;admin=plugin_main&amp;action=zip&amp;lang='
+        $action = $sn . '?translator&amp;admin=plugin_main&amp;action=zip&amp;translator_lang='
             . $lang;
         $url = $sn . '?translator&amp;admin=plugin_main&amp;action=edit'
             . ($pcf['translate_fullscreen'] ? '&amp;print' : '')
-            . '&amp;from=' . $pcf['translate_from'] . '&amp;to='
-            . $lang . '&amp;plugin=';
-        $filename = isset($_POST['translator-filename'])
-            ? $_POST['translator-filename']
+            . '&amp;translator_from=' . $pcf['translate_from'] . '&amp;translator_to='
+            . $lang . '&amp;translator_module=';
+        $filename = isset($_POST['translator_filename'])
+            ? $_POST['translator_filename']
             : '';
-        $modules = isset($_POST['translator-plugins'])
-            ? $_POST['translator-plugins']
+        $modules = isset($_POST['translator_plugins'])
+            ? $_POST['translator_plugins']
             : array();
         return $this->views->main($action, $url, $filename, $modules);
     }
@@ -166,8 +166,8 @@ class Translator_Controller
     {
         global $sn;
 
-        $url = $sn . '?translator&amp;admin=plugin_main&amp;action=save&amp;from='
-            . $from . '&amp;to=' . $to . '&amp;plugin=' . $plugin;
+        $url = $sn . '?translator&amp;admin=plugin_main&amp;action=save&amp;translator_from='
+            . $from . '&amp;translator_to=' . $to . '&amp;translator_module=' . $plugin;
         return $this->views->editor($url, $plugin, $from, $to);
     }
 
@@ -193,7 +193,7 @@ class Translator_Controller
             ksort($sourceTexts);
         }
         foreach ($sourceTexts as $key => $dummy) {
-            $value = stsl($_POST['translator-' . $key]);
+            $value = stsl($_POST['translator_string_' . $key]);
             if ($value != '' || $value != $pcf['default_translation']) {
                 $destinationTexts[$key] = $value;
             }
@@ -227,19 +227,19 @@ class Translator_Controller
     {
         global $pth, $e, $sn, $plugin_tx;
 
-        if (empty($_POST['translator-plugins'])) {
+        if (empty($_POST['translator_plugins'])) {
             $e .= '<li>' . $plugin_tx['translator']['error_no_plugin'] . '</li>'
                 . PHP_EOL;
             return $this->administration();
         }
         try {
-            $cnt = $this->model->zipArchive($_POST['translator-plugins'], $lang);
+            $cnt = $this->model->zipArchive($_POST['translator_plugins'], $lang);
         } catch (Exception $ex) {
             $e .= '<li>' . $ex->getMessage() . '</li>' . PHP_EOL;
             return $this->administration();
         }
         $ok = true;
-        $filename = $this->model->downloadFolder() . $_POST['translator-filename']
+        $filename = $this->model->downloadFolder() . $_POST['translator_filename']
             . '.zip';
         if (file_put_contents($filename, $cnt) === false) {
             e('cntsave', 'file', $filename);
@@ -284,13 +284,13 @@ class Translator_Controller
                     $o .= $this->administration();
                     break;
                 case 'edit':
-                    $o .= $this->edit($_GET['plugin'], $_GET['from'], $_GET['to']);
+                    $o .= $this->edit($_GET['translator_module'], $_GET['translator_from'], $_GET['translator_to']);
                     break;
                 case 'save':
-                    $o .= $this->save($_GET['plugin'], $_GET['from'], $_GET['to']);
+                    $o .= $this->save($_GET['translator_module'], $_GET['translator_from'], $_GET['translator_to']);
                     break;
                 case 'zip':
-                    $o .= $this->zip($_GET['lang']);
+                    $o .= $this->zip($_GET['translator_lang']);
                     break;
                 }
                 break;
