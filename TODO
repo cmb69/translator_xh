@@ -4,10 +4,11 @@
 * check and document pl.php
 * lock files
 
-* fix for XH 1.6
-* better headings (especially for translation editor)
 * mark changed language strings (compare with default.php)? (problem: works only
   for en->?? translation)
 * (de)select all translation for ZIP
-* add CSRF protection
 * explicitely guard Conroller::dispatch() (admin mode only)?
+
+* add CSRF protection
+* fix for XH 1.6
+* better headings (especially for translation editor)

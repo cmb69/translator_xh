@@ -56,6 +56,23 @@ class Translator_Controller
     }
 
     /**
+     * Returns the absolute URL of the folder of the requested index.php.
+     *
+     * @return string
+     *
+     * @global string The script name.
+     */
+    protected function baseUrl()
+    {
+        global $sn;
+
+        return 'http'
+            . (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 's' : '')
+            . '://' . $_SERVER['HTTP_HOST']
+            . preg_replace('/index\.php$/', '', $sn);
+    }
+
+    /**
      * Returns the CMSimple_XH version.
      *
      * Unfortunately, we can't use CMSIMPLE_XH_VERSION directly, as this is set
@@ -280,7 +297,7 @@ class Translator_Controller
         $o = $this->views->saveMessage($saved, $filename)
             . $this->administration();
         if ($saved) {
-            $url = 'http://' . $_SERVER['SERVER_NAME'] . $sn . $filename; // TODO
+            $url = $this->baseUrl() . $filename;
             $url = $this->model->canonicalUrl($url);
             $o .= $this->views->downloadUrl($url);
         }
