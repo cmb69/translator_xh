@@ -4,6 +4,8 @@ require_once 'vfsStream/vfsStream.php';
 
 require_once './classes/Model.php';
 
+define('CMSIMPLE_XH_VERSION', 'CMSimple_XH 1.5.9');
+
 class ModelTest extends PHPUnit_Framework_TestCase
 {
     protected $basePath;
