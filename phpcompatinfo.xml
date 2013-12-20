@@ -12,10 +12,10 @@
         <exclude id="translator">
             <directory name="config"/>
             <directory name="css"/>
-            <directory name="data"/>
             <directory name="help"/>
             <directory name="images"/>
             <directory name="languages"/>
+            <directory name="tests"/>
         </exclude>
     </excludes>
 </phpcompatinfo>

@@ -106,13 +106,13 @@ class Translator_Controller
         global $pth, $tx, $plugin_tx;
 
         $ptx = $plugin_tx['translator'];
-        $requiredPhpVersion = '5.0.0';
+        $requiredPhpVersion = '5.1.0';
         $requiredXhVersion = '1.5';
         $checks = array();
         $checks[sprintf($ptx['syscheck_phpversion'], $requiredPhpVersion)]
             = version_compare(PHP_VERSION, $requiredPhpVersion, 'ge')
                 ? 'ok' : 'fail';
-        foreach (array('zlib') as $extension) {
+        foreach (array('pcre', 'zlib') as $extension) {
             $checks[sprintf($ptx['syscheck_extension'], $extension)]
                 = extension_loaded($extension) ? 'ok' : 'fail';
         }
