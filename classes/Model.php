@@ -224,9 +224,13 @@ class Translator_Model
         $texts = array();
         $filename = $this->filename($module, $lang);
         if (file_exists($filename)) {
-            include $filename;
+            $varname = $this->moduleVarname($module);
+            if (function_exists('XH_includeVar')) {
+                $$varname = XH_includeVar($filename, $varname);
+            } else {
+                include $filename;
+            }
             if (in_array($module, $this->specialModules)) {
-                $varname = $this->moduleVarname($module);
                 foreach ($$varname as $key1 => $val1) {
                     foreach ($val1 as $key2 => $val2) {
                         if ($module != 'pluginloader'
@@ -345,7 +349,12 @@ EOT;
     {
         $filename = $this->filename($module, $lang);
         $contents = $this->phpCode($module, $texts);
-        return file_put_contents($filename, $contents) !== false;
+        if (function_exists('XH_writeFile')) {
+            $func = 'XH_writeFile';
+        } else {
+            $func = 'file_put_contents';
+        }
+        return $func($filename, $contents) !== false;
     }
 
     /**
