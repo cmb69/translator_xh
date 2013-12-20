@@ -266,10 +266,11 @@ EOT;
         }
         $o .= <<<EOT
     </ul>
-    <p>
-        <button id="translator_select_all" type="button">Select all</button>
+    <p style="display: none">
+        <button id="translator_select_all" type="button"
+            >$ptx[label_select_all]</button>
         <button id="translator_deselect_all" type="button" disabled="disabled"
-            >Deselect all</button>
+            >$ptx[label_deselect_all]</button>
     </p>
     <p>
         $ptx[label_filename]

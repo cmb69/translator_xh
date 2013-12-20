@@ -1,12 +1,14 @@
 <?php
 
 $plugin_tx['translator']['default_translation']="*** NEUER SPRACH-TEXT ***";
+$plugin_tx['translator']['label_deselect_all']="Alle abwählen";
 $plugin_tx['translator']['label_translate_from']="Übersetzen von:";
 $plugin_tx['translator']['label_translate_to']="Übersetzen nach:";
 $plugin_tx['translator']['label_filename']="Dateiname:";
 $plugin_tx['translator']['label_download_url']="Download-URL:";
 $plugin_tx['translator']['label_generate']="Sprach-Paket erzeugen";
 $plugin_tx['translator']['label_save']="Speichern";
+$plugin_tx['translator']['label_select_all']="Alle auswählen";
 $plugin_tx['translator']['menu_main']="Übersetzungen";
 $plugin_tx['translator']['message_no_module']="Sie müssen wenigstens ein Modul wählen!";
 $plugin_tx['translator']['message_save_success']="Die Datei \"%s\" wurde erfolgreich gespeichert.";
