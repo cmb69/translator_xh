@@ -1,3 +1,19 @@
+Version 1beta5 - released 2013-12-20
+cmb     improved security wrt. XSS and CSRF
+cmb     lifted requirements to PHP 5.1
+cmb     removed translation-hints support
+cmb     removed config option folder_download
+cmb     added support for XH 1.6
+cmb     added config option translate_fullscreen
+cmb     added buttons to (de)select all modules for zipping
+cmb     added version.nfo
+cmb     added metaconfig.php for XH 1.6
+cmb     added plugin icon
+cmb     added Polish translation (contributed by learnandcode)
+cmb     updated English and added German manual
+cmb     refactored to MVC architecture
+cmb     improved QA (Phing, PHPCS, PHPCI, PHPUnit, PHPDoc)
+
 Version 1beta4 - released 2011-11-04
 cmb	changed use_defaults to default_translation (inspired by svasti)
 
