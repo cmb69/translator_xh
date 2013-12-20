@@ -1,5 +1,2 @@
-* System check and documentation about PHP requirements
-* check TODOs in FILES
-
 * change zip structure for single plugins?
 * explicitely guard Controller::dispatch() (admin mode only)?

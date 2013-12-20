@@ -151,28 +151,24 @@ class Translator_Controller
      * @global string The current language.
      * @global string The document fragment to insert into the head element.
      * @global array  The configuration of the plugins.
-     * @global array  The localization of the plugins.
-     *
-     * @todo Improve variable names.
      */
-    protected function administration()
+    protected function administrate()
     {
-        global $pth, $sn, $sl, $hjs, $plugin_cf, $plugin_tx;
+        global $pth, $sn, $sl, $hjs, $plugin_cf;
 
         $pcf = $plugin_cf['translator'];
-        $ptx = $plugin_tx['translator'];
         $filename = $pth['folder']['plugins'] . 'translator/translator.js';
         $hjs .= '<script type="text/javascript" src="' . $filename
             . '"></script>' . PHP_EOL;
-        $lang = ($pcf['translate_to'] == '')
+        $language = ($pcf['translate_to'] == '')
             ? $sl
             : $pcf['translate_to'];
-        $action = $sn . '?translator&amp;admin=plugin_main&amp;action=zip'
-            . '&amp;translator_lang=' . $lang;
-        $url = $sn . '?translator&amp;admin=plugin_main&amp;action=edit'
-            . ($pcf['translate_fullscreen'] ? '&amp;print' : '')
-            . '&amp;translator_from=' . $pcf['translate_from']
-            . '&amp;translator_to=' . $lang . '&amp;translator_module=';
+        $action = $sn . '?&translator&admin=plugin_main&action=zip'
+            . '&translator_lang=' . $language;
+        $url = $sn . '?&translator&admin=plugin_main&action=edit'
+            . ($pcf['translate_fullscreen'] ? '&print' : '')
+            . '&translator_from=' . $pcf['translate_from']
+            . '&translator_to=' . $language . '&translator_module=';
         $filename = isset($_POST['translator_filename'])
             ? $this->sanitizedName($_POST['translator_filename'])
             : '';
@@ -211,9 +207,9 @@ class Translator_Controller
         $module = $this->sanitizedName($_GET['translator_module']);
         $from = $this->sanitizedName($_GET['translator_from']);
         $to = $this->sanitizedName($_GET['translator_to']);
-        $url = $sn . '?translator&amp;admin=plugin_main&amp;action=save'
-            . '&amp;translator_from=' . $from . '&amp;translator_to=' . $to
-            . '&amp;translator_module=' . $module;
+        $url = $sn . '?&translator&admin=plugin_main&action=save'
+            . '&translator_from=' . $from . '&translator_to=' . $to
+            . '&translator_module=' . $module;
         return $this->views->editor($url, $module, $from, $to);
     }
 
@@ -254,7 +250,7 @@ class Translator_Controller
         );
         $filename = $this->model->filename($module, $destinationLanguage);
         $o = $this->views->saveMessage($saved, $filename);
-        $o .= $this->administration();
+        $o .= $this->administrate();
         return $o;
     }
 
@@ -280,20 +276,20 @@ class Translator_Controller
         $language = $this->sanitizedName($_GET['translator_lang']);
         if (empty($_POST['translator_modules'])) {
             return $this->views->message('warning', $ptx['message_no_module'])
-                . $this->administration();
+                . $this->administrate();
         }
         $modules = $this->sanitizedName($_POST['translator_modules']);
         try {
             $contents = $this->model->zipArchive($modules, $language);
         } catch (Exception $exception) {
             return $this->views->message('fail', $exception->getMessage())
-                . $this->administration();
+                . $this->administrate();
         }
         $filename = $this->sanitizedName($_POST['translator_filename']);
         $filename = $this->model->downloadFolder() . $filename . '.zip';
         $saved = file_put_contents($filename, $contents) !== false;
         $o = $this->views->saveMessage($saved, $filename)
-            . $this->administration();
+            . $this->administrate();
         if ($saved) {
             $url = $this->baseUrl() . $filename;
             $url = $this->model->canonicalUrl($url);
@@ -326,7 +322,7 @@ class Translator_Controller
             case 'plugin_main':
                 switch ($action) {
                 case 'plugin_text':
-                    $o .= $this->administration();
+                    $o .= $this->administrate();
                     break;
                 case 'edit':
                     $o .= $this->edit();

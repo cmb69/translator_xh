@@ -223,6 +223,7 @@ EOT;
         $checked = in_array($module, $modules)
             ? ' checked="checked"'
             : '';
+        $url = $this->hsc($url);
         return <<<EOT
         <li>
             <input type="checkbox" name="translator_modules[]"
@@ -254,6 +255,7 @@ EOT;
         $csrfTokenInput = isset($_XH_csrfProtection)
             ? $_XH_csrfProtection->tokenInput()
             : '';
+        $action = $this->hsc($action);
         $o = <<<EOT
 <!-- Translator_XH: Administration -->
 <form id="translator_list" action="$action" method="post">
@@ -384,6 +386,7 @@ EOT;
         $csrfTokenInput = isset($_XH_csrfProtection)
             ? $_XH_csrfProtection->tokenInput()
             : '';
+        $action = $this->hsc($action);
         $o = <<<EOT
 <!-- Translator_XH: Translation Editor -->
 <form id="translator" method="post" action="$action">
