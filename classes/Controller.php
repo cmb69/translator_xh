@@ -217,15 +217,19 @@ class Translator_Controller
      *
      * @return string
      *
-     * @global array The configuration of the plugins.
-     * @global array The localization of the plugins.
+     * @global array             The configuration of the plugins.
+     * @global array             The localization of the plugins.
+     * @global XH_CSRFProtection The CSRF protector.
      */
     protected function save()
     {
-        global $plugin_cf, $plugin_tx;
+        global $plugin_cf, $plugin_tx, $_XH_csrfProtection;
 
         $pcf = $plugin_cf['translator'];
         $ptx = $plugin_tx['translator'];
+        if (isset($_XH_csrfProtection)) {
+            $_XH_csrfProtection->check();
+        }
         $module = $this->sanitizedName($_GET['translator_module']);
         $sourceLanguage = $this->sanitizedName($_GET['translator_from']);
         $destinationLanguage = $this->sanitizedName($_GET['translator_to']);
@@ -255,15 +259,19 @@ class Translator_Controller
      *
      * @return string
      *
-     * @global array  The paths of system files and folders.
-     * @global string The script name.
-     * @global array  The localization of the plugins.
+     * @global array             The paths of system files and folders.
+     * @global string            The script name.
+     * @global array             The localization of the plugins.
+     * @global XH_CSRFProtection The CSRF protector.
      */
     protected function zip()
     {
-        global $pth, $sn, $plugin_tx;
+        global $pth, $sn, $plugin_tx, $_XH_csrfProtection;
 
         $ptx = $plugin_tx['translator'];
+        if (isset($_XH_csrfProtection)) {
+            $_XH_csrfProtection->check();
+        }
         $language = $this->sanitizedName($_GET['translator_lang']);
         if (empty($_POST['translator_modules'])) {
             return $this->views->message('warning', $ptx['message_no_module'])

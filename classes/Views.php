@@ -243,13 +243,17 @@ EOT;
      *
      * @return string (X)HTML.
      *
-     * @global array The localization of the plugins.
+     * @global array             The localization of the plugins.
+     * @global XH_CSRFProtection The CSRF protector.
      */
     public function main($action, $url, $filename, $modules)
     {
-        global $plugin_tx;
+        global $plugin_tx, $_XH_csrfProtection;
 
         $ptx = $plugin_tx['translator'];
+        $csrfTokenInput = isset($_XH_csrfProtection)
+            ? $_XH_csrfProtection->tokenInput()
+            : '';
         $o = <<<EOT
 <!-- Translator_XH: Administration -->
 <form id="translator_list" action="$action" method="post">
@@ -271,6 +275,7 @@ EOT;
         $ptx[label_filename]
         <input type="text" name="translator_filename" value="$filename" />.zip
         <input type="submit" class="submit" value="$ptx[label_generate]" />
+        $csrfTokenInput
     </p>
 </form>
 
@@ -361,12 +366,13 @@ EOT;
      *
      * @return string (X)HTML.
      *
-     * @global array The configuration of the plugins.
-     * @global array The localization of the plugins.
+     * @global array             The configuration of the plugins.
+     * @global array             The localization of the plugins.
+     * @global XH_CSRFProtection The CSRF protector.
      */
     public function editor($action, $module, $sourceLanguage, $destinationLanguage)
     {
-        global $plugin_cf, $plugin_tx;
+        global $plugin_cf, $plugin_tx, $_XH_csrfProtection;
 
         $pcf = $plugin_cf['translator'];
         $ptx = $plugin_tx['translator'];
@@ -374,8 +380,11 @@ EOT;
         $sourceLabel = $this->languageLabel($sourceLanguage);
         $destinationLabel = $this->languageLabel($destinationLanguage);
         $rows = $this->editorRows($module, $sourceLanguage, $destinationLanguage);
+        $csrfTokenInput = isset($_XH_csrfProtection)
+            ? $_XH_csrfProtection->tokenInput()
+            : '';
         $o = <<<EOT
-<!-- Translation_XH: Translation Editor -->
+<!-- Translator_XH: Translation Editor -->
 <form id="translator" method="post" action="$action">
     <h1>Translator &ndash; $moduleName</h1>
     <input type="submit" class="submit" value="$ptx[label_save]" />
@@ -388,6 +397,7 @@ EOT;
 $rows
     </table>
     <input type="submit" class="submit" value="$ptx[label_save]" />
+    $csrfTokenInput
 </form>
 
 EOT;
