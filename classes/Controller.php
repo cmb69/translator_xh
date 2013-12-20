@@ -127,8 +127,13 @@ class Translator_Controller
         foreach ($this->model->plugins() as $plugin) {
             $folders[] = $pth['folder']['plugins'] . $plugin . '/languages/';
         }
-        array_unshift($folders, $pth['folder']['language']);
-        array_push($folders, $this->model->downloadFolder());
+        $furtherFolders = array(
+            $pth['folder']['language'],
+            $pth['folder']['plugins'] . 'translator/config',
+            $pth['folder']['plugins'] . 'translator/css',
+            $this->model->downloadFolder()
+        );
+        $folders = array_merge($folders, $furtherFolders);
         foreach ($folders as $folder) {
             $checks[sprintf($ptx['syscheck_writable'], $folder)]
                 = is_writable($folder) ? 'ok' : 'warn';
