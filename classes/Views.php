@@ -421,7 +421,7 @@ EOT;
         $o = <<<EOT
 <p>
     $ptx[label_download_url]<br />
-    <input id="translator_download_link" type="text" disabled="disabled"
+    <input id="translator_download_link" type="text" readonly="readonly"
            value="$url" />
 </p>
 

@@ -27,7 +27,7 @@ addEventListener("load", function () {
      * Initializes everything.
      */
     function init() {
-        var form, elements, i, element;
+        var form, elements, i, element, downloadUrl;
 
         form = document.getElementById("translator_list");
         elements = form.elements;
@@ -53,6 +53,12 @@ addEventListener("load", function () {
         deselectAllButton.addEventListener("click", function () {
             deSelectModules(false);
         }, false);
+        downloadUrl = document.getElementById("translator_download_link");
+        if (downloadUrl) {
+            downloadUrl.addEventListener("click", function () {
+                this.select();
+            });
+        }
     }
 
     init();
