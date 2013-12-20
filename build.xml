@@ -116,10 +116,12 @@
         </jsMin>
         <move todir="dist">
             <fileset dir="export">
-                <exclude name="translator.komodoproject"/>
+                <exclude name="tests/**"/>
                 <exclude name="build.xml"/>
                 <exclude name="phpcompatinfo.xml"/>
+                <exclude name="TODO"/>
                 <exclude name="translator.js"/>
+                <exclude name="translator.komodoproject"/>
             </fileset>
         </move>
         <delete dir="export"/>
