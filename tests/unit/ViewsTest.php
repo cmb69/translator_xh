@@ -57,6 +57,20 @@ class ViewsTest extends PHPUnit_Framework_TestCase
         $this->assertTag($matcher, $actual);
     }
 
+    public function testSaveMessage()
+    {
+        global $plugin_tx;
+
+        $plugin_tx['translator']['message_save_success'] = 'OK';
+        $matcher = array(
+            'tag' => 'p',
+            'attributes' => array('class' => ''),
+            'content' => 'OK'
+        );
+        $actual = $this->views->saveMessage(true, '');
+        $this->assertTag($matcher, $actual);
+    }
+
     public function testAboutShowsVersionInfo()
     {
         $matcher = array('tag' => 'p', 'content' => 'Version: test');
