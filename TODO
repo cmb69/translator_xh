@@ -1,2 +1,3 @@
+* add translation of metaXY.php
 * change zip structure for single plugins?
 * explicitely guard Controller::dispatch() (admin mode only)?
