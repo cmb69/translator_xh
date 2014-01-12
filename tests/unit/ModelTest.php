@@ -117,22 +117,22 @@ class ModelTest extends PHPUnit_Framework_TestCase
             array(
                 'CORE', 'en',
                 array(
-                    'a_1' => 'one', 'a_2' => 'two',
-                    'b_1' => 'three', 'b_2' => 'four'
+                    'a|1' => 'one', 'a|2' => 'two',
+                    'b|1' => 'three', 'b|2' => 'four'
                 )
             ),
             array(
                 'CORE-LANGCONFIG', 'en',
                 array(
-                    'a_1' => 'one', 'a_2' => 'two',
-                    'b_1' => 'three', 'b_2' => 'four'
+                    'a|1' => 'one', 'a|2' => 'two',
+                    'b|1' => 'three', 'b|2' => 'four'
                 )
             ),
             array(
                 'pluginloader', 'en',
                 array(
-                    'a_1' => 'one', 'a_2' => 'two',
-                    'b_1' => 'three', 'b_2' => 'four'
+                    'a|1' => 'one', 'a|2' => 'two',
+                    'b|1' => 'three', 'b|2' => 'four'
                 )
             ),
             array(

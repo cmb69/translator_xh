@@ -236,12 +236,13 @@ class Translator_Model
                         if ($module != 'pluginloader'
                             || $key1 != 'error' || $key2 == 'plugin_error'
                         ) {
-                            $texts[$key1 . '_' . $key2] = $val2;
+                            $texts[$key1 . '|' . $key2] = $val2;
                         }
                     }
                 }
             } else {
                 foreach ($plugin_tx[$module] as $key => $val) {
+                    $key = preg_replace('/_/', '|', $key, 1);
                     $texts[$key] = $val;
                 }
             }
@@ -313,7 +314,7 @@ EOT;
         if (in_array($module, $this->specialModules)) {
             $varname = $this->moduleVarname($module);
             foreach ($texts as $key => $val) {
-                $keys = explode('_', $key, 2);
+                $keys = explode('|', $key, 2);
                 $o .= $this->elementDefinition($varname, $keys[0], $keys[1], $val)
                     . PHP_EOL;
             }
@@ -328,6 +329,7 @@ EOT;
             }
         } else {
             foreach ($texts as $key => $val) {
+                $key = str_replace('|', '_', $key);
                 $o .= $this->elementDefinition('plugin_tx', $module, $key, $val)
                     . PHP_EOL;
             }

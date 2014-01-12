@@ -310,7 +310,7 @@ EOT;
             $destinationText = $sourceText;
         }
         $class = isset($destinationTexts[$key]) ? '' : ' class="translator_new"';
-        $displayKey = str_replace('_', ' ', $key);
+        $displayKey = strtr($key, '_|', '  ');
         $sourceText = $this->hsc($sourceText);
         $destinationText = $this->hsc($destinationText);
         return <<<EOT
