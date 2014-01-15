@@ -241,7 +241,7 @@ class Translator_Controller
         }
         foreach ($sourceTexts as $key => $dummy) {
             $value = stsl($_POST['translator_string_' . $key]);
-            if ($value != '' || $value != $ptx['default_translation']) {
+            if ($value != '' && $value != $ptx['default_translation']) {
                 $destinationTexts[$key] = $value;
             }
         }
