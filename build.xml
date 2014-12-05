@@ -119,7 +119,6 @@
                 <exclude name="tests/**"/>
                 <exclude name="build.xml"/>
                 <exclude name="phpcompatinfo.xml"/>
-                <exclude name="TODO"/>
                 <exclude name="translator.js"/>
             </fileset>
         </move>
