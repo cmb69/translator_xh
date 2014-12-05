@@ -121,7 +121,6 @@
                 <exclude name="phpcompatinfo.xml"/>
                 <exclude name="TODO"/>
                 <exclude name="translator.js"/>
-                <exclude name="translator.komodoproject"/>
             </fileset>
         </move>
         <delete dir="export"/>
