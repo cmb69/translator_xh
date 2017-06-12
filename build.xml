@@ -51,7 +51,9 @@
 
     <target name="build" description="builds distributable ZIP archive">
         <fail unless="version" message="version is not defined!"/>
-        <svnexport revision="" repositoryurl="." todir="export"/>
+        <exec command="git archive -o export.tar HEAD" checkreturn="true"/>
+        <untar file="export.tar" todir="export"/>
+        <delete file="export.tar"/>
         <move todir="dist">
             <fileset dir="export">
                 <include name="admin.php"/>
@@ -72,7 +74,10 @@
             <fileset dir="export">
                 <exclude name="tests/**"/>
                 <exclude name="build.xml"/>
-                <exclude name="phpcompatinfo.xml"/>
+                <exclude name="composer.*"/>
+                <exclude name="coverage.xml"/>
+                <exclude name="pax_global_header"/>
+                <exclude name="phpcompatinfo.json"/>
                 <exclude name="translator.js"/>
             </fileset>
         </move>
