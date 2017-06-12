@@ -80,7 +80,7 @@ class Controller
      */
     private function systemChecks()
     {
-        global $pth, $tx, $plugin_tx;
+        global $pth, $plugin_tx;
 
         $ptx = $plugin_tx['translator'];
         $requiredPhpVersion = '5.4.0';
