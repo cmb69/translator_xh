@@ -76,31 +76,10 @@ class Views
      */
     public function about($iconPath)
     {
-        $version = TRANSLATOR_VERSION;
-        $o = <<<EOT
-<!-- Translator_XH: About -->
-<h1>Translator_XH</h1>
-<img src="$iconPath" alt="Plugin icon" width="128" height="128"
-     style="float: left; margin-right: 16px">
-<p>Version: $version</p>
-<p>Copyright &copy; 2011-2013 Christoph M. Becker</p>
-<p style="text-align: justify">
-    Translator_XH is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.</p>
-<p style="text-align: justify">
-    Translator_XH is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHAN&shy;TABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.</p>
-<p style="text-align: justify">
-    You should have received a copy of the GNU General Public License
-    along with Translator_XH.  If not, see
-    <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>.</p>
-
-EOT;
-        return $o;
+        $view = new View('info');
+        $view->logo = $iconPath;
+        $view->version = TRANSLATOR_VERSION;
+        return (string) $view;
     }
 
     /**
@@ -179,41 +158,18 @@ EOT;
      */
     public function main($action, $url, $filename, array $modules)
     {
-        global $plugin_tx, $_XH_csrfProtection;
+        global $_XH_csrfProtection;
 
-        $ptx = $plugin_tx['translator'];
-        $csrfTokenInput = isset($_XH_csrfProtection)
-            ? $_XH_csrfProtection->tokenInput()
-            : '';
-        $action = $this->hsc($action);
-        $o = <<<EOT
-<!-- Translator_XH: Administration -->
-<form id="translator_list" action="$action" method="post">
-    <h1>Translator &ndash; $ptx[menu_main]</h1>
-    <ul>
-
-EOT;
+        $view = new View('main');
+        $view->action = $action;
+        $modules = [];
         foreach ($this->model->modules() as $module) {
-            $o .= $this->module($module, $url, $modules);
+            $modules[] = new HtmlString($this->module($module, $url, $modules));
         }
-        $o .= <<<EOT
-    </ul>
-    <p style="display: none">
-        <button id="translator_select_all" type="button"
-            >$ptx[label_select_all]</button>
-        <button id="translator_deselect_all" type="button" disabled="disabled"
-            >$ptx[label_deselect_all]</button>
-    </p>
-    <p>
-        $ptx[label_filename]
-        <input type="text" name="translator_filename" value="$filename">.zip
-        <input type="submit" class="submit" value="$ptx[label_generate]">
-        $csrfTokenInput
-    </p>
-</form>
-
-EOT;
-        return $o;
+        $view->modules = $modules;
+        $view->filename = $filename;
+        $view->csrfTokenInput = new HtmlString($_XH_csrfProtection->tokenInput());
+        return (string) $view;
     }
 
     /**
@@ -285,36 +241,16 @@ EOT;
      */
     public function editor($action, $module, $sourceLanguage, $destinationLanguage)
     {
-        global $plugin_tx, $_XH_csrfProtection;
+        global $_XH_csrfProtection;
 
-        $ptx = $plugin_tx['translator'];
-        $moduleName = ucfirst($module);
-        $sourceLabel = $this->languageLabel($sourceLanguage);
-        $destinationLabel = $this->languageLabel($destinationLanguage);
-        $rows = $this->editorRows($module, $sourceLanguage, $destinationLanguage);
-        $csrfTokenInput = isset($_XH_csrfProtection)
-            ? $_XH_csrfProtection->tokenInput()
-            : '';
-        $action = $this->hsc($action);
-        $o = <<<EOT
-<!-- Translator_XH: Translation Editor -->
-<form id="translator" method="post" action="$action">
-    <h1>Translator &ndash; $moduleName</h1>
-    <input type="submit" class="submit" value="$ptx[label_save]">
-    <table>
-        <tr>
-            <th></th>
-            <th>$ptx[label_translate_from] $sourceLabel</th>
-            <th>$ptx[label_translate_to] $destinationLabel</th>
-        </tr>
-$rows
-    </table>
-    <input type="submit" class="submit" value="$ptx[label_save]">
-    $csrfTokenInput
-</form>
-
-EOT;
-        return $o;
+        $view = new View('editor');
+        $view->action = $action;
+        $view->moduleName = ucfirst($module);
+        $view->sourceLabel = new HtmlString($this->languageLabel($sourceLanguage));
+        $view->destinationLabel = new HtmlString($this->languageLabel($destinationLanguage));
+        $view->rows = new HtmlString($this->editorRows($module, $sourceLanguage, $destinationLanguage));
+        $view->csrfTokenInput = new HtmlString($_XH_csrfProtection->tokenInput());
+        return (string) $view;
     }
 
     /**
