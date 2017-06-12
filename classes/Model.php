@@ -163,8 +163,6 @@ class Model
      */
     public function readLanguage($module, $lang)
     {
-        global $pth;
-
         $texts = array();
         $filename = $this->filename($module, $lang);
         if (file_exists($filename)) {
@@ -180,7 +178,7 @@ class Model
                     }
                 }
             } else {
-                foreach ($plugin_tx[$module] as $key => $val) {
+                foreach (${$varname}[$module] as $key => $val) {
                     $key = preg_replace('/_/', '|', $key, 1);
                     $texts[$key] = $val;
                 }

@@ -86,8 +86,6 @@ class ModelTest extends PHPUnit_Framework_TestCase
 
     public function testDownloadFolder()
     {
-        global $pth;
-
         $expected = $this->basePath . 'downloads/';
         $actual = $this->model->downloadFolder();
         $this->assertEquals($expected, $actual);
@@ -95,8 +93,6 @@ class ModelTest extends PHPUnit_Framework_TestCase
 
     public function testPlugins()
     {
-        global $pth;
-
         $expected = array('bar', 'foo');
         $actual = $this->model->plugins();
         $this->assertEquals($expected, $actual);
@@ -104,8 +100,6 @@ class ModelTest extends PHPUnit_Framework_TestCase
 
     public function testModules()
     {
-        global $pth;
-
         $expected = array('CORE', 'bar', 'foo');
         $actual = $this->model->modules();
         $this->assertEquals($expected, $actual);
@@ -124,8 +118,6 @@ class ModelTest extends PHPUnit_Framework_TestCase
      */
     public function testFilename($module, $language, $expected)
     {
-        global $pth;
-
         $expected = $this->basePath . $expected;
         $actual = $this->model->filename($module, $language);
         $this->assertEquals($expected, $actual);

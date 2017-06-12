@@ -299,9 +299,8 @@ EOT;
      */
     public function editor($action, $module, $sourceLanguage, $destinationLanguage)
     {
-        global $plugin_cf, $plugin_tx, $_XH_csrfProtection;
+        global $plugin_tx, $_XH_csrfProtection;
 
-        $pcf = $plugin_cf['translator'];
         $ptx = $plugin_tx['translator'];
         $moduleName = ucfirst($module);
         $sourceLabel = $this->languageLabel($sourceLanguage);

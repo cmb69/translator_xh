@@ -194,7 +194,7 @@ class Controller
         if ($pcf['sort_save']) {
             ksort($sourceTexts);
         }
-        foreach ($sourceTexts as $key => $dummy) {
+        foreach (array_keys($sourceTexts) as $key) {
             $value = stsl($_POST['translator_string_' . $key]);
             if ($value != '' && $value != $ptx['default_translation']) {
                 $destinationTexts[$key] = $value;
@@ -212,7 +212,7 @@ class Controller
      */
     private function zip()
     {
-        global $pth, $sn, $plugin_tx, $_XH_csrfProtection;
+        global $plugin_tx, $_XH_csrfProtection;
 
         $ptx = $plugin_tx['translator'];
         if (isset($_XH_csrfProtection)) {
@@ -248,7 +248,7 @@ class Controller
      */
     private function dispatch()
     {
-        global $o, $pth, $translator, $admin, $action;
+        global $o, $translator, $admin, $action;
 
         if (isset($translator) && $translator == 'true') {
             $o .= print_plugin_admin('on');
