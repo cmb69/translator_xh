@@ -13,7 +13,6 @@ $plugin_tx['translator']['menu_main']="Translations";
 $plugin_tx['translator']['message_no_module']="You must select at least one module!";
 $plugin_tx['translator']['message_save_fail']="The file \"%s\" couldn't be saved.";
 $plugin_tx['translator']['message_save_success']="The file \"%s\" has been successfully saved.";
-$plugin_tx['translator']['syscheck_encoding']="Encoding \"UTF-8\" configured";
 $plugin_tx['translator']['syscheck_extension']="Extension \"%s\" loaded";
 $plugin_tx['translator']['syscheck_phpversion']="PHP version &ge; %s";
 $plugin_tx['translator']['syscheck_title']="System check";

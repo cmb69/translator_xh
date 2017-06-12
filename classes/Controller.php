@@ -83,21 +83,19 @@ class Controller
         global $pth, $tx, $plugin_tx;
 
         $ptx = $plugin_tx['translator'];
-        $requiredPhpVersion = '5.1.0';
-        $requiredXhVersion = '1.5';
+        $requiredPhpVersion = '5.4.0';
+        $requiredXhVersion = '1.6.3';
         $checks = array();
         $checks[sprintf($ptx['syscheck_phpversion'], $requiredPhpVersion)]
             = version_compare(PHP_VERSION, $requiredPhpVersion, 'ge')
                 ? 'ok' : 'fail';
-        foreach (array('pcre', 'zlib') as $extension) {
+        foreach (array('zlib') as $extension) {
             $checks[sprintf($ptx['syscheck_extension'], $extension)]
                 = extension_loaded($extension) ? 'ok' : 'fail';
         }
         $checks[sprintf($ptx['syscheck_xhversion'], $requiredXhVersion)]
             = version_compare($this->model->xhVersion(), $requiredXhVersion, 'ge')
                 ? 'ok' : 'warn';
-        $checks[$ptx['syscheck_encoding']]
-            = (strtoupper($tx['meta']['codepage']) == 'UTF-8') ? 'ok' : 'warn';
         $folders = array();
         foreach ($this->model->plugins() as $plugin) {
             $folders[] = $pth['folder']['plugins'] . $plugin . '/languages/';

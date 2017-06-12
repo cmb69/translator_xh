@@ -10,7 +10,6 @@
 $plugin_tx['translator']['syscheck_title']="Test systemu";
 $plugin_tx['translator']['syscheck_phpversion']="Wersja PHP ≥ %s";
 $plugin_tx['translator']['syscheck_extension']="Wtyczka \"%s\" wczytana poprawnie";
-$plugin_tx['translator']['syscheck_encoding']="Kodowanie \"UTF-8\" skonfigurowane";
 $plugin_tx['translator']['syscheck_writable']="\"%s\" ma prawa zapisu";
 $plugin_tx['translator']['menu_main']="Tłumaczenia";
 $plugin_tx['translator']['label_plugins']="Pliki językowe wtyczek";
