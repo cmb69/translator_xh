@@ -1,8 +1,12 @@
 <?php
 
-require_once 'vfsStream/vfsStream.php';
+require_once './vendor/autoload.php';
 
 require_once './classes/Model.php';
+
+use org\bovigo\vfs\vfsStreamWrapper;
+use org\bovigo\vfs\vfsStreamDirectory;
+use org\bovigo\vfs\vfsStream;
 
 define('CMSIMPLE_XH_VERSION', 'CMSimple_XH 1.5.9');
 

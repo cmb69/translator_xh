@@ -24,8 +24,7 @@
     </target>
 
     <target name="compat">
-        <exec command="phpcompatinfo --configuration phpcompatinfo.xml print --exclude-pattern translator ."
-              logoutput="true"/>
+        <exec command="phpcompatinfo analyser:run --alias current" logoutput="true"/>
     </target>
 
     <!-- Tests -->

@@ -54,7 +54,7 @@ class ViewsTest extends PHPUnit_Framework_TestCase
             'content' => $message
         );
         $actual = $this->views->message($type, $message);
-        $this->assertTag($matcher, $actual);
+        @$this->assertTag($matcher, $actual);
     }
 
     public function testSaveMessage()
@@ -68,14 +68,14 @@ class ViewsTest extends PHPUnit_Framework_TestCase
             'content' => 'OK'
         );
         $actual = $this->views->saveMessage(true, '');
-        $this->assertTag($matcher, $actual);
+        @$this->assertTag($matcher, $actual);
     }
 
     public function testAboutShowsVersionInfo()
     {
         $matcher = array('tag' => 'p', 'content' => 'Version: test');
         $actual = $this->views->about('');
-        $this->assertTag($matcher, $actual);
+        @$this->assertTag($matcher, $actual);
     }
 
     public function testAboutShowsPluginIcon()
@@ -83,7 +83,7 @@ class ViewsTest extends PHPUnit_Framework_TestCase
         $icon = 'icon.png';
         $matcher = array('tag' => 'img', 'attributes' => array('src' => $icon));
         $actual = $this->views->about($icon);
-        $this->assertTag($matcher, $actual);
+        @$this->assertTag($matcher, $actual);
     }
 
     public function testSystemCheck()
@@ -97,28 +97,28 @@ class ViewsTest extends PHPUnit_Framework_TestCase
             )
         );
         $actual = $this->views->systemCheck($checks);
-        $this->assertTag($matcher, $actual);
+        @$this->assertTag($matcher, $actual);
     }
 
     public function testMain()
     {
         $matcher = array('tag' => 'form');
         $actual = $this->views->main('', '', '', array());
-        $this->assertTag($matcher, $actual);
+        @$this->assertTag($matcher, $actual);
     }
 
     public function testEditor()
     {
         $matcher = array('tag' => 'form');
         $actual = $this->views->editor('', 'foo', 'en', 'de');
-        $this->assertTag($matcher, $actual);
+        @$this->assertTag($matcher, $actual);
     }
 
     public function testDownloadUrl()
     {
         $matcher = array('tag' => 'input');
         $actual = $this->views->downloadUrl('');
-        $this->assertTag($matcher, $actual);
+        @$this->assertTag($matcher, $actual);
     }
 }
 
