@@ -46,10 +46,6 @@ class Translator_Controller
      */
     public function __construct()
     {
-        global $pth;
-
-        include_once $pth['folder']['plugin_classes'] . 'Model.php';
-        include_once $pth['folder']['plugin_classes'] . 'Views.php';
         $this->model = new Translator_Model();
         $this->views = new Translator_Views($this->model);
         $this->dispatch();

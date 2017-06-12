@@ -27,11 +27,6 @@ if (!defined('CMSIMPLE_XH_VERSION')) {
  */
 define('TRANSLATOR_VERSION', '@TRANSLATOR_VERSION@');
 
-/**
- * The controller class.
- */
-require_once $pth['folder']['plugin_classes'] . 'Controller.php';
-
 new Translator_Controller();
 
 ?>

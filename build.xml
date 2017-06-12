@@ -23,7 +23,7 @@
     </target>
 
     <target name="unit-tests" description="runs all unit tests">
-        <phpunit haltonerror="true" haltonfailure="true">
+        <phpunit bootstrap="tests/bootstrap.php" haltonerror="true" haltonfailure="true">
             <formatter type="plain" usefile="false"/>
             <batchtest>
                 <fileset dir="tests/unit">

@@ -1,8 +1,5 @@
 <?php
 
-require_once './classes/Model.php';
-require_once './classes/Views.php';
-
 define('TRANSLATOR_VERSION', 'test');
 
 function tag($string)
