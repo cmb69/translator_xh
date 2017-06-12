@@ -1,43 +1,35 @@
 <?php
 
 /**
- * The views.
+ * Copyright (C) 2011-2017 Christoph M. Becker
  *
- * PHP version 5
+ * This file is part of Translator_XH.
  *
- * @category  CMSimple_XH
- * @package   Translator
- * @author    Christoph M. Becker <cmbecker69@gmx.de>
- * @copyright 2011-2017 Christoph M. Becker <http://3-magi.net>
- * @license   http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
- * @version   SVN: $Id$
- * @link      http://3-magi.net/?CMSimple_XH/Translator_XH
+ * Translator_XH is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Translator_XH is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Translator_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace Translator;
 
-/**
- * The views class.
- *
- * @category CMSimple_XH
- * @package  Translator
- * @author   Christoph M. Becker <cmbecker69@gmx.de>
- * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
- * @link     http://3-magi.net/?CMSimple_XH/Translator_XH
- */
 class Views
 {
     /**
-     * The translator model.
-     *
      * @var Model
      */
-    protected $model;
+    private $model;
 
     /**
-     * Initializes a new instance.
-     *
-     * @param Model $model A translator model.
+     * @return void
      */
     public function __construct(Model $model)
     {
@@ -45,13 +37,10 @@ class Views
     }
 
     /**
-     * Returns a string with special (X)HTML characters escaped as entities.
-     *
-     * @param string $string A string.
-     *
-     * @return string (X)HTML.
+     * @param string $string
+     * @return string
      */
-    protected function hsc($string)
+    private function hsc($string)
     {
         if (function_exists('XH_hsc')) {
             return XH_hsc($string);
@@ -61,15 +50,10 @@ class Views
     }
 
     /**
-     * Returns a string with ETAGCs adjusted to the configured markup language.
-     *
-     * @param string $string A string.
-     *
-     * @return string (X)HTML.
-     *
-     * @global array The configuration of the core.
+     * @param string $string
+     * @return string
      */
-    protected function xhtml($string)
+    private function xhtml($string)
     {
         global $cf;
 
@@ -80,12 +64,9 @@ class Views
     }
 
     /**
-     * Returns a message.
-     *
-     * @param string $type    A message type ('success', 'info', 'warning', 'fail').
-     * @param string $message A message.
-     *
-     * @return string (X)HTML.
+     * @param string $type
+     * @param string $message
+     * @return string
      */
     public function message($type, $message)
     {
@@ -100,14 +81,9 @@ class Views
     }
 
     /**
-     * Returns a message after saving a file.
-     *
-     * @param bool   $success  Whether saving succeeded.
-     * @param string $filename A filename.
-     *
-     * @return string (X)HTML.
-     *
-     * @global array The localization of the plugins.
+     * @param bool $success
+     * @param string $filename
+     * @return string
      */
     public function saveMessage($success, $filename)
     {
@@ -120,11 +96,8 @@ class Views
     }
 
     /**
-     * Returns the about view.
-     *
-     * @param string $iconPath A file path.
-     *
-     * @return string (X)HTML.
+     * @param string $iconPath
+     * @return string
      */
     public function about($iconPath)
     {
@@ -156,14 +129,8 @@ EOT;
     }
 
     /**
-     * Returns the system check view.
-     *
-     * @param array $checks An array of system checks.
-     *
-     * @return string (X)HTML.
-     *
-     * @global array The paths of system files and folders.
-     * @global array The localization of the plugins.
+     * @param array $checks
+     * @return string
      */
     public function systemCheck($checks)
     {
@@ -191,13 +158,10 @@ EOT;
     }
 
     /**
-     * Returns a language label.
-     *
-     * @param string $language A language code.
-     *
-     * @return string (X)HTML.
+     * @param string $language
+     * @return string
      */
-    protected function languageLabel($language)
+    private function languageLabel($language)
     {
         $filename = $this->model->flagIconPath($language);
         if ($filename !== false) {
@@ -211,15 +175,11 @@ EOT;
     }
 
     /**
-     * Returns a <li> element for a module.
-     *
-     * @param string $module  A module name.
-     * @param string $url     A URL to link to.
-     * @param array  $modules An array of checked modules.
-     *
-     * @return string XHTML.
+     * @param string $module
+     * @param string $url
+     * @return string
      */
-    protected function module($module, $url, $modules)
+    private function module($module, $url, array $modules)
     {
         $name = ucfirst($module);
         $checked = in_array($module, $modules)
@@ -237,19 +197,12 @@ EOT;
     }
 
     /**
-     * Returns the main administration view.
-     *
-     * @param string $action   A URL to submit to.
-     * @param string $url      A URL to link to.
-     * @param string $filename A language pack file name.
-     * @param array  $modules  An array of module names.
-     *
-     * @return string (X)HTML.
-     *
-     * @global array             The localization of the plugins.
-     * @global XH_CSRFProtection The CSRF protector.
+     * @param string $action
+     * @param string $url
+     * @param string $filename
+     * @return string
      */
-    public function main($action, $url, $filename, $modules)
+    public function main($action, $url, $filename, array $modules)
     {
         global $plugin_tx, $_XH_csrfProtection;
 
@@ -289,17 +242,11 @@ EOT;
     }
 
     /**
-     * Returns a single table row of the translation editor.
-     *
-     * @param string $key              A language key.
-     * @param array  $sourceText       An array of original texts.
-     * @param array  $destinationTexts An array of translated texts.
-     *
-     * @return string XHTML.
-     *
-     * @global array The localization of the plugins.
+     * @param string $key
+     * @param string $sourceText
+     * @return string
      */
-    protected function editorRow($key, $sourceText, $destinationTexts)
+    private function editorRow($key, $sourceText, array $destinationTexts)
     {
         global $plugin_tx;
 
@@ -332,25 +279,18 @@ EOT;
     }
 
     /**
-     * Returns all table rows of the translation editor.
-     *
-     * @param string $module              A module name.
-     * @param string $sourceLanguage      A language code.
-     * @param string $destinationLanguage A language code.
-     *
-     * @return string XHTML.
-     *
-     * @global array The configuration of the plugins.
+     * @param string $module
+     * @param string $sourceLanguage
+     * @param string $destinationLanguage
+     * @return string
      */
-    protected function editorRows($module, $sourceLanguage, $destinationLanguage)
+    private function editorRows($module, $sourceLanguage, $destinationLanguage)
     {
         global $plugin_cf;
 
         $pcf = $plugin_cf['translator'];
         $sourceTexts = $this->model->readLanguage($module, $sourceLanguage);
-        $destinationTexts = $this->model->readLanguage(
-            $module, $destinationLanguage
-        );
+        $destinationTexts = $this->model->readLanguage($module, $destinationLanguage);
         if ($pcf['sort_load']) {
             ksort($sourceTexts);
         }
@@ -362,18 +302,11 @@ EOT;
     }
 
     /**
-     * Returns the translation editor view.
-     *
-     * @param string $action              A URL to submit to.
-     * @param string $module              A module name.
-     * @param string $sourceLanguage      A language code.
-     * @param string $destinationLanguage A language code.
-     *
-     * @return string (X)HTML.
-     *
-     * @global array             The configuration of the plugins.
-     * @global array             The localization of the plugins.
-     * @global XH_CSRFProtection The CSRF protector.
+     * @param string $action
+     * @param string $module
+     * @param string $sourceLanguage
+     * @param string $destinationLanguage
+     * @return string
      */
     public function editor($action, $module, $sourceLanguage, $destinationLanguage)
     {
@@ -411,13 +344,8 @@ EOT;
     }
 
     /**
-     * Returns the download URL view.
-     *
-     * @param string $url A URL.
-     *
-     * @return string (X)HTML.
-     *
-     * @global array The localization of the plugins.
+     * @param string $url
+     * @return string
      */
     public function downloadUrl($url)
     {
@@ -435,5 +363,3 @@ EOT;
         return $this->xhtml($o);
     }
 }
-
-?>

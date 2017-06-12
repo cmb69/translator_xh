@@ -1,45 +1,34 @@
 <?php
 
 /**
- * The model.
+ * Copyright (C) 2011-2017 Christoph M. Becker
  *
- * PHP version 5
+ * This file is part of Translator_XH.
  *
- * @category  CMSimple_XH
- * @package   Translator
- * @author    Christoph M. Becker <cmbecker69@gmx.de>
- * @copyright 2011-2017 Christoph M. Becker <http://3-magi.net>
- * @license   http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
- * @version   SVN: $Id$
- * @link      http://3-magi.net/?CMSimple_XH/Translator_XH
+ * Translator_XH is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Translator_XH is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Translator_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace Translator;
 
-/**
- * The model class.
- *
- * @category CMSimple_XH
- * @package  Translator
- * @author   Christoph M. Becker <cmbecker69@gmx.de>
- * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
- * @link     http://3-magi.net/?CMSimple_XH/Translator_XH
- */
 class Model
 {
     /**
-     * The names of special modules.
-     *
      * @var array
      */
-    protected $specialModules = array('CORE', 'CORE-LANGCONFIG', 'pluginloader');
+    private $specialModules = array('CORE', 'CORE-LANGCONFIG', 'pluginloader');
 
     /**
-     * Returns the CMSimple_XH version.
-     *
-     * Unfortunately, we can't use CMSIMPLE_XH_VERSION directly, as this is set
-     * by CMSimple v4.
-     *
      * @return string
      */
     public function xhVersion()
@@ -54,10 +43,7 @@ class Model
     }
 
     /**
-     * Returns a canonical URL, i.e. a URL with all . and .. resolved.
-     *
-     * @param string $url A URL.
-     *
+     * @param string $url
      * @return string
      */
     public function canonicalUrl($url)
@@ -66,28 +52,23 @@ class Model
         $i = 0;
         while ($i < count($parts)) {
             switch ($parts[$i]) {
-            case '.':
-                array_splice($parts, $i, 1);
-                break;
-            case '..':
-                array_splice($parts, $i-1, 2);
-                $i--;
-                break;
-            default:
-                $i++;
+                case '.':
+                    array_splice($parts, $i, 1);
+                    break;
+                case '..':
+                    array_splice($parts, $i-1, 2);
+                    $i--;
+                    break;
+                default:
+                    $i++;
             }
         }
         return implode('/', $parts);
     }
 
     /**
-     * Returns the paths of a flag icon if it exists; <var>false</var> otherwise.
-     *
-     * @param string $language A language code.
-     *
+     * @param string $language
      * @return string
-     *
-     * @global array The paths of system files and folders.
      */
     public function flagIconPath($language)
     {
@@ -101,11 +82,7 @@ class Model
     }
 
     /**
-     * Returns the path of the download folder.
-     *
      * @return string
-     *
-     * @global array The paths of system files and folders.
      */
     public function downloadFolder()
     {
@@ -115,11 +92,7 @@ class Model
     }
 
     /**
-     * Returns all internationalized plugins.
-     *
      * @return array
-     *
-     * @global array The paths of system files and folders.
      */
     public function plugins()
     {
@@ -141,8 +114,6 @@ class Model
     }
 
     /**
-     * Returns all translatable modules.
-     *
      * @return array
      */
     public function modules()
@@ -156,14 +127,9 @@ class Model
     }
 
     /**
-     * Returns the path of a language file.
-     *
-     * @param string $module   A module name.
-     * @param string $language A language code.
-     *
+     * @param string $module
+     * @param string $language
      * @return string
-     *
-     * @global array The paths of system files and folders.
      */
     public function filename($module, $language)
     {
@@ -181,39 +147,31 @@ class Model
     }
 
     /**
-     * Returns the name of the language variable of a module.
-     *
-     * @param string $module A module name.
-     *
+     * @param string $module
      * @return string
      */
-    protected function moduleVarname($module)
+    private function moduleVarname($module)
     {
         switch ($module) {
-        case 'CORE':
-            $varname = 'tx';
-            break;
-        case 'CORE-LANGCONFIG':
-            $varname = 'txc';
-            break;
-        case 'pluginloader':
-            $varname = 'pluginloader_tx';
-            break;
-        default:
-            $varname = 'plugin_tx';
+            case 'CORE':
+                $varname = 'tx';
+                break;
+            case 'CORE-LANGCONFIG':
+                $varname = 'txc';
+                break;
+            case 'pluginloader':
+                $varname = 'pluginloader_tx';
+                break;
+            default:
+                $varname = 'plugin_tx';
         }
         return $varname;
     }
 
     /**
-     * Reads a language file and returns the value of the variable defined in it.
-     *
-     * @param string $module A module name.
-     * @param string $lang   A language code.
-     *
+     * @param string $module
+     * @param string $lang
      * @return array
-     *
-     * @global array The paths of system files and folders.
      */
     public function readLanguage($module, $lang)
     {
@@ -253,15 +211,10 @@ class Model
     }
 
     /**
-     * Returns the copyright header for a translated language file.
-     *
      * @return string
-     *
-     * @global array The configuration of the plugins.
-     *
      * @todo Use utf8_wordwrap() ;)
      */
-    protected function copyrightHeader()
+    private function copyrightHeader()
     {
         global $plugin_cf;
 
@@ -284,16 +237,12 @@ EOT;
     }
 
     /**
-     * Returns an array element definition line.
-     *
-     * @param string $varname A variable name.
-     * @param string $key1    A key of the array.
-     * @param string $key2    A key of the subarray.
-     * @param mixed  $value   A value.
-     *
+     * @param string $varname
+     * @param string $key1
+     * @param string $key2
      * @return string
      */
-    protected function elementDefinition($varname, $key1, $key2, $value)
+    private function elementDefinition($varname, $key1, $key2, $value)
     {
         $value = addcslashes($value, "\r\n\t\v\f\\\$\"");
         return <<<EOT
@@ -302,14 +251,10 @@ EOT;
     }
 
     /**
-     * Returns the PHP code for a language file.
-     *
-     * @param string $module A module name.
-     * @param array  $texts  A language array.
-     *
+     * @param string $module
      * @return string
      */
-    protected function phpCode($module, $texts)
+    private function phpCode($module, array $texts)
     {
         $o = '<?php' . PHP_EOL . PHP_EOL
             . $this->copyrightHeader();
@@ -341,15 +286,11 @@ EOT;
     }
 
     /**
-     * Writes a language file and returns whether that succeeded.
-     *
-     * @param string $module A module name.
-     * @param string $lang   A language code.
-     * @param array  $texts  A language array.
-     *
+     * @param string $module
+     * @param string $lang
      * @return bool
      */
-    public function writeLanguage($module, $lang, $texts)
+    public function writeLanguage($module, $lang, array $texts)
     {
         $filename = $this->filename($module, $lang);
         $contents = $this->phpCode($module, $texts);
@@ -362,18 +303,11 @@ EOT;
     }
 
     /**
-     * Returns a ZIP archive.
-     *
-     * @param array  $modules  An array of module names.
-     * @param string $language A language code.
-     *
+     * @param string $language
      * @return string
-     *
      * @throws Exception
-     *
-     * @global array The paths of system files and folders.
      */
-    public function zipArchive($modules, $language)
+    public function zipArchive(array $modules, $language)
     {
         global $pth;
 
@@ -393,5 +327,3 @@ EOT;
         return $contents;
     }
 }
-
-?>

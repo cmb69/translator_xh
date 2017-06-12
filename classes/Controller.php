@@ -1,50 +1,40 @@
 <?php
 
 /**
- * The controller.
+ * Copyright (C) 2011-2017 Christoph M. Becker
  *
- * PHP version 5
+ * This file is part of Translator_XH.
  *
- * @category  CMSimple_XH
- * @package   Translator
- * @author    Christoph M. Becker <cmbecker69@gmx.de>
- * @copyright 2011-2017 Christoph M. Becker <http://3-magi.net>
- * @license   http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
- * @version   SVN: $Id$
- * @link      http://3-magi.net/?CMSimple_XH/Translator_XH
+ * Translator_XH is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Translator_XH is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Translator_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace Translator;
 
-/**
- * The controller class.
- *
- * @category CMSimple_XH
- * @package  Translator
- * @author   Christoph M. Becker <cmbecker69@gmx.de>
- * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
- * @link     http://3-magi.net/?CMSimple_XH/Translator_XH
- */
 class Controller
 {
     /**
-     * The translator model.
-     *
      * @var Model
      */
-    protected $model;
+    private $model;
 
     /**
-     * The translator views.
-     *
      * @var Views
      */
-    protected $views;
+    private $views;
 
     /**
-     * Initializes a new instance.
-     *
-     * @global array The paths of system files and folders.
+     * @return void
      */
     public function __construct()
     {
@@ -54,13 +44,9 @@ class Controller
     }
 
     /**
-     * Returns the absolute URL of the folder of the requested index.php.
-     *
      * @return string
-     *
-     * @global string The script name.
      */
-    protected function baseUrl()
+    private function baseUrl()
     {
         global $sn;
 
@@ -78,10 +64,9 @@ class Controller
      * and the underscore.
      *
      * @param mixed $input A name resp. an array of names.
-     *
      * @return mixed
      */
-    protected function sanitizedName($input)
+    private function sanitizedName($input)
     {
         if (is_array($input)) {
             return array_map(array($this, 'sanitizedName'), $input);
@@ -91,15 +76,9 @@ class Controller
     }
 
     /**
-     * Returns the system checks.
-     *
      * @return array
-     *
-     * @global array The paths of system files and folders.
-     * @global array The localization of the core.
-     * @global array The localization of the plugins.
      */
-    protected function systemChecks()
+    private function systemChecks()
     {
         global $pth, $tx, $plugin_tx;
 
@@ -140,17 +119,9 @@ class Controller
     }
 
     /**
-     * Returns available modules view.
-     *
      * @return string
-     *
-     * @global array  The paths of system files and folders.
-     * @global string The script name.
-     * @global string The current language.
-     * @global string The document fragment to insert into the head element.
-     * @global array  The configuration of the plugins.
      */
-    protected function administrate()
+    private function administrate()
     {
         global $pth, $sn, $sl, $hjs, $plugin_cf;
 
@@ -177,13 +148,9 @@ class Controller
     }
 
     /**
-     * Returns the plugin info view.
-     *
-     * @return string (X)HTML.
-     *
-     * @global array The paths of system files and folders.
+     * @return string
      */
-    protected function info()
+    private function info()
     {
         global $pth;
 
@@ -192,13 +159,9 @@ class Controller
     }
 
     /**
-     * Returns the translation editor view.
-     *
      * @return string
-     *
-     * @global string The script name.
      */
-    protected function edit()
+    private function edit()
     {
         global $sn;
 
@@ -212,15 +175,9 @@ class Controller
     }
 
     /**
-     * Saves the translated language file and returns the main administration view.
-     *
      * @return string
-     *
-     * @global array             The configuration of the plugins.
-     * @global array             The localization of the plugins.
-     * @global XH_CSRFProtection The CSRF protector.
      */
-    protected function save()
+    private function save()
     {
         global $plugin_cf, $plugin_tx, $_XH_csrfProtection;
 
@@ -243,9 +200,7 @@ class Controller
                 $destinationTexts[$key] = $value;
             }
         }
-        $saved = $this->model->writeLanguage(
-            $module, $destinationLanguage, $destinationTexts
-        );
+        $saved = $this->model->writeLanguage($module, $destinationLanguage, $destinationTexts);
         $filename = $this->model->filename($module, $destinationLanguage);
         $o = $this->views->saveMessage($saved, $filename);
         $o .= $this->administrate();
@@ -253,17 +208,9 @@ class Controller
     }
 
     /**
-     * Creates a ZIP file with the language files of the selected modules, and
-     * returns the main administration view.
-     *
      * @return string
-     *
-     * @global array             The paths of system files and folders.
-     * @global string            The script name.
-     * @global array             The localization of the plugins.
-     * @global XH_CSRFProtection The CSRF protector.
      */
-    protected function zip()
+    private function zip()
     {
         global $pth, $sn, $plugin_tx, $_XH_csrfProtection;
 
@@ -297,47 +244,37 @@ class Controller
     }
 
     /**
-     * Handles the plugin administration.
-     *
      * @return void
-     *
-     * @global string The document fragment for the contents area.
-     * @global array  The paths of system files and folders.
-     * @global string Whether the plugin administration is requested.
-     * @global string The value of the admin G/P paramter.
-     * @global string The value of the action G/P parameter.     *
      */
-    protected function dispatch()
+    private function dispatch()
     {
         global $o, $pth, $translator, $admin, $action;
 
         if (isset($translator) && $translator == 'true') {
             $o .= print_plugin_admin('on');
             switch ($admin) {
-            case '':
-                $o .= $this->info();
-                break;
-            case 'plugin_main':
-                switch ($action) {
-                case 'plugin_text':
-                    $o .= $this->administrate();
+                case '':
+                    $o .= $this->info();
                     break;
-                case 'edit':
-                    $o .= $this->edit();
+                case 'plugin_main':
+                    switch ($action) {
+                        case 'plugin_text':
+                            $o .= $this->administrate();
+                            break;
+                        case 'edit':
+                            $o .= $this->edit();
+                            break;
+                        case 'save':
+                            $o .= $this->save();
+                            break;
+                        case 'zip':
+                            $o .= $this->zip();
+                            break;
+                    }
                     break;
-                case 'save':
-                    $o .= $this->save();
-                    break;
-                case 'zip':
-                    $o .= $this->zip();
-                    break;
-                }
-                break;
-            default:
-                $o .= plugin_admin_common($action, $admin, 'translator');
+                default:
+                    $o .= plugin_admin_common($action, $admin, 'translator');
             }
         }
     }
 }
-
-?>
