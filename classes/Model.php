@@ -14,6 +14,8 @@
  * @link      http://3-magi.net/?CMSimple_XH/Translator_XH
  */
 
+namespace Translator;
+
 /**
  * The model class.
  *
@@ -23,7 +25,7 @@
  * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
  * @link     http://3-magi.net/?CMSimple_XH/Translator_XH
  */
-class Translator_Model
+class Model
 {
     /**
      * The names of special modules.

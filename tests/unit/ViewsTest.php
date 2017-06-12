@@ -1,11 +1,10 @@
 <?php
 
-define('TRANSLATOR_VERSION', 'test');
+namespace Translator;
 
-function tag($string)
-{
-    return $string;
-}
+use PHPUnit_Framework_TestCase;
+
+define('TRANSLATOR_VERSION', 'test');
 
 class ViewsTest extends PHPUnit_Framework_TestCase
 {
@@ -17,7 +16,7 @@ class ViewsTest extends PHPUnit_Framework_TestCase
 
         $cf = array('xhtml' => array('endtags' => ''));
         //$plugin_tx = array('translator' => array('label_download_url' => ''));
-        $model = $this->getMockBuilder('Translator_Model')
+        $model = $this->getMockBuilder('Translator\Model')
                       ->disableOriginalConstructor()
                       ->getMock();
         $model->expects($this->any())
@@ -26,7 +25,7 @@ class ViewsTest extends PHPUnit_Framework_TestCase
         $model->expects($this->any())
               ->method('readLanguage')
               ->will($this->returnValue(array('a' => 'one')));
-        $this->views = new Translator_Views($model);
+        $this->views = new Views($model);
     }
 
     public function dataForMessage()

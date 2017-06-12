@@ -1,5 +1,8 @@
 <?php
 
+namespace Translator;
+
+use PHPUnit_Framework_TestCase;
 use org\bovigo\vfs\vfsStreamWrapper;
 use org\bovigo\vfs\vfsStreamDirectory;
 use org\bovigo\vfs\vfsStream;
@@ -42,7 +45,7 @@ class ModelTest extends PHPUnit_Framework_TestCase
                 'cntopen' => '', 'cntwriteto' => '', 'notreadable' => ''
             )
         );
-        $this->model = new Translator_Model();
+        $this->model = new Model();
     }
 
     public function testCanonicalUrl()

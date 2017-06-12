@@ -27,6 +27,6 @@ if (!defined('CMSIMPLE_XH_VERSION')) {
  */
 define('TRANSLATOR_VERSION', '@TRANSLATOR_VERSION@');
 
-new Translator_Controller();
+new Translator\Controller();
 
 ?>

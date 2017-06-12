@@ -14,6 +14,8 @@
  * @link      http://3-magi.net/?CMSimple_XH/Translator_XH
  */
 
+namespace Translator;
+
 /**
  * The controller class.
  *
@@ -23,19 +25,19 @@
  * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
  * @link     http://3-magi.net/?CMSimple_XH/Translator_XH
  */
-class Translator_Controller
+class Controller
 {
     /**
      * The translator model.
      *
-     * @var Translator_Model
+     * @var Model
      */
     protected $model;
 
     /**
      * The translator views.
      *
-     * @var Translator_Views
+     * @var Views
      */
     protected $views;
 
@@ -46,8 +48,8 @@ class Translator_Controller
      */
     public function __construct()
     {
-        $this->model = new Translator_Model();
-        $this->views = new Translator_Views($this->model);
+        $this->model = new Model();
+        $this->views = new Views($this->model);
         $this->dispatch();
     }
 
