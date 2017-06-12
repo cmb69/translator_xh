@@ -11,7 +11,6 @@ $plugin_tx['translator']['syscheck_title']="Проверка системы";
 $plugin_tx['translator']['syscheck_phpversion']="Версия PHP &ge; %s";
 $plugin_tx['translator']['syscheck_extension']="Расширение '%s' загружено";
 $plugin_tx['translator']['syscheck_encoding']="Кодировка 'UTF-8' установлена";
-$plugin_tx['translator']['syscheck_magic_quotes']="Экранирование спецсимволов (\"magic_quotes_runtime\") отключено";
 $plugin_tx['translator']['syscheck_writable']="'%s' доступно для записи";
 $plugin_tx['translator']['menu_main']="Переводы";
 /* added */

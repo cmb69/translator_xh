@@ -15,7 +15,6 @@ $plugin_tx['translator']['message_save_success']="Die Datei \"%s\" wurde erfolgr
 $plugin_tx['translator']['message_save_fail']="Die Datei \"%s\" konnte nicht gespeichert werden.";
 $plugin_tx['translator']['syscheck_encoding']="UTF-8-Kodierung eingestellt";
 $plugin_tx['translator']['syscheck_extension']="Erweiterung \"%s\" geladen";
-$plugin_tx['translator']['syscheck_magic_quotes']="magic_quotes_runtime off";
 $plugin_tx['translator']['syscheck_phpversion']="PHP-Version &ge; %s";
 $plugin_tx['translator']['syscheck_title']="System-Prüfung";
 $plugin_tx['translator']['syscheck_writable']="\"%s\" beschreibbar";

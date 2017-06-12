@@ -93,8 +93,6 @@ class Controller
             $checks[sprintf($ptx['syscheck_extension'], $extension)]
                 = extension_loaded($extension) ? 'ok' : 'fail';
         }
-        $checks[$ptx['syscheck_magic_quotes']]
-            = !get_magic_quotes_runtime() ? 'ok' : 'fail';
         $checks[sprintf($ptx['syscheck_xhversion'], $requiredXhVersion)]
             = version_compare($this->model->xhVersion(), $requiredXhVersion, 'ge')
                 ? 'ok' : 'warn';
@@ -195,7 +193,7 @@ class Controller
             ksort($sourceTexts);
         }
         foreach (array_keys($sourceTexts) as $key) {
-            $value = stsl($_POST['translator_string_' . $key]);
+            $value = $_POST['translator_string_' . $key];
             if ($value != '' && $value != $ptx['default_translation']) {
                 $destinationTexts[$key] = $value;
             }
