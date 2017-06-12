@@ -46,20 +46,6 @@ class Views
     }
 
     /**
-     * @param string $string
-     * @return string
-     */
-    private function xhtml($string)
-    {
-        global $cf;
-
-        if (!$cf['xhtml']['endtags']) {
-            $string = str_replace(' />', '>', $string);
-        }
-        return $string;
-    }
-
-    /**
      * @param string $type
      * @param string $message
      * @return string
@@ -95,7 +81,7 @@ class Views
 <!-- Translator_XH: About -->
 <h1>Translator_XH</h1>
 <img src="$iconPath" alt="Plugin icon" width="128" height="128"
-     style="float: left; margin-right: 16px" />
+     style="float: left; margin-right: 16px">
 <p>Version: $version</p>
 <p>Copyright &copy; 2011-2013 Christoph M. Becker</p>
 <p style="text-align: justify">
@@ -114,7 +100,7 @@ class Views
     <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>.</p>
 
 EOT;
-        return $this->xhtml($o);
+        return $o;
     }
 
     /**
@@ -135,7 +121,7 @@ EOT;
 EOT;
         foreach ($checks as $check => $state) {
             $o .= <<<EOT
-    <li><img src="$imgdir$state.png" alt="$state" /> $check</li>
+    <li><img src="$imgdir$state.png" alt="$state"> $check</li>
 
 EOT;
         }
@@ -143,7 +129,7 @@ EOT;
 </ul>
 
 EOT;
-        return $this->xhtml($o);
+        return $o;
     }
 
     /**
@@ -178,7 +164,7 @@ EOT;
         return <<<EOT
         <li>
             <input type="checkbox" name="translator_modules[]"
-                   value="$module"$checked />
+                   value="$module"$checked>
             <a href="$url$module">$name</a>
         </li>
 
@@ -220,14 +206,14 @@ EOT;
     </p>
     <p>
         $ptx[label_filename]
-        <input type="text" name="translator_filename" value="$filename" />.zip
-        <input type="submit" class="submit" value="$ptx[label_generate]" />
+        <input type="text" name="translator_filename" value="$filename">.zip
+        <input type="submit" class="submit" value="$ptx[label_generate]">
         $csrfTokenInput
     </p>
 </form>
 
 EOT;
-        return $this->xhtml($o);
+        return $o;
     }
 
     /**
@@ -314,7 +300,7 @@ EOT;
 <!-- Translator_XH: Translation Editor -->
 <form id="translator" method="post" action="$action">
     <h1>Translator &ndash; $moduleName</h1>
-    <input type="submit" class="submit" value="$ptx[label_save]" />
+    <input type="submit" class="submit" value="$ptx[label_save]">
     <table>
         <tr>
             <th></th>
@@ -323,12 +309,12 @@ EOT;
         </tr>
 $rows
     </table>
-    <input type="submit" class="submit" value="$ptx[label_save]" />
+    <input type="submit" class="submit" value="$ptx[label_save]">
     $csrfTokenInput
 </form>
 
 EOT;
-        return $this->xhtml($o);
+        return $o;
     }
 
     /**
@@ -342,12 +328,12 @@ EOT;
         $ptx = $plugin_tx['translator'];
         $o = <<<EOT
 <p>
-    $ptx[label_download_url]<br />
+    $ptx[label_download_url]<br>
     <input id="translator_download_link" type="text" readonly="readonly"
-           value="$url" />
+           value="$url">
 </p>
 
 EOT;
-        return $this->xhtml($o);
+        return $o;
     }
 }
