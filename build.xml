@@ -23,6 +23,13 @@
         </phpcodesniffer>
     </target>
 
+    <target name="mess" description="detects code flaws">
+        <phpmd>
+            <fileset refid="php-sources"/>
+            <fileset refid="unit-tests"/>
+         </phpmd>
+    </target>
+
     <target name="compat" description="checks compatibility with PHPCompatInfo">
         <exec command="phpcompatinfo analyser:run --alias current" logoutput="true"/>
     </target>
