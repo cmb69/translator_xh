@@ -78,6 +78,7 @@
                 <exclude name="coverage.xml"/>
                 <exclude name="pax_global_header"/>
                 <exclude name="phpcompatinfo.json"/>
+                <exclude name="README.md"/>
                 <exclude name="translator.js"/>
             </fileset>
         </move>
