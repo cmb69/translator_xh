@@ -26,7 +26,7 @@ class Model
     /**
      * @var array
      */
-    private $specialModules = array('CORE', 'CORE-LANGCONFIG', 'pluginloader');
+    private $specialModules = array('CORE');
 
     /**
      * @return string
@@ -119,9 +119,6 @@ class Model
     public function modules()
     {
         $modules = $this->plugins();
-        if (version_compare($this->xhVersion(), '1.6', 'lt')) {
-            array_unshift($modules, 'CORE-LANGCONFIG');
-        }
         array_unshift($modules, 'CORE');
         return $modules;
     }
@@ -135,13 +132,10 @@ class Model
     {
         global $pth;
 
-        $filename = ($module == 'CORE'|| $module == 'CORE-LANGCONFIG')
+        $filename = ($module == 'CORE')
             ? $pth['folder']['language']
             : $pth['folder']['plugins'] . $module . '/languages/';
         $filename .= $language;
-        if ($module == 'CORE-LANGCONFIG') {
-            $filename .= 'config';
-        }
         $filename .= '.php';
         return $filename;
     }
@@ -155,12 +149,6 @@ class Model
         switch ($module) {
             case 'CORE':
                 $varname = 'tx';
-                break;
-            case 'CORE-LANGCONFIG':
-                $varname = 'txc';
-                break;
-            case 'pluginloader':
-                $varname = 'pluginloader_tx';
                 break;
             default:
                 $varname = 'plugin_tx';
@@ -177,24 +165,15 @@ class Model
     {
         global $pth;
 
-        if ($module == 'pluginloader') {
-            $tx = $GLOBALS['tx'];
-        }
-
         $texts = array();
         $filename = $this->filename($module, $lang);
         if (file_exists($filename)) {
             $varname = $this->moduleVarname($module);
-            if (function_exists('XH_includeVar')) {
-                $$varname = XH_includeVar($filename, $varname);
-            } else {
-                include $filename;
-            }
+            $$varname = XH_includeVar($filename, $varname);
             if (in_array($module, $this->specialModules)) {
                 foreach ($$varname as $key1 => $val1) {
                     foreach ($val1 as $key2 => $val2) {
-                        if ($module != 'pluginloader'
-                            || $key1 != 'error' || $key2 == 'plugin_error'
+                        if ($key1 != 'error' || $key2 == 'plugin_error'
                         ) {
                             $texts[$key1 . '|' . $key2] = $val2;
                         }
@@ -265,15 +244,6 @@ EOT;
                 $o .= $this->elementDefinition($varname, $keys[0], $keys[1], $val)
                     . PHP_EOL;
             }
-            if ($module == 'pluginloader') {
-                $specialKeys = array('cntopen', 'cntwriteto', 'notreadable');
-                foreach ($specialKeys as $key2) {
-                    $o .= <<<EOT
-\$pluginloader_tx['error']['$key2']=\$tx['error']['$key2'];
-
-EOT;
-                }
-            }
         } else {
             foreach ($texts as $key => $val) {
                 $key = str_replace('|', '_', $key);
@@ -294,12 +264,7 @@ EOT;
     {
         $filename = $this->filename($module, $lang);
         $contents = $this->phpCode($module, $texts);
-        if (function_exists('XH_writeFile')) {
-            $func = 'XH_writeFile';
-        } else {
-            $func = 'file_put_contents';
-        }
-        return $func($filename, $contents) !== false;
+        return XH_writeFile($filename, $contents) !== false;
     }
 
     /**

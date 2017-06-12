@@ -50,10 +50,10 @@ class ViewsTest extends PHPUnit_Framework_TestCase
     public function dataForMessage()
     {
         return array(
-            array('success', ''),
-            array('info', ''),
-            array('warning', 'cmsimplecore_warning'),
-            array('fail', 'cmsimplecore_warning')
+            array('success', 'xh_success'),
+            array('info', 'xh_info'),
+            array('warning', 'xh_warning'),
+            array('fail', 'xh_fail')
         );
     }
 
@@ -79,7 +79,7 @@ class ViewsTest extends PHPUnit_Framework_TestCase
         $plugin_tx['translator']['message_save_success'] = 'OK';
         $matcher = array(
             'tag' => 'p',
-            'attributes' => array('class' => ''),
+            'attributes' => array('class' => 'xh_success'),
             'content' => 'OK'
         );
         $actual = $this->views->saveMessage(true, '');

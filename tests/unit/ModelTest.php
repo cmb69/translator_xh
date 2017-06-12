@@ -52,7 +52,6 @@ class ModelTest extends PHPUnit_Framework_TestCase
         file_put_contents($pth['folder']['flags'] . 'en.gif', '');
         mkdir($pth['folder']['language'], 0777, true);
         mkdir($pth['folder']['plugins'], 0777, true);
-        mkdir($pth['folder']['plugins'] . 'pluginloader/languages', 0777, true);
         mkdir($pth['folder']['plugins'] . 'foo/languages', 0777, true);
         mkdir($pth['folder']['plugins'] . 'bar/languages', 0777, true);
         $this->texts = array(
@@ -98,7 +97,7 @@ class ModelTest extends PHPUnit_Framework_TestCase
     {
         global $pth;
 
-        $expected = array('bar', 'foo', 'pluginloader');
+        $expected = array('bar', 'foo');
         $actual = $this->model->plugins();
         $this->assertEquals($expected, $actual);
     }
@@ -107,7 +106,7 @@ class ModelTest extends PHPUnit_Framework_TestCase
     {
         global $pth;
 
-        $expected = array('CORE', 'CORE-LANGCONFIG', 'bar', 'foo', 'pluginloader');
+        $expected = array('CORE', 'bar', 'foo');
         $actual = $this->model->modules();
         $this->assertEquals($expected, $actual);
     }
@@ -116,7 +115,6 @@ class ModelTest extends PHPUnit_Framework_TestCase
     {
         return array(
             array('CORE', 'en', 'cmsimple/languages/en.php'),
-            array('CORE-LANGCONFIG', 'de', 'cmsimple/languages/deconfig.php'),
             array('pagemanager', 'da', 'plugins/pagemanager/languages/da.php')
         );
     }
@@ -138,20 +136,6 @@ class ModelTest extends PHPUnit_Framework_TestCase
         return array(
             array(
                 'CORE', 'en',
-                array(
-                    'a|1' => 'one', 'a|2' => 'two',
-                    'b|1' => 'three', 'b|2' => 'four'
-                )
-            ),
-            array(
-                'CORE-LANGCONFIG', 'en',
-                array(
-                    'a|1' => 'one', 'a|2' => 'two',
-                    'b|1' => 'three', 'b|2' => 'four'
-                )
-            ),
-            array(
-                'pluginloader', 'en',
                 array(
                     'a|1' => 'one', 'a|2' => 'two',
                     'b|1' => 'three', 'b|2' => 'four'
