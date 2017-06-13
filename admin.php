@@ -27,6 +27,4 @@ if (!defined('CMSIMPLE_XH_VERSION')) {
     exit;
 }
 
-define('TRANSLATOR_VERSION', '@TRANSLATOR_VERSION@');
-
-new Translator\Controller();
+(new Translator\Plugin)->run();

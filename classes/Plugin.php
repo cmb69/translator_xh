@@ -21,8 +21,9 @@
 
 namespace Translator;
 
-class Controller
+class Plugin
 {
+    const VERSION = '@TRANSLATOR_VERSION@';
     /**
      * @var Model
      */
@@ -40,7 +41,44 @@ class Controller
     {
         $this->model = new Model();
         $this->views = new Views($this->model);
-        $this->dispatch();
+    }
+
+    /**
+     * @return void
+     */
+    public function run()
+    {
+        global $o, $translator, $admin, $action;
+
+        if (isset($translator) && $translator == 'true') {
+            $o .= print_plugin_admin('on');
+            switch ($admin) {
+                case '':
+                    $o .= $this->info();
+                    break;
+                case 'plugin_main':
+                    $controller = new MainController;
+                    ob_start();
+                    switch ($action) {
+                        case 'plugin_text':
+                            $controller->defaultAction();
+                            break;
+                        case 'edit':
+                            $controller->editAction();
+                            break;
+                        case 'save':
+                            $controller->saveAction();
+                            break;
+                        case 'zip':
+                            $controller->zipAction();
+                            break;
+                    }
+                    $o .= ob_get_clean();
+                    break;
+                default:
+                    $o .= plugin_admin_common($action, $admin, 'translator');
+            }
+        }
     }
 
     /**
@@ -91,43 +129,5 @@ class Controller
 
         return $this->views->about($pth['folder']['plugin'] . 'translator.png')
             . tag('hr') . $this->views->systemCheck($this->systemChecks());
-    }
-
-    /**
-     * @return void
-     */
-    private function dispatch()
-    {
-        global $o, $translator, $admin, $action;
-
-        if (isset($translator) && $translator == 'true') {
-            $o .= print_plugin_admin('on');
-            switch ($admin) {
-                case '':
-                    $o .= $this->info();
-                    break;
-                case 'plugin_main':
-                    $controller = new MainController;
-                    ob_start();
-                    switch ($action) {
-                        case 'plugin_text':
-                            $controller->defaultAction();
-                            break;
-                        case 'edit':
-                            $controller->editAction();
-                            break;
-                        case 'save':
-                            $controller->saveAction();
-                            break;
-                        case 'zip':
-                            $controller->zipAction();
-                            break;
-                    }
-                    $o .= ob_get_clean();
-                    break;
-                default:
-                    $o .= plugin_admin_common($action, $admin, 'translator');
-            }
-        }
     }
 }

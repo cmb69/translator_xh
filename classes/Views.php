@@ -78,7 +78,7 @@ class Views
     {
         $view = new View('info');
         $view->logo = $iconPath;
-        $view->version = TRANSLATOR_VERSION;
+        $view->version = Plugin::VERSION;
         return (string) $view;
     }
 
