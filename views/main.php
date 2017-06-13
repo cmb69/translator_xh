@@ -2,7 +2,10 @@
     <h1>Translator – <?=$this->text('menu_main')?></h1>
     <ul>
 <?php foreach ($this->modules as $module):?>
-        <?=$this->escape($module)?>
+        <li>
+            <input type="checkbox" name="translator_modules[]" value="<?=$this->escape($module->module)?>" <?=$this->escape($module->checked)?>>
+            <a href="<?=$this->escape($module->url)?><?=$this->escape($module->module)?>"><?=$this->escape($module->name)?></a>
+        </li>
 <?php endforeach?>
     </ul>
     <p style="display: none">

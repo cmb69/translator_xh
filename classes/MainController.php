@@ -21,6 +21,8 @@
 
 namespace Translator;
 
+use stdClass;
+
 class MainController
 {
     /**
@@ -39,15 +41,21 @@ class MainController
     private $lang;
 
     /**
+     * @var XH_CSRFProtection
+     */
+    private $csrfProtector;
+
+    /**
      * @return void
      */
     public function __construct()
     {
-        global $plugin_cf, $plugin_tx;
+        global $plugin_cf, $plugin_tx, $_XH_csrfProtection;
 
         $this->model = new Model();
         $this->conf = $plugin_cf['translator'];
         $this->lang = $plugin_tx['translator'];
+        $this->csrfProtector = $_XH_csrfProtection;
     }
 
     /**
@@ -86,40 +94,27 @@ class MainController
      */
     private function prepareMainView($action, $url, $filename, array $modules)
     {
-        global $_XH_csrfProtection;
-
         $view = new View('main');
         $view->action = $action;
-        $modules = [];
-        foreach ($this->model->modules() as $module) {
-            $modules[] = new HtmlString($this->module($module, $url, $modules));
-        }
-        $view->modules = $modules;
+        $view->modules = $this->getModules($url, $modules);
         $view->filename = $filename;
-        $view->csrfTokenInput = new HtmlString($_XH_csrfProtection->tokenInput());
+        $view->csrfTokenInput = new HtmlString($this->csrfProtector->tokenInput());
         return $view;
     }
 
     /**
-     * @param string $module
      * @param string $url
-     * @return string
+     * @return HtmlString[]
      */
-    private function module($module, $url, array $modules)
+    private function getModules($url, array $modules)
     {
-        $name = ucfirst($module);
-        $checked = in_array($module, $modules)
-            ? ' checked="checked"'
-            : '';
-        $url = XH_hsc($url);
-        return <<<EOT
-        <li>
-            <input type="checkbox" name="translator_modules[]"
-                   value="$module"$checked>
-            <a href="$url$module">$name</a>
-        </li>
-
-EOT;
+        $modules = [];
+        foreach ($this->model->modules() as $module) {
+            $name = ucfirst($module);
+            $checked = in_array($module, $modules) ? 'checked' : '';
+            $modules[] = (object) compact('module', 'name', 'url', 'checked');
+        }
+        return $modules;
     }
 
     /**
@@ -147,15 +142,13 @@ EOT;
      */
     private function prepareEditorView($action, $module, $sourceLanguage, $destinationLanguage)
     {
-        global $_XH_csrfProtection;
-
         $view = new View('editor');
         $view->action = $action;
         $view->moduleName = ucfirst($module);
         $view->sourceLabel = new HtmlString($this->languageLabel($sourceLanguage));
         $view->destinationLabel = new HtmlString($this->languageLabel($destinationLanguage));
-        $view->rows = new HtmlString($this->editorRows($module, $sourceLanguage, $destinationLanguage));
-        $view->csrfTokenInput = new HtmlString($_XH_csrfProtection->tokenInput());
+        $view->rows = $this->getEditorRows($module, $sourceLanguage, $destinationLanguage);
+        $view->csrfTokenInput = new HtmlString($this->csrfProtector->tokenInput());
         return $view;
     }
 
@@ -163,60 +156,39 @@ EOT;
      * @param string $module
      * @param string $sourceLanguage
      * @param string $destinationLanguage
-     * @return string
+     * @return stdClass[]
      */
-    private function editorRows($module, $sourceLanguage, $destinationLanguage)
+    private function getEditorRows($module, $sourceLanguage, $destinationLanguage)
     {
-        global $plugin_cf;
-
-        $pcf = $plugin_cf['translator'];
         $sourceTexts = $this->model->readLanguage($module, $sourceLanguage);
         $destinationTexts = $this->model->readLanguage($module, $destinationLanguage);
-        if ($pcf['sort_load']) {
+        if ($this->conf['sort_load']) {
             ksort($sourceTexts);
         }
-        $o = '';
+        $rows = [];
         foreach ($sourceTexts as $key => $sourceText) {
-            $o .= $this->editorRow($key, $sourceText, $destinationTexts);
+            $rows[] = $this->getEditorRow($key, $sourceText, $destinationTexts);
         }
-        return $o;
+        return $rows;
     }
 
     /**
      * @param string $key
      * @param string $sourceText
-     * @return string
+     * @return stdClass
      */
-    private function editorRow($key, $sourceText, array $destinationTexts)
+    private function getEditorRow($key, $sourceText, array $destinationTexts)
     {
-        global $plugin_tx;
-
-        $ptx = $plugin_tx['translator'];
         if (isset($destinationTexts[$key])) {
             $destinationText = $destinationTexts[$key];
-        } elseif ($ptx['default_translation'] != '') {
-            $destinationText = $ptx['default_translation'];
+        } elseif ($this->lang['default_translation'] != '') {
+            $destinationText = $this->lang['default_translation'];
         } else {
             $destinationText = $sourceText;
         }
-        $class = isset($destinationTexts[$key]) ? '' : ' class="translator_new"';
+        $className = isset($destinationTexts[$key]) ? '' : 'translator_new';
         $displayKey = strtr($key, '_|', '  ');
-        $sourceText = XH_hsc($sourceText);
-        $destinationText = XH_hsc($destinationText);
-        return <<<EOT
-        <tr>
-            <td class="translator_key">$displayKey</td>
-            <td class="translator_from">
-                <textarea rows="2" cols="40" readonly="readonly"
-                    >$sourceText</textarea>
-            </td>
-            <td class="translator_to">
-                <textarea name="translator_string_$key"$class rows="2" cols="40"
-                    >$destinationText</textarea>
-            </td>
-        </tr>
-
-EOT;
+        return (object) compact('key', 'displayKey', 'className', 'sourceText', 'destinationText');
     }
 
     /**
@@ -241,11 +213,7 @@ EOT;
      */
     public function saveAction()
     {
-        global $_XH_csrfProtection;
-
-        if (isset($_XH_csrfProtection)) {
-            $_XH_csrfProtection->check();
-        }
+        $this->csrfProtector->check();
         $module = $this->sanitizedName($_GET['translator_module']);
         $sourceLanguage = $this->sanitizedName($_GET['translator_from']);
         $destinationLanguage = $this->sanitizedName($_GET['translator_to']);
@@ -272,11 +240,7 @@ EOT;
      */
     public function zipAction()
     {
-        global $_XH_csrfProtection;
-
-        if (isset($_XH_csrfProtection)) {
-            $_XH_csrfProtection->check();
-        }
+        $this->csrfProtector->check();
         $language = $this->sanitizedName($_GET['translator_lang']);
         if (empty($_POST['translator_modules'])) {
             echo XH_message('warning', $this->lang['message_no_module'])
@@ -297,31 +261,11 @@ EOT;
         $o = $this->saveMessage($saved, $filename)
             . $this->defaultAction();
         if ($saved) {
-            $url = $this->baseUrl() . $filename;
-            $url = $this->model->canonicalUrl($url);
-            $o .= $this->downloadUrl($url);
+            $view = new View('download');
+            $view->url = $this->model->canonicalUrl($this->baseUrl() . $filename);
+            $o .= $view;
         }
         echo $o;
-    }
-
-    /**
-     * @param string $url
-     * @return string
-     */
-    private function downloadUrl($url)
-    {
-        global $plugin_tx;
-
-        $ptx = $plugin_tx['translator'];
-        $o = <<<EOT
-<p>
-    $ptx[label_download_url]<br>
-    <input id="translator_download_link" type="text" readonly="readonly"
-           value="$url">
-</p>
-
-EOT;
-        return $o;
     }
 
     /**
@@ -363,11 +307,7 @@ EOT;
      */
     private function saveMessage($success, $filename)
     {
-        global $plugin_tx;
-
-        $ptx = $plugin_tx['translator'];
         $type = $success ? 'success' : 'fail';
-        $message = sprintf($ptx['message_save_' . $type], $filename);
-        return XH_message($type, $message);
+        return XH_message($type, $this->lang["message_save_{$type}"], $filename);
     }
 }
