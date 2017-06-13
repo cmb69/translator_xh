@@ -3,22 +3,26 @@
 
 <head>
 <meta http-equiv="content-type" content="text/html;charset=utf-8">
-<title>Translator_XH &ndash; Handbuch</title>
+<title>Translator_XH – Handbuch</title>
 <link rel="stylesheet" type="text/css" href="./stylesheet.css">
 </head>
 
 <body>
 
-<h1>Translator_XH &ndash; ein CMSimple_XH Plugin</h1>
-<img src="../translator.png" alt="Translate" width="128" height="128"
-style="float:left; margin-right:16px">
-<p>Translator_XH ist ein fortgeschrittenes Tool um den CMSimple_XH Systemkern
-und Plugins zu übersetzen. Es ist vor allem für Übersetzer
-gedacht, die ihre Übersetzungen veröffentlichen möchten. Wenn Sie nur ein paar
-Sprach-Texte übersetzen möchten, sollten CMSimple_XHs eingebaute Sprachformulare
-ausreichen.</p>
+<article>
+<h1>Translator_XH – Handbuch</h1>
+<img src="../translator.png" alt="Translate" width="128" height="128" style="float:left; margin: 0 1.5em 0.5em 0">
+<p>
+    Translator_XH ist ein fortgeschrittenes Tool um den CMSimple_XH Systemkern
+    und Plugins zu übersetzen. Es ist vor allem für Übersetzer gedacht, die ihre
+    Übersetzungen veröffentlichen möchten. Wenn Sie nur ein paar Sprach-Texte
+    übersetzen möchten, sollten CMSimple_XHs eingebaute Sprachformulare
+    ausreichen.
+</p>
 
-<ul id="nav">
+<nav id="nav">
+<h2>Inhaltsverzeichnis</h2>
+<ul>
 <li><a href="#notice">Wichtiger Hinweis</a></li>
 <li><a href="#requirements">Voraussetzungen</a></li>
 <li><a href="#installation">Installation</a></li>
@@ -28,101 +32,150 @@ ausreichen.</p>
 <li><a href="#license">Lizenz</a></li>
 <li><a href="#credits">Danksagung</a></li>
 </ul>
+</nav>
 
-<div id="body">
+<section id="notice">
+<h2>Wichtiger Hinweis</h2>
+<p class="important">
+    Translator_XH konnte bisher nicht in diversen Umgebungen getestet werden. Es
+    handelt sich um eine so genannte Beta-Version. Vorsicht bei der Nutzung.
+</p>
+</section>
 
-<p><strong>Bitte lesen Sie diese Dokumentation <em>bevor</em> Sie auf Probleme
-stoßen!</strong></p>
+<section id="requirements">
+<h2>Voraussetzungen</h2>
+<p>
+    Translator_XH ist ein Plugin für CMSimple_XH ≥ 1.6.3. Es benötigt PHP ≥
+    5.4.0 mit der <i>zlib</i> Extension.
+</p>
+</section>
 
-<h2 id="notice">Wichtiger Hinweis</h2>
-<p><strong>Translator_XH konnte bisher nicht in diversen Umgebungen getestet
-werden. Es handelt sich um eine so genannte BETA Version. Vorsicht bei der
-Nutzung.</strong></p>
-<div class="toplink"><a href="#">zum Seitenanfang</a></div>
-
-<h2 id="requirements">Voraussetzungen</h2>
-<p>Translator_XH ist ein Plugin für CMSimple_XH ≥ 1.6.3. Es
-benötigt PHP ≥ 5.4.0.</p>
-<div class="toplink"><a href="#">zum Seitenanfang</a></div>
-
-<h2 id="installation">Installation</h2>
-<p>Die Installation erfolgt wie bei vielen anderen CMSimple_XH-Plugins auch. Im
-<a href="http://www.cmsimple-xh.org/wiki/doku.php/de:installation"> CMSimple_XH
-Wiki</a> finden sie ausführliche Hinweise.</p>
+<section id="installation">
+<h2>Installation</h2>
+<p>
+    Die Installation erfolgt wie bei vielen anderen CMSimple_XH-Plugins auch. Im
+    <a href="http://www.cmsimple-xh.org/wiki/doku.php/de:installation">
+    CMSimple_XH Wiki</a> finden sie ausführliche Hinweise.
+</p>
 <ol>
-<li>Sichern Sie die Daten auf Ihrem Server.</li>
-<li>Entpacken Sie die ZIP-Datei auf Ihrem Computer.</li>
-<li>Laden Sie das gesamte Verzeichnis translator/ auf Ihren Server in das
-plugins/ Verzeichnis von CMSimple_XH hoch.</li>
-<li>Vergeben Sie Schreibrechte für die Unterverzeichnisse css/, config/ und
-languages/. Die languages/ Ordner des Systemkerns und der
-Plugins, die übersetzt werden sollen, benötigen ebenfalls Schreibrechte.</li>
-<li>Navigieren Sie zur Administration von Translator_XH ("Plugins" &rarr;
-"Translator"), und prüfen Sie, ob alle Voraussetzungen für den Betrieb erfüllt
-sind.</li>
+<li class="important">
+    Sichern Sie die Daten auf Ihrem Server.
+</li>
+<li>
+    Entpacken Sie die ZIP-Datei auf Ihrem Computer.
+</li>
+<li>
+    Laden Sie das gesamte Verzeichnis <code>translator/</code> auf Ihren Server
+    in das <code>plugins/</code> Verzeichnis von CMSimple_XH hoch.
+</li>
+<li>
+    Vergeben Sie Schreibrechte für die Unterverzeichnisse <code>css/</code>,
+    <code>config/</code> und <code>languages/</code>. Die
+    <code>languages/</code> Ordner des Systemkerns und der Plugins, die
+    übersetzt werden sollen, benötigen ebenfalls Schreibrechte.
+</li>
+<li class="important">
+    Navigieren Sie zur Administration von Translator_XH (<i>Plugins</i> →
+    <i>Translator</i>), und prüfen Sie, ob alle Voraussetzungen für den Betrieb
+    erfüllt sind.
+</li>
 </ol>
-<div class="toplink"><a href="#">zum Seitenanfang</a></div>
+</section>
 
-<h2 id="settings">Einstellungen</h2>
-<p>Die Konfiguration des Plugins erfolgt wie bei vielen anderen CMSimple_XH
-Plugins auch im Administrationsbereich der Homepage. Wählen Sie "Plugins" &rarr;
-"Translator" aus.</p>
-<p>Sie können die Original-Einstellungen unter "Konfiguration" ändern. Beim
-Überfahren der Hilfe-Icons mit der Maus werden Hinweise zu den Einstellungen
-angezeigt.</p>
-<p>Die Lokalisierung wird unter "Sprache" vorgenommen. Sie können die
-Zeichenketten in Ihre eigene Sprache übersetzen, oder sie entsprechend Ihren
-Anforderungen anpassen. Wenn Sie bevorzugen dies mit den gehobenen Möglichkeiten
-von Translator_XH zu tun, dann lesen Sie unter <a href="#usage">Verwendung</a>
-nach wie es gemacht wird.</p>
-<p>Das Aussehen von Translator_XH kann unter "Stylesheet" angepasst werden.</p>
-<div class="toplink"><a href="#">zum Seitenanfang</a></div>
+<section id="settings">
+<h2>Einstellungen</h2>
+<p>
+    Die Konfiguration des Plugins erfolgt wie bei vielen anderen CMSimple_XH
+    Plugins auch im Administrationsbereich der Homepage. Wählen Sie
+    <i>Plugins</i> → <i>Translator</i> aus.
+</p>
+<p>
+    Sie können die Original-Einstellungen unter <i>Konfiguration</i> ändern.
+    Beim Überfahren der Hilfe-Icons mit der Maus werden Hinweise zu den
+    Einstellungen angezeigt.
+</p>
+<p>
+    Die Lokalisierung wird unter <i>Sprache</i> vorgenommen. Sie können die
+    Zeichenketten in Ihre eigene Sprache übersetzen, falls keine entsprechende
+    Sprachdatei zur Verfügung steht, oder sie entsprechend Ihren Anforderungen
+    anpassen. Wenn Sie bevorzugen dies mit den gehobenen Möglichkeiten von
+    Translator_XH zu tun, dann lesen Sie unter <a href="#usage">Verwendung</a>
+    nach wie es gemacht wird.
+</p>
+<p>
+    Das Aussehen von Translator_XH kann unter <i>Stylesheet</i> angepasst
+    werden.
+</p>
+</section>
 
-<h2 id="usage">Verwendung</h2>
-<p>Wählen Sie "Plugins" &rarr; "Translator" &rarr; "Übersetzungen" in
-CMSimple_XHs Administrationsbereich, um eine Liste aller übersetzbaren Module
-angezeigt zu bekommen. Folgen Sie einfach einem der Links um das entsprechende
-Modul zu übersetzen &ndash; das Übersetzungsformular sollte sich von selbst
-erklären.</p>
-<p>Wenn Sie die übersetzten Module als ZIP-Archiv mit der benötigten
-Ordnerstruktur speichern wollen, dann wählen Sie einfach die gewünschten Module,
-geben einen Dateinamen ein und drücken Sie den Speichern-Schalter.</p>
-<div class="toplink"><a href="#">zum Seitenanfang</a></div>
+<section id="usage">
+<h2>Verwendung</h2>
+<p>
+    Wählen Sie <i>Plugins</i> → <i>Translator</i> → <i>Übersetzungen</i> in
+    CMSimple_XHs Administrationsbereich, um eine Liste aller übersetzbaren
+    Module angezeigt zu bekommen. Folgen Sie einfach einem der Links um das
+    entsprechende Modul zu übersetzen – das Übersetzungsformular sollte sich von
+    selbst erklären.
+</p>
+<p>
+    Wenn Sie die übersetzten Module als ZIP-Archiv mit der benötigten
+    Ordnerstruktur speichern wollen, dann wählen Sie einfach die gewünschten
+    Module, geben einen Dateinamen ein und drücken Sie den Speichern-Schalter.
+</p>
+</section>
 
-<!--<h2 id="limitations">Beschränkungen</a></h2>-->
-<!--<div class="toplink"><a href="#">zum Seitenanfang</a></div>-->
+<!--
+<section id="limitations">
+<h2>Beschränkungen</h2>
+</section>
+-->
 
-<h2 id="license">Lizenz</h2>
-<p>Translator_XH kann unter Einhaltung der <a
-href="http://www.gnu.org/licenses/gpl.html">GPLv3</a> verwendet werden.</p>
-<p>&copy; 2011-2017 Christoph M. Becker</p>
-<p>Polnische Übersetung &copy; 2012 Kamil Krzes<br>
-Russische Übersetzung &copy; 2012 Lybomyr Kydray</p>
-<div class="toplink"><a href="#">zum Seitenanfang</a></div>
+<section id="license">
+<h2>Lizenz</h2>
+<p>
+    Translator_XH kann unter Einhaltung der <a
+    href="http://www.gnu.org/licenses/gpl.html">GPLv3</a> verwendet werden.
+</p>
+<p>
+    Copyright © 2011-2017 Christoph M. Becker
+</p>
+<p>
+    Polnische Übersetung © 2012 Kamil Krzes<br>
+    Russische Übersetzung © 2012 Lybomyr Kydray
+</p>
+</section>
 
-<h2 id="credits">Danksagung</h2>
-<p>Translator_XH wurde von Tata und oldnema angeregt. Vielen Dank für Ihre
-andauernden Bemühungen CMSimple_XH und dessen Plugins für slowakisch bzw.
-tschechisch sprechende Anwender verfügbar zu machen.</p>
-<p>Dieses Plugin verwendet zip.lib.php von Garvin Hicking. Vielen Dank für die
-freie Verwendbarkeit dieser guten PHP Klasse.</p>
-<p>Das Plugin-Icon wurde von <a
-href="http://carlosjj.deviantart.com/">carlosjj</a> gestaltet. Vielen Dank für
-die freie Verwendbarkeit dieses Icons.</p>
-<p>Dieses Plugin verwendet "free application icons" von <a
-href="http://www.aha-soft.com/">Aha-Soft</a>. Vielen Dank für die freie
-Verwendbarkeit dieser Icons.</p>
-<p>Vielen Dank an die Gemeinschaft im <a
-href="http://www.cmsimpleforum.com/">CMSimple_XH-Forum</a> für Tipps, Anregungen
-und das Testen. Besonders möchte ich oldnema, Tata und svasti für Ihr
-ermutigendes Feedback danken.</p>
-<p>Zu guter Letzt vielen Dank an <a href="http://harteg.dk/">Peter Harteg</a>,
-den "Vater" von CMSimple, und allen Entwicklern von <a
-href="http://www.cmsimple-xh.org/">CMSimple_XH</a>, ohne die dieses fantastische
-CMS nicht existieren würde.</p>
-<div class="toplink"><a href="#">zum Seitenanfang</a></div>
+<section id="credits">
+<h2>Danksagung</h2>
+<p>
+    Translator_XH wurde von <i>Tata</i> und <i>oldnema</i> angeregt. Vielen Dank
+    für Ihre andauernden Bemühungen CMSimple_XH und dessen Plugins für
+    slowakisch bzw. tschechisch sprechende Anwender verfügbar zu machen.
+</p>
+<p>
+    Dieses Plugin verwendet <code>zip.lib.php</code> von Garvin Hicking. Vielen
+    Dank für die freie Verwendbarkeit dieser guten PHP Klasse.
+</p>
+<p>
+    Das Plugin-Icon wurde von <a
+    href="http://carlosjj.deviantart.com/">carlosjj</a> gestaltet. Vielen Dank
+    für die freie Verwendbarkeit dieses Icons.
+</p>
+<p>
+    Vielen Dank an die Gemeinschaft im <a
+    href="http://www.cmsimpleforum.com/">CMSimple_XH-Forum</a> für Tipps,
+    Anregungen und das Testen. Besonders möchte ich <i>oldnema</i>, <i>Tata</i>
+    und <i>svasti</i> für Ihr ermutigendes Feedback danken.
+</p>
+<p>
+    Zu guter Letzt vielen Dank an <a href="http://harteg.dk/">Peter Harteg</a>,
+    den "Vater" von CMSimple, und allen Entwicklern von <a
+    href="http://www.cmsimple-xh.org/">CMSimple_XH</a>, ohne die dieses
+    fantastische CMS nicht existieren würde.
+</p>
+</section>
 
-</div>
+</article>
 
 </body>
 
