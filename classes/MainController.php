@@ -63,7 +63,7 @@ class MainController
     {
         global $pth, $sn, $sl, $hjs;
 
-        $filename = $pth['folder']['plugins'] . 'translator/translator.js';
+        $filename = $pth['folder']['plugins'] . 'translator/translator.min.js';
         $hjs .= '<script type="text/javascript" src="' . $filename
             . '"></script>' . PHP_EOL;
         $language = ($this->conf['translate_to'] == '')

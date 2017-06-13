@@ -77,7 +77,7 @@
         </move>
         <jsMin targetDir="dist" suffix="" failonerror="true">
             <fileset dir="export">
-                <include name="translator.js"/>
+                <include name="translator.min.js"/>
             </fileset>
         </jsMin>
         <move todir="dist">
@@ -89,7 +89,6 @@
                 <exclude name="pax_global_header"/>
                 <exclude name="phpcompatinfo.json"/>
                 <exclude name="README.md"/>
-                <exclude name="translator.js"/>
             </fileset>
         </move>
         <delete dir="export"/>
