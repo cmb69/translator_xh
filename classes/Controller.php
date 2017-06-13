@@ -44,38 +44,6 @@ class Controller
     }
 
     /**
-     * @return string
-     */
-    private function baseUrl()
-    {
-        global $sn;
-
-        return 'http'
-            . (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 's' : '')
-            . '://' . $_SERVER['HTTP_HOST']
-            . preg_replace('/index\.php$/', '', $sn);
-    }
-
-    /**
-     * Returns a sanitized name resp. an array of sanitized names.
-     *
-     * Sanitizing means, that all invalid characters are stripped; valid
-     * characters are the 26 roman letters, the 10 arabic digits, the hyphen
-     * and the underscore.
-     *
-     * @param mixed $input A name resp. an array of names.
-     * @return mixed
-     */
-    private function sanitizedName($input)
-    {
-        if (is_array($input)) {
-            return array_map(array($this, 'sanitizedName'), $input);
-        } else {
-            return preg_replace('/[^a-z0-9_-]/i', '', $input);
-        }
-    }
-
-    /**
      * @return array
      */
     private function systemChecks()
@@ -117,126 +85,12 @@ class Controller
     /**
      * @return string
      */
-    private function administrate()
-    {
-        global $pth, $sn, $sl, $hjs, $plugin_cf;
-
-        $pcf = $plugin_cf['translator'];
-        $filename = $pth['folder']['plugins'] . 'translator/translator.js';
-        $hjs .= '<script type="text/javascript" src="' . $filename
-            . '"></script>' . PHP_EOL;
-        $language = ($pcf['translate_to'] == '')
-            ? $sl
-            : $pcf['translate_to'];
-        $action = $sn . '?&translator&admin=plugin_main&action=zip'
-            . '&translator_lang=' . $language;
-        $url = $sn . '?&translator&admin=plugin_main&action=edit'
-            . ($pcf['translate_fullscreen'] ? '&print' : '')
-            . '&translator_from=' . $pcf['translate_from']
-            . '&translator_to=' . $language . '&translator_module=';
-        $filename = isset($_POST['translator_filename'])
-            ? $this->sanitizedName($_POST['translator_filename'])
-            : '';
-        $modules = isset($_POST['translator_modules'])
-            ? $this->sanitizedName($_POST['translator_modules'])
-            : array();
-        return $this->views->main($action, $url, $filename, $modules);
-    }
-
-    /**
-     * @return string
-     */
     private function info()
     {
         global $pth;
 
         return $this->views->about($pth['folder']['plugin'] . 'translator.png')
             . tag('hr') . $this->views->systemCheck($this->systemChecks());
-    }
-
-    /**
-     * @return string
-     */
-    private function edit()
-    {
-        global $sn;
-
-        $module = $this->sanitizedName($_GET['translator_module']);
-        $from = $this->sanitizedName($_GET['translator_from']);
-        $to = $this->sanitizedName($_GET['translator_to']);
-        $url = $sn . '?&translator&admin=plugin_main&action=save'
-            . '&translator_from=' . $from . '&translator_to=' . $to
-            . '&translator_module=' . $module;
-        return $this->views->editor($url, $module, $from, $to);
-    }
-
-    /**
-     * @return string
-     */
-    private function save()
-    {
-        global $plugin_cf, $plugin_tx, $_XH_csrfProtection;
-
-        $pcf = $plugin_cf['translator'];
-        $ptx = $plugin_tx['translator'];
-        if (isset($_XH_csrfProtection)) {
-            $_XH_csrfProtection->check();
-        }
-        $module = $this->sanitizedName($_GET['translator_module']);
-        $sourceLanguage = $this->sanitizedName($_GET['translator_from']);
-        $destinationLanguage = $this->sanitizedName($_GET['translator_to']);
-        $destinationTexts = array();
-        $sourceTexts = $this->model->readLanguage($module, $sourceLanguage);
-        if ($pcf['sort_save']) {
-            ksort($sourceTexts);
-        }
-        foreach (array_keys($sourceTexts) as $key) {
-            $value = $_POST['translator_string_' . $key];
-            if ($value != '' && $value != $ptx['default_translation']) {
-                $destinationTexts[$key] = $value;
-            }
-        }
-        $saved = $this->model->writeLanguage($module, $destinationLanguage, $destinationTexts);
-        $filename = $this->model->filename($module, $destinationLanguage);
-        $o = $this->views->saveMessage($saved, $filename);
-        $o .= $this->administrate();
-        return $o;
-    }
-
-    /**
-     * @return string
-     */
-    private function zip()
-    {
-        global $plugin_tx, $_XH_csrfProtection;
-
-        $ptx = $plugin_tx['translator'];
-        if (isset($_XH_csrfProtection)) {
-            $_XH_csrfProtection->check();
-        }
-        $language = $this->sanitizedName($_GET['translator_lang']);
-        if (empty($_POST['translator_modules'])) {
-            return $this->views->message('warning', $ptx['message_no_module'])
-                . $this->administrate();
-        }
-        $modules = $this->sanitizedName($_POST['translator_modules']);
-        try {
-            $contents = $this->model->zipArchive($modules, $language);
-        } catch (Exception $exception) {
-            return $this->views->message('fail', $exception->getMessage())
-                . $this->administrate();
-        }
-        $filename = $this->sanitizedName($_POST['translator_filename']);
-        $filename = $this->model->downloadFolder() . $filename . '.zip';
-        $saved = file_put_contents($filename, $contents) !== false;
-        $o = $this->views->saveMessage($saved, $filename)
-            . $this->administrate();
-        if ($saved) {
-            $url = $this->baseUrl() . $filename;
-            $url = $this->model->canonicalUrl($url);
-            $o .= $this->views->downloadUrl($url);
-        }
-        return $o;
     }
 
     /**
@@ -253,20 +107,23 @@ class Controller
                     $o .= $this->info();
                     break;
                 case 'plugin_main':
+                    $controller = new MainController;
+                    ob_start();
                     switch ($action) {
                         case 'plugin_text':
-                            $o .= $this->administrate();
+                            $controller->defaultAction();
                             break;
                         case 'edit':
-                            $o .= $this->edit();
+                            $controller->editAction();
                             break;
                         case 'save':
-                            $o .= $this->save();
+                            $controller->saveAction();
                             break;
                         case 'zip':
-                            $o .= $this->zip();
+                            $controller->zipAction();
                             break;
                     }
+                    $o .= ob_get_clean();
                     break;
                 default:
                     $o .= plugin_admin_common($action, $admin, 'translator');
