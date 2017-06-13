@@ -29,9 +29,9 @@ class Plugin
      */
     public function run()
     {
-        global $o, $translator, $admin, $action;
+        global $o, $admin, $action;
 
-        if (isset($translator) && $translator == 'true') {
+        if (XH_wantsPluginAdministration('translator')) {
             $o .= print_plugin_admin('on');
             switch ($admin) {
                 case '':
