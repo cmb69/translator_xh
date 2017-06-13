@@ -19,12 +19,4 @@
  * along with Translator_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
- * Prevent direct access.
- */
-if (!defined('CMSIMPLE_XH_VERSION')) {
-    header('HTTP/1.0 403 Forbidden');
-    exit;
-}
-
 (new Translator\Plugin)->run();
