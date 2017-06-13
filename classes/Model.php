@@ -21,6 +21,8 @@
 
 namespace Translator;
 
+use zipfile;
+
 class Model
 {
     /**
