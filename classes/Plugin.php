@@ -31,6 +31,7 @@ class Plugin
     {
         global $o, $admin, $action;
 
+        XH_registerStandardPluginMenuItems(true);
         if (XH_wantsPluginAdministration('translator')) {
             $o .= print_plugin_admin('on');
             switch ($admin) {
