@@ -25,25 +25,6 @@ class Plugin
 {
     const VERSION = '@TRANSLATOR_VERSION@';
     /**
-     * @var Model
-     */
-    private $model;
-
-    /**
-     * @var Views
-     */
-    private $views;
-
-    /**
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->model = new Model();
-        $this->views = new Views($this->model);
-    }
-
-    /**
      * @return void
      */
     public function run()
@@ -88,6 +69,10 @@ class Plugin
     {
         global $pth;
 
-        return $this->views->about($pth['folder']['plugin'] . 'translator.png');
+        $view = new View('info');
+        $view->logo = "{$pth['folder']['plugin']}translator.png";
+        $view->version = Plugin::VERSION;
+        $view->checks = (new SystemCheckService)->getChecks();
+        return (string) $view;
     }
 }
