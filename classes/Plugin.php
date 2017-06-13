@@ -82,52 +82,12 @@ class Plugin
     }
 
     /**
-     * @return array
-     */
-    private function systemChecks()
-    {
-        global $pth, $plugin_tx;
-
-        $ptx = $plugin_tx['translator'];
-        $requiredPhpVersion = '5.4.0';
-        $requiredXhVersion = '1.6.3';
-        $checks = array();
-        $checks[sprintf($ptx['syscheck_phpversion'], $requiredPhpVersion)]
-            = version_compare(PHP_VERSION, $requiredPhpVersion, 'ge')
-                ? 'ok' : 'fail';
-        foreach (array('zlib') as $extension) {
-            $checks[sprintf($ptx['syscheck_extension'], $extension)]
-                = extension_loaded($extension) ? 'ok' : 'fail';
-        }
-        $checks[sprintf($ptx['syscheck_xhversion'], $requiredXhVersion)]
-            = version_compare($this->model->xhVersion(), $requiredXhVersion, 'ge')
-                ? 'ok' : 'warn';
-        $folders = array();
-        foreach ($this->model->plugins() as $plugin) {
-            $folders[] = $pth['folder']['plugins'] . $plugin . '/languages/';
-        }
-        $furtherFolders = array(
-            $pth['folder']['language'],
-            $pth['folder']['plugins'] . 'translator/config',
-            $pth['folder']['plugins'] . 'translator/css',
-            $this->model->downloadFolder()
-        );
-        $folders = array_merge($folders, $furtherFolders);
-        foreach ($folders as $folder) {
-            $checks[sprintf($ptx['syscheck_writable'], $folder)]
-                = is_writable($folder) ? 'ok' : 'warn';
-        }
-        return $checks;
-    }
-
-    /**
      * @return string
      */
     private function info()
     {
         global $pth;
 
-        return $this->views->about($pth['folder']['plugin'] . 'translator.png')
-            . tag('hr') . $this->views->systemCheck($this->systemChecks());
+        return $this->views->about($pth['folder']['plugin'] . 'translator.png');
     }
 }

@@ -79,36 +79,8 @@ class Views
         $view = new View('info');
         $view->logo = $iconPath;
         $view->version = Plugin::VERSION;
+        $view->checks = (new SystemCheckService)->getChecks();
         return (string) $view;
-    }
-
-    /**
-     * @param array $checks
-     * @return string
-     */
-    public function systemCheck($checks)
-    {
-        global $pth, $plugin_tx;
-
-        $ptx = $plugin_tx['translator'];
-        $imgdir = $pth['folder']['plugins'] . 'translator/images/';
-        $o = <<<EOT
-<!-- Translator_XH: System Check -->
-<h4>$ptx[syscheck_title]</h4>
-<ul style="list-style: none">
-
-EOT;
-        foreach ($checks as $check => $state) {
-            $o .= <<<EOT
-    <li><img src="$imgdir$state.png" alt="$state"> $check</li>
-
-EOT;
-        }
-        $o .= <<<EOT
-</ul>
-
-EOT;
-        return $o;
     }
 
     /**

@@ -8,9 +8,6 @@
  */
 
 $plugin_tx['translator']['syscheck_title']="Проверка системы";
-$plugin_tx['translator']['syscheck_phpversion']="Версия PHP &ge; %s";
-$plugin_tx['translator']['syscheck_extension']="Расширение '%s' загружено";
-$plugin_tx['translator']['syscheck_writable']="'%s' доступно для записи";
 $plugin_tx['translator']['menu_main']="Переводы";
 /* added */
 $plugin_tx['translator']['menu_css']="Стили";
