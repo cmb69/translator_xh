@@ -37,25 +37,6 @@ class Views
     }
 
     /**
-     * @param string $string
-     * @return string
-     */
-    private function hsc($string)
-    {
-        return XH_hsc($string);
-    }
-
-    /**
-     * @param string $type
-     * @param string $message
-     * @return string
-     */
-    public function message($type, $message)
-    {
-        return XH_message($type, $message);
-    }
-
-    /**
      * @param bool $success
      * @param string $filename
      * @return string
@@ -67,7 +48,7 @@ class Views
         $ptx = $plugin_tx['translator'];
         $type = $success ? 'success' : 'fail';
         $message = sprintf($ptx['message_save_' . $type], $filename);
-        return $this->message($type, $message);
+        return XH_message($type, $message);
     }
 
     /**
@@ -111,7 +92,7 @@ class Views
         $checked = in_array($module, $modules)
             ? ' checked="checked"'
             : '';
-        $url = $this->hsc($url);
+        $url = XH_hsc($url);
         return <<<EOT
         <li>
             <input type="checkbox" name="translator_modules[]"
@@ -163,8 +144,8 @@ EOT;
         }
         $class = isset($destinationTexts[$key]) ? '' : ' class="translator_new"';
         $displayKey = strtr($key, '_|', '  ');
-        $sourceText = $this->hsc($sourceText);
-        $destinationText = $this->hsc($destinationText);
+        $sourceText = XH_hsc($sourceText);
+        $destinationText = XH_hsc($destinationText);
         return <<<EOT
         <tr>
             <td class="translator_key">$displayKey</td>

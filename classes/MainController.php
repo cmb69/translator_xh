@@ -143,7 +143,7 @@ class MainController
         }
         $language = $this->sanitizedName($_GET['translator_lang']);
         if (empty($_POST['translator_modules'])) {
-            echo $this->views->message('warning', $this->lang['message_no_module'])
+            echo XH_message('warning', $this->lang['message_no_module'])
                 . $this->defaultAction();
             return;
         }
@@ -151,7 +151,7 @@ class MainController
         try {
             $contents = $this->model->zipArchive($modules, $language);
         } catch (Exception $exception) {
-            echo $this->views->message('fail', $exception->getMessage())
+            echo XH_message('fail', $exception->getMessage())
                 . $this->defaultAction();
             return;
         }
