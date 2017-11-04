@@ -22,6 +22,7 @@
 namespace Translator;
 
 use Pfw\View\HtmlView;
+use Pfw\SystemCheckService;
 
 class Plugin
 {
@@ -78,9 +79,31 @@ class Plugin
             ->data([
                 'logo' => "{$pth['folder']['plugin']}translator.png",
                 'version' => Plugin::VERSION,
-                'checks' => (new SystemCheckService)->getChecks()
+                'checks' => $this->getSystemChecks()
             ])
             ->render();
         return ob_get_clean();
+    }
+
+    /**
+     * @return SystemCheck[]
+     */
+    private function getSystemChecks()
+    {
+        global $pth;
+
+        $model = new Model;
+        $systemCheckService = (new SystemCheckService)
+            ->minPhpVersion('5.4.0')
+            ->extension('zlib')
+            ->minXhVersion('1.6.3')
+            ->writable($model->downloadFolder())
+            ->writable($pth['folder']['language'])
+            ->writable("{$pth['folder']['plugins']}translator/css/")
+            ->writable("{$pth['folder']['plugins']}translator/config/");
+        foreach ($model->plugins() as $plugin) {
+            $systemCheckService->writable("{$pth['folder']['plugins']}$plugin/languages/");
+        }
+        return $systemCheckService->getChecks();
     }
 }
