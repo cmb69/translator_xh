@@ -22,6 +22,8 @@
 namespace Translator;
 
 use stdClass;
+use Pfw\View\HtmlView;
+use Pfw\View\HtmlString;
 
 class MainController
 {
@@ -90,16 +92,18 @@ class MainController
      * @param string $action
      * @param string $url
      * @param string $filename
-     * @return View
+     * @return HtmlView
      */
     private function prepareMainView($action, $url, $filename, array $modules)
     {
-        $view = new View('main');
-        $view->action = $action;
-        $view->modules = $this->getModules($url, $modules);
-        $view->filename = $filename;
-        $view->csrfTokenInput = new HtmlString($this->csrfProtector->tokenInput());
-        return $view;
+        return (new HtmlView('translator'))
+            ->template('main')
+            ->data([
+                'action' => $action,
+                'modules' => $this->getModules($url, $modules),
+                'filename' => $filename,
+                'csrfTokenInput' => new HtmlString($this->csrfProtector->tokenInput())
+            ]);
     }
 
     /**
@@ -138,18 +142,20 @@ class MainController
      * @param string $module
      * @param string $sourceLanguage
      * @param string $destinationLanguage
-     * @return View
+     * @return HtmlView
      */
     private function prepareEditorView($action, $module, $sourceLanguage, $destinationLanguage)
     {
-        $view = new View('editor');
-        $view->action = $action;
-        $view->moduleName = ucfirst($module);
-        $view->sourceLabel = new HtmlString($this->languageLabel($sourceLanguage));
-        $view->destinationLabel = new HtmlString($this->languageLabel($destinationLanguage));
-        $view->rows = $this->getEditorRows($module, $sourceLanguage, $destinationLanguage);
-        $view->csrfTokenInput = new HtmlString($this->csrfProtector->tokenInput());
-        return $view;
+        return (new HtmlView('translator'))
+            ->template('editor')
+            ->data([
+                'action' => $action,
+                'moduleName' => ucfirst($module),
+                'sourceLabel' => new HtmlString($this->languageLabel($sourceLanguage)),
+                'destinationLabel' => new HtmlString($this->languageLabel($destinationLanguage)),
+                'rows' => $this->getEditorRows($module, $sourceLanguage, $destinationLanguage),
+                'csrfTokenInput' => new HtmlString($this->csrfProtector->tokenInput())
+            ]);
     }
 
     /**
@@ -261,9 +267,14 @@ class MainController
         $o = $this->saveMessage($saved, $filename)
             . $this->defaultAction();
         if ($saved) {
-            $view = new View('download');
-            $view->url = $this->model->canonicalUrl($this->baseUrl() . $filename);
-            $o .= $view;
+            ob_start();
+            (new HtmlView('translator'))
+                ->template('download')
+                ->data([
+                    'url' => $this->model->canonicalUrl($this->baseUrl() . $filename)
+                ])
+                ->render();
+            $o .= ob_get_clean();
         }
         echo $o;
     }

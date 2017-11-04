@@ -21,6 +21,8 @@
 
 namespace Translator;
 
+use Pfw\View\HtmlView;
+
 class Plugin
 {
     const VERSION = '@TRANSLATOR_VERSION@';
@@ -70,10 +72,15 @@ class Plugin
     {
         global $pth;
 
-        $view = new View('info');
-        $view->logo = "{$pth['folder']['plugin']}translator.png";
-        $view->version = Plugin::VERSION;
-        $view->checks = (new SystemCheckService)->getChecks();
-        return (string) $view;
+        ob_start();
+        (new HtmlView('translator'))
+            ->template('info')
+            ->data([
+                'logo' => "{$pth['folder']['plugin']}translator.png",
+                'version' => Plugin::VERSION,
+                'checks' => (new SystemCheckService)->getChecks()
+            ])
+            ->render();
+        return ob_get_clean();
     }
 }

@@ -1,7 +1,7 @@
 <h1>Translator</h1>
-<img src="<?=$this->logo()?>" alt="Plugin icon" width="128" height="128" style="float: left; margin: 0 1.5em 0.5em 0">
+<img src="<?=$logo?>" alt="Plugin icon" width="128" height="128" style="float: left; margin: 0 1.5em 0.5em 0">
 <p>
-    Version: <?=$this->version()?>
+    Version: <?=$version?>
 </p>
 <p>
     Copyright © 2011-2017 <a href="http://3-magi.net/">Christoph M. Becker</a>
@@ -25,7 +25,7 @@
 </p>
 <div class="translator_syscheck">
     <h2><?=$this->text('syscheck_title')?></h2>
-<?php foreach ($this->checks as $check):?>
-    <p class="xh_<?=$this->escape($check->state)?>"><?=$this->text('syscheck_message', $check->label, $check->stateLabel)?></p>
+<?php foreach ($checks as $check):?>
+    <p class="xh_<?=$check->state?>"><?=$this->text('syscheck_message', $check->label, $check->stateLabel)?></p>
 <?php endforeach?>
 </div>
