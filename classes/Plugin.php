@@ -21,12 +21,10 @@
 
 namespace Translator;
 
-use Pfw\View\HtmlView;
-use Pfw\SystemCheckService;
-
 class Plugin
 {
     const VERSION = '@TRANSLATOR_VERSION@';
+
     /**
      * @return void
      */
@@ -39,7 +37,9 @@ class Plugin
             $o .= print_plugin_admin('on');
             switch ($admin) {
                 case '':
-                    $o .= $this->info();
+                    ob_start();
+                    (new InfoController)->defaultAction();
+                    $o .= ob_get_clean();
                     break;
                 case 'plugin_main':
                     $controller = new MainController;
@@ -64,46 +64,5 @@ class Plugin
                     $o .= plugin_admin_common($action, $admin, 'translator');
             }
         }
-    }
-
-    /**
-     * @return string
-     */
-    private function info()
-    {
-        global $pth;
-
-        ob_start();
-        (new HtmlView('translator'))
-            ->template('info')
-            ->data([
-                'logo' => "{$pth['folder']['plugin']}translator.png",
-                'version' => Plugin::VERSION,
-                'checks' => $this->getSystemChecks()
-            ])
-            ->render();
-        return ob_get_clean();
-    }
-
-    /**
-     * @return SystemCheck[]
-     */
-    private function getSystemChecks()
-    {
-        global $pth;
-
-        $model = new Model;
-        $systemCheckService = (new SystemCheckService)
-            ->minPhpVersion('5.4.0')
-            ->extension('zlib')
-            ->minXhVersion('1.6.3')
-            ->writable($model->downloadFolder())
-            ->writable($pth['folder']['language'])
-            ->writable("{$pth['folder']['plugins']}translator/css/")
-            ->writable("{$pth['folder']['plugins']}translator/config/");
-        foreach ($model->plugins() as $plugin) {
-            $systemCheckService->writable("{$pth['folder']['plugins']}$plugin/languages/");
-        }
-        return $systemCheckService->getChecks();
     }
 }
