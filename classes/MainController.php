@@ -22,7 +22,7 @@
 namespace Translator;
 
 use stdClass;
-use Pfw\View\HtmlView;
+use Pfw\View\View;
 use Pfw\View\HtmlString;
 
 class MainController
@@ -92,11 +92,11 @@ class MainController
      * @param string $action
      * @param string $url
      * @param string $filename
-     * @return HtmlView
+     * @return View
      */
     private function prepareMainView($action, $url, $filename, array $modules)
     {
-        return (new HtmlView('translator'))
+        return (new View('translator'))
             ->template('main')
             ->data([
                 'action' => $action,
@@ -142,11 +142,11 @@ class MainController
      * @param string $module
      * @param string $sourceLanguage
      * @param string $destinationLanguage
-     * @return HtmlView
+     * @return View
      */
     private function prepareEditorView($action, $module, $sourceLanguage, $destinationLanguage)
     {
-        return (new HtmlView('translator'))
+        return (new View('translator'))
             ->template('editor')
             ->data([
                 'action' => $action,
@@ -268,7 +268,7 @@ class MainController
             . $this->defaultAction();
         if ($saved) {
             ob_start();
-            (new HtmlView('translator'))
+            (new View('translator'))
                 ->template('download')
                 ->data([
                     'url' => $this->model->canonicalUrl($this->baseUrl() . $filename)

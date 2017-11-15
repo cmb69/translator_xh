@@ -21,7 +21,7 @@
 
 namespace Translator;
 
-use Pfw\View\HtmlView;
+use Pfw\View\View;
 use Pfw\SystemCheckService;
 
 class InfoController
@@ -33,7 +33,7 @@ class InfoController
     {
         global $pth;
 
-        (new HtmlView('translator'))
+        (new View('translator'))
             ->template('info')
             ->data([
                 'logo' => "{$pth['folder']['plugin']}translator.png",
