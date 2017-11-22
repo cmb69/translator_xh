@@ -21,5 +21,3 @@ $plugin_tx['translator']['cf_translation_license']="Licencja, na podstawie któr
 $plugin_tx['translator']['cf_sort_load']="Czy posortować warości po wczytaniu? \"1\" (tak) or \"0\" (nie)";
 $plugin_tx['translator']['cf_sort_save']="Czy posortować warości przed zapisaniem? (wymaga opcji sortowania po wczytaniu)? \"1\" (tak) or \"0\" (nie)";
 $plugin_tx['translator']['cf_default_translation']="<p>Domyślne tłumaczenie dla nowych ciągów znaków. <strong> Uwaga </strong>: frazy z tej wartości nie zostaną zapisane! Wybierz więc bardzo szczególną wartość, aby uniknąć konfliktu z właściwymi frazami. </ P> Zostaw puste, aby użyć ciągu w języku źródłowym. Każda wartość zostanie zapisana w tym przypadku. </ P>";
-
-?>

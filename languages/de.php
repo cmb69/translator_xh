@@ -23,4 +23,3 @@ $plugin_tx['translator']['cf_translate_to']="Die Sprache in die übersetzt werde
 $plugin_tx['translator']['cf_translation_author']="Der Name des Übersetzers. Dieser wird als Urheber in der übersetzten Sprachdatei angegeben, wenn translation_license nich leer ist.";
 $plugin_tx['translator']['cf_translation_license']="Die Lizenz unter der die übersetzte Sprachdatei steht. Diese sollte zur Lizenz des Plugins passen.";
 
-?>

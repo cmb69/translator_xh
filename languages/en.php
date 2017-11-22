@@ -22,5 +22,3 @@ $plugin_tx['translator']['cf_translate_fullscreen']="Whether the translation for
 $plugin_tx['translator']['cf_translate_to']="The language to translate to. Defaults to the current CMSimple language, if empty.";
 $plugin_tx['translator']['cf_translation_author']="The name of the translator. Will be commented as copyright holder in the translated language file, if translation_license is not empty.";
 $plugin_tx['translator']['cf_translation_license']="The license under which to put the translated language file. It should fit to the license of the plugin.";
-
-?>
