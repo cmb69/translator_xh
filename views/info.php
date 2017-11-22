@@ -1,5 +1,5 @@
 <h1>Translator</h1>
-<img src="<?=$logo?>" alt="Plugin icon" class="pfw_logo">
+<img src="<?=$logo?>" alt="<?=$this->text('alt_logo')?>" class="pfw_logo">
 <p>
     Version: <?=$version?>
 </p>

@@ -13,6 +13,7 @@ $plugin_tx['translator']['menu_main']="Übersetzungen";
 $plugin_tx['translator']['message_no_module']="Sie müssen wenigstens ein Modul wählen!";
 $plugin_tx['translator']['message_save_success']="Die Datei \"%s\" wurde erfolgreich gespeichert.";
 $plugin_tx['translator']['message_save_fail']="Die Datei \"%s\" konnte nicht gespeichert werden.";
+$plugin_tx['translator']['alt_logo']="Übersetzung";
 $plugin_tx['translator']['cf_default_translation']="<p>Die Vorgabe-Übersetzung für neue Sprach-Zeichenketten. <strong>Achtung</strong>: Schlüssel mit diesem Wert werden nicht gespeichert! Wählen Sie daher einen außergewöhnlichen Wert, um Konflikte mit wirklichen Sprach-Zeichenketten zu vermeiden.</p><p>Lassen Sie den Eintrag leer, um die Sprach-Zeichenkette der Ausgangssprache zu verwenden. In diesem Fall wird jeder Wert gespeichert.</p>";
 $plugin_tx['translator']['cf_sort_load']="Sollen die Sprach-Zeichenketten beim Laden nach ihren Schlüsseln sortiert werden? \"1\" (ja) oder \"0\" (nein)";
 $plugin_tx['translator']['cf_sort_save']="Sollen die Sprach-Zeichenketten beim Speichern nach ihren Schlüsseln sortiert werden? \"1\" (ja) oder \"0\" (nein)";
