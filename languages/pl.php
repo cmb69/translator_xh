@@ -7,7 +7,6 @@
  * License.
  */
 
-$plugin_tx['translator']['syscheck_title']="Test systemu";
 $plugin_tx['translator']['menu_main']="Tłumaczenia";
 $plugin_tx['translator']['label_plugins']="Pliki językowe wtyczek";
 $plugin_tx['translator']['label_translate_from']="Tłumacz z:";

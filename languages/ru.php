@@ -7,7 +7,6 @@
  * later.
  */
 
-$plugin_tx['translator']['syscheck_title']="Проверка системы";
 $plugin_tx['translator']['menu_main']="Переводы";
 /* added */
 $plugin_tx['translator']['menu_css']="Стили";
