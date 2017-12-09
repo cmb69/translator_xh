@@ -1,3 +1,4 @@
 tests/coverage
 vendor
 /translator.min.js
+/README.htm
