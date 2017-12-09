@@ -1,28 +1,40 @@
-Themeswitcher_XH – a CMSimple_XH plugin
-=======================================
+Translator_XH
+=============
 
-[![beta: 1.0beta8](https://img.shields.io/badge/beta-1.0beta8-red.svg)](https://github.com/cmb69/translator_xh/releases/tag/1.0beta8)
+English
+-------
+
+Translator_XH is an advanced tool for translating the [CMSimple_XH](http://www.cmsimple-xh.org/) core and plugins.
+
+[![Latest Version: 1.0beta8](https://img.shields.io/badge/Latest%20Version-1.0beta8-red.svg)](https://github.com/cmb69/translator_xh/releases/tag/1.0beta8)
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
 
-Copyright (c) 2011 - 2017 Christoph M. Becker
+* For general **information** and **downloads** of the latest version visit the [project page](http://3-magi.net/?CMSimple_XH/Translator_XH).
+* For **installation** and **usage** information consult the [user manual](https://htmlpreview.github.io/?https://github.com/cmb69/translator_xh/blob/master/help/help.htm).
+* The **source code** is hosted on [Github](https://github.com/cmb69/translator_xh).
+* You have **translated** the language files and/or the user manual to another language?  Please submit a respective [pull request](https://github.com/cmb69/translator_xh/compare) or send me the file(s) via [email](mailto:cmbecker69@gmx.de).
+* You have found a **vulnerability**?  Please send a private report via [email](mailto:cmbecker69@gmx.de).
+* You have found a not security related **bug**?  File a bug report on [Github](https://github.com/cmb69/translator_xh/issues/new?labels=bug) or in the [CMSimple_XH Forum](https://cmsimpleforum.com/) (please provide a good description!)
+* You have an idea how to **improve** the plugin?  Suggest an enhancement on [Github](https://github.com/cmb69/translator_xh/issues/new?labels=enhancement) or in the [CMSimple_XH Forum](https://cmsimpleforum.com/).
+* **You are stuck**?  Ask for support on [Github](https://github.com/cmb69/translator_xh/issues/new?labels=question) or in the [CMSimple_XH Forum](https://cmsimpleforum.com/).
 
-Translator_XH is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+Enjoy!
 
-Translator_XH is distributed in the hope that it will be useful,
-but *without any warranty*; without even the implied warranty of
-*merchantability* or *fitness for a particular purpose*.  See the
-GNU General Public License for more details.
+Deutsch
+-------
 
-You should have received a copy of the GNU General Public License
-along with Translator_XH (see LICENSE).
+Translator_XH ist ein fortgeschrittenes Tool um den [CMSimple_XH](http://www.cmsimple-xh.org/de/) Systemkern und Plugins zu übersetzen.
 
-For further information see the user manual in help/help.htm.
+[![Aktuelle Version: 1.0beta2](https://img.shields.io/badge/Aktuelle%20Version-1.0beta2-red.svg)](https://github.com/cmb69/translator_xh/releases/tag/1.0beta2)
+[![Lizenz: GPL v3](https://img.shields.io/badge/Lizenz-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
 
-Christoph M. Becker  
-Rheinstraße 147  
-55424 Münster-Sarmsheim  
-GERMANY  
-<cmbecker69@gmx.de>
+* Für allgemeine **Information** und **Downloads** der aktuellen Version besuche die [Projektseite](http://3-magi.net/de/?CMSimple_XH/Translator_XH).
+* Informationen zu **Installation** und **Verwendung** findest du im [Handbuch](https://htmlpreview.github.io/?https://github.com/cmb69/translator_xh/blob/master/help/help_de.htm).
+* Der **Quellcode** wird auf [Github](https://github.com/cmb69/translator_xh) gehostet.
+* Du hast die Sprachdatei und/oder das Handbuch in eine andere Sprache **übersetzt**? Bitte reiche einen entsprechenden [Pull-Request](https://github.com/cmb69/translator_xh/compare) ein oder schicke mir die Datei(en) per [E-Mail](mailto:cmbecker69@gmx.de).
+* Du hast eine **Sicherheitslücke** gefunden? Bitte melde diese per [E-Mail](mailto:cmbecker69@gmx.de).
+* Du hast einen nicht sicherheitsrelevanten **Fehler** gefunden? Melde diesen auf [Github](https://github.com/cmb69/translator_xh/issues/new?labels=bug) oder im [CMSimple_XH Forum](https://cmsimpleforum.com/) (bitte liefere eine gute Beschreibung!)
+* Du hast eine Idee wie das Plugin **verbessert** werden könnte? Schlage die Verbesserung auf [Github](https://github.com/cmb69/translator_xh/issues/new?labels=enhancement) oder im [CMSimple_XH Forum](https://cmsimpleforum.com/) vor.
+* **Du kommst nicht weiter**?  Frage nach Unterstützung auf [Github](https://github.com/cmb69/translator_xh/issues/new?labels=question) oder im [CMSimple_XH Forum](https://cmsimpleforum.com/).
+
+Viel Spaß!
