@@ -23,7 +23,7 @@ namespace Translator;
 
 class Plugin
 {
-    const VERSION = '@PLUGIN_VERSION@';
+    const VERSION = '1.0beta8';
 
     /**
      * @return void
