@@ -28,15 +28,15 @@ use XH\CSRFProtection;
 
 class MainController
 {
+    private string $pluginFolder;
+
     /**
      * @var Model
      */
     private $model;
 
-    /**
-     * @var array<string,string>
-     */
-    private $conf;
+    /** @var array<string,string> */
+    private array $conf;
 
     /**
      * @var array<string,string>
@@ -50,15 +50,17 @@ class MainController
 
     private View $view;
 
-    /**
-     * @return void
-     */
-    public function __construct(View $view)
-    {
-        global $plugin_cf, $plugin_tx, $_XH_csrfProtection;
+    /** @param array<string,string> $conf */
+    public function __construct(
+        string $pluginFolder,
+        array $conf,
+        View $view
+    ) {
+        global $plugin_tx, $_XH_csrfProtection;
 
+        $this->pluginFolder = $pluginFolder;
         $this->model = new Model();
-        $this->conf = $plugin_cf['translator'];
+        $this->conf = $conf;
         $this->lang = $plugin_tx['translator'];
         $this->csrfProtector = $_XH_csrfProtection;
         $this->view = $view;
@@ -69,22 +71,22 @@ class MainController
      */
     public function defaultAction()
     {
-        global $pth, $sn, $sl, $hjs;
+        global $sn, $sl, $hjs;
 
-        $filename = "{$pth['folder']['plugins']}translator/translator.min.js";
+        $filename = $this->pluginFolder . "translator.min.js";
         if (!file_exists($filename)) {
-            $filename = "{$pth['folder']['plugins']}translator/translator.js";
+            $filename = $this->pluginFolder . "translator.js";
         }
         $hjs .= '<script type="text/javascript" src="' . $filename
             . '"></script>' . PHP_EOL;
-        $language = ($this->conf['translate_to'] == '')
+        $language = ($this->conf["translate_to"] == '')
             ? $sl
-            : $this->conf['translate_to'];
+            : $this->conf["translate_to"];
         $action = $sn . '?&translator&admin=plugin_main&action=zip'
             . '&translator_lang=' . $language;
         $url = $sn . '?&translator&admin=plugin_main&action=edit'
-            . ($this->conf['translate_fullscreen'] ? '&print' : '')
-            . '&translator_from=' . $this->conf['translate_from']
+            . ($this->conf["translate_fullscreen"] ? '&print' : '')
+            . '&translator_from=' . $this->conf["translate_from"]
             . '&translator_to=' . $language . '&translator_module=';
         $filename = isset($_POST['translator_filename'])
             ? $this->sanitizedName($_POST['translator_filename'])
@@ -173,7 +175,7 @@ class MainController
     {
         $sourceTexts = $this->model->readLanguage($module, $sourceLanguage);
         $destinationTexts = $this->model->readLanguage($module, $destinationLanguage);
-        if ($this->conf['sort_load']) {
+        if ($this->conf["sort_load"]) {
             ksort($sourceTexts);
         }
         $rows = [];
@@ -231,7 +233,7 @@ class MainController
         $destinationLanguage = $this->sanitizedName($_GET['translator_to']);
         $destinationTexts = array();
         $sourceTexts = $this->model->readLanguage($module, $sourceLanguage);
-        if ($this->conf['sort_save']) {
+        if ($this->conf["sort_save"]) {
             ksort($sourceTexts);
         }
         foreach (array_keys($sourceTexts) as $key) {

@@ -41,7 +41,12 @@ class Plugin
 
     public static function mainController(): MainController
     {
-        return new MainController(self::view());
+        global $pth, $plugin_cf;
+        return new MainController(
+            $pth["folder"]["plugins"] . "translator/",
+            $plugin_cf["translator"],
+            self::view()
+        );
     }
 
     private static function view(): View
