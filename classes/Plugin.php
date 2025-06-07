@@ -25,6 +25,16 @@ class Plugin
 {
     public const VERSION = '1.0beta8';
 
+    public static function infoController(): InfoController
+    {
+        return new InfoController();
+    }
+
+    public static function mainController(): MainController
+    {
+        return new MainController();
+    }
+
     /**
      * @return void
      */
@@ -38,11 +48,11 @@ class Plugin
             switch ($admin) {
                 case '':
                     ob_start();
-                    (new InfoController())->defaultAction();
+                    self::InfoController()->defaultAction();
                     $o .= ob_get_clean();
                     break;
                 case 'plugin_main':
-                    $controller = new MainController();
+                    $controller = self::mainController();
                     ob_start();
                     switch ($action) {
                         case 'plugin_text':
