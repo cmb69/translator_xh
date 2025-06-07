@@ -71,22 +71,20 @@ class Plugin
                     break;
                 case 'plugin_main':
                     $controller = self::mainController();
-                    ob_start();
                     switch ($action) {
                         case 'plugin_text':
-                            $controller->defaultAction();
+                            $o .= $controller->defaultAction();
                             break;
                         case 'edit':
-                            $controller->editAction();
+                            $o .= $controller->editAction();
                             break;
                         case 'save':
-                            $controller->saveAction();
+                            $o .= $controller->saveAction();
                             break;
                         case 'zip':
-                            $controller->zipAction();
+                            $o .= $controller->zipAction();
                             break;
                     }
-                    $o .= ob_get_clean();
                     break;
                 default:
                     $o .= plugin_admin_common($action, $admin, 'translator'); // @phpstan-ignore-line
