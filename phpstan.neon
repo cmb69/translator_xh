@@ -13,5 +13,4 @@ parameters:
     - ../../cmsimple/functions.php
     - ./zip.lib.php
   scanDirectories:
-    - ../pfw/classes
     - ../plib/classes

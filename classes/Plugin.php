@@ -21,6 +21,7 @@
 
 namespace Translator;
 
+use Plib\SystemChecker;
 use Plib\View;
 
 class Plugin
@@ -29,7 +30,10 @@ class Plugin
 
     public static function infoController(): InfoController
     {
-        return new InfoController(self::view());
+        return new InfoController(
+            new SystemChecker(),
+            self::view()
+        );
     }
 
     public static function mainController(): MainController

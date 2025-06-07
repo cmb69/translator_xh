@@ -14,6 +14,18 @@ $plugin_tx['translator']['message_no_module'] = "Sie müssen wenigstens ein Modu
 $plugin_tx['translator']['message_save_success'] = "Die Datei \"%s\" wurde erfolgreich gespeichert.";
 $plugin_tx['translator']['message_save_fail'] = "Die Datei \"%s\" konnte nicht gespeichert werden.";
 $plugin_tx['translator']['alt_logo'] = "Übersetzung";
+
+$plugin_tx['translator']['syscheck_extension'] = "die PHP-Extension '%s' geladen wurde";
+$plugin_tx['translator']['syscheck_fail'] = "Fehlschlag";
+$plugin_tx['translator']['syscheck_message'] = "Prüfe, dass %1\$s … %2\$s";
+$plugin_tx['translator']['syscheck_phpversion'] = "die PHP-Version mindestens %s ist";
+$plugin_tx['translator']['syscheck_plugin'] = "das CMSimple_XH-Plugin '%s' installiert ist";
+$plugin_tx['translator']['syscheck_success'] = "Okay";
+$plugin_tx['translator']['syscheck_title'] = "System-Prüfung";
+$plugin_tx['translator']['syscheck_warning'] = "Warnung";
+$plugin_tx['translator']['syscheck_writable'] = "'%s' is writable";
+$plugin_tx['translator']['syscheck_xhversion'] = "die CMSimple_XH-Version mindestens %s ist";
+
 $plugin_tx['translator']['cf_default_translation'] = "<p>Die Vorgabe-Übersetzung für neue Sprach-Zeichenketten. <strong>Achtung</strong>: Schlüssel mit diesem Wert werden nicht gespeichert! Wählen Sie daher einen außergewöhnlichen Wert, um Konflikte mit wirklichen Sprach-Zeichenketten zu vermeiden.</p><p>Lassen Sie den Eintrag leer, um die Sprach-Zeichenkette der Ausgangssprache zu verwenden. In diesem Fall wird jeder Wert gespeichert.</p>";
 $plugin_tx['translator']['cf_sort_load'] = "Sollen die Sprach-Zeichenketten beim Laden nach ihren Schlüsseln sortiert werden? \"1\" (ja) oder \"0\" (nein)";
 $plugin_tx['translator']['cf_sort_save'] = "Sollen die Sprach-Zeichenketten beim Speichern nach ihren Schlüsseln sortiert werden? \"1\" (ja) oder \"0\" (nein)";

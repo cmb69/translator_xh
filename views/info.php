@@ -1,13 +1,12 @@
 <?php
 
-use Pfw\SystemCheck;
 use Plib\View;
 
 /**
  * @var View $this
  * @var string $logo
  * @var string $version
- * @var list<SystemCheck> $checks
+ * @var list<object{state:string,label:string,stateLabel:string}> $checks
  */
 ?>
 
@@ -39,6 +38,6 @@ use Plib\View;
 <div class="pfw_syscheck">
     <h2><?=$this->text('syscheck_title')?></h2>
 <?php foreach ($checks as $check):?>
-    <p class="xh_<?=$this->esc($check->getState())?>"><?=$this->text('syscheck_message', $check->getLabel(), $check->getStateLabel())?></p>
+    <p class="xh_<?=$this->esc($check->state)?>"><?=$this->text('syscheck_message', $check->label, $check->stateLabel)?></p>
 <?php endforeach?>
 </div>

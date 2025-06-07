@@ -21,16 +21,17 @@
 
 namespace Translator;
 
-use Pfw\SystemCheck;
-use Pfw\SystemCheckService;
+use Plib\SystemChecker;
 use Plib\View;
 
 class InfoController
 {
+    private SystemChecker $systemChecker;
     private View $view;
 
-    public function __construct(View $view)
+    public function __construct(SystemChecker $systemChecker, View $view)
     {
+        $this->systemChecker = $systemChecker;
         $this->view = $view;
     }
 
@@ -44,29 +45,72 @@ class InfoController
         echo $this->view->render("info", [
             'logo' => "{$pth['folder']['plugin']}translator.png",
             'version' => Plugin::VERSION,
-            'checks' => $this->getSystemChecks()
+            'checks' => $this->checks()
         ]);
     }
 
-    /**
-     * @return SystemCheck[]
-     */
-    private function getSystemChecks()
+    /** @return list<object{state:string,label:string,stateLabel:string}> */
+    private function checks()
     {
         global $pth;
 
         $model = new Model();
-        $systemCheckService = (new SystemCheckService())
-            ->minPhpVersion('7.4.0')
-            ->extension('zlib')
-            ->minXhVersion('1.6.3')
-            ->writable($model->downloadFolder())
-            ->writable($pth['folder']['language'])
-            ->writable("{$pth['folder']['plugins']}translator/css/")
-            ->writable("{$pth['folder']['plugins']}translator/config/");
+        $checks = [
+            $this->checkPhpVersion("7.4.0"),
+            $this->checkExtension("zlib"),
+            $this->checkXhVersion("1.6.3"),
+            $this->checkWritabilty($model->downloadFolder()),
+            $this->checkWritabilty($pth['folder']['language']),
+            $this->checkWritabilty("{$pth['folder']['plugins']}translator/css/"),
+            $this->checkWritabilty("{$pth['folder']['plugins']}translator/config/"),
+        ];
         foreach ($model->plugins() as $plugin) {
-            $systemCheckService->writable("{$pth['folder']['plugins']}$plugin/languages/");
+            $checks[] = $this->checkWritabilty("{$pth['folder']['plugins']}$plugin/languages/");
         }
-        return $systemCheckService->getChecks();
+        return $checks;
+    }
+
+    /** @return object{state:string,label:string,stateLabel:string} */
+    private function checkPhpVersion(string $version)
+    {
+        $state = $this->systemChecker->checkVersion(PHP_VERSION, $version) ? "success" : "fail";
+        return (object) [
+            "state" => $state,
+            "label" => $this->view->plain("syscheck_phpversion", $version),
+            "stateLabel" => $this->view->plain("syscheck_$state"),
+        ];
+    }
+
+    /** @return object{state:string,label:string,stateLabel:string} */
+    private function checkExtension(string $name)
+    {
+        $state = $this->systemChecker->checkExtension($name) ? "success" : "fail";
+        return (object) [
+            "state" => $state,
+            "label" => $this->view->plain("syscheck_extension", $name),
+            "stateLabel" => $this->view->plain("syscheck_$state"),
+        ];
+    }
+
+    /** @return object{state:string,label:string,stateLabel:string} */
+    private function checkXhVersion(string $version)
+    {
+        $state = $this->systemChecker->checkVersion(CMSIMPLE_XH_VERSION, "CMSimple_XH $version") ? "success" : "fail";
+        return (object) [
+            "state" => $state,
+            "label" => $this->view->plain("syscheck_xhversion", $version),
+            "stateLabel" => $this->view->plain("syscheck_$state"),
+        ];
+    }
+
+    /** @return object{state:string,label:string,stateLabel:string} */
+    private function checkWritabilty(string $filename)
+    {
+        $state = $this->systemChecker->checkWritability($filename) ? "success" : "warning";
+        return (object) [
+            "state" => $state,
+            "label" => $this->view->plain("syscheck_writable", $filename),
+            "stateLabel" => $this->view->plain("syscheck_$state"),
+        ];
     }
 }
