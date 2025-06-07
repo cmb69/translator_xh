@@ -2,6 +2,11 @@
 
 <project name="Translator" default="help">
 
-    <import file="../pfw/build.xml"/>
+  <target name="help" description="lists available targets">
+    <exec executable="phing" outputProperty="help">
+      <arg line="-l"/>
+    </exec>
+    <echo>${help}</echo>
+  </target>
 
 </project>
