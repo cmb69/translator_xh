@@ -52,7 +52,7 @@ class InfoController
 
         $model = new Model();
         $systemCheckService = (new SystemCheckService())
-            ->minPhpVersion('5.4.0')
+            ->minPhpVersion('7.4.0')
             ->extension('zlib')
             ->minXhVersion('1.6.3')
             ->writable($model->downloadFolder())
