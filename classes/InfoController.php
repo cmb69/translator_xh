@@ -59,7 +59,7 @@ class InfoController
         $checks = [
             $this->checkPhpVersion("7.4.0"),
             $this->checkExtension("zlib"),
-            $this->checkXhVersion("1.6.3"),
+            $this->checkXhVersion("1.7.0"),
             $this->checkWritabilty($model->downloadFolder()),
             $this->checkWritabilty($this->languageFolder),
             $this->checkWritabilty($this->pluginsFolder . "translator/css/"),
