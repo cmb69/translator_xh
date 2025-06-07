@@ -43,15 +43,12 @@ class InfoController
         $this->view = $view;
     }
 
-    /**
-     * @return void
-     */
-    public function defaultAction()
+    public function defaultAction(): string
     {
-        echo $this->view->render("info", [
-            'logo' => $this->pluginsFolder . "translator/translator.png",
-            'version' => Plugin::VERSION,
-            'checks' => $this->checks()
+        return $this->view->render("info", [
+            "logo" => $this->pluginsFolder . "translator/translator.png",
+            "version" => Plugin::VERSION,
+            "checks" => $this->checks()
         ]);
     }
 

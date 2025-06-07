@@ -62,9 +62,7 @@ class Plugin
             $o .= print_plugin_admin('on');
             switch ($admin) {
                 case '':
-                    ob_start();
-                    self::InfoController()->defaultAction();
-                    $o .= ob_get_clean();
+                    $o .= self::InfoController()->defaultAction();
                     break;
                 case 'plugin_main':
                     $controller = self::mainController();
