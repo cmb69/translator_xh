@@ -3,3 +3,6 @@ vendor
 /translator.min.js
 /README.htm
 /tools
+/coverage
+/.phpunit.result.cache
+/composer.lock

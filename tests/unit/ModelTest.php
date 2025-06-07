@@ -21,20 +21,20 @@
 
 namespace Translator;
 
-use PHPUnit_Framework_TestCase;
 use org\bovigo\vfs\vfsStreamWrapper;
 use org\bovigo\vfs\vfsStreamDirectory;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\TestCase;
 
 define('CMSIMPLE_XH_VERSION', 'CMSimple_XH 1.5.9');
 
-class ModelTest extends PHPUnit_Framework_TestCase
+class ModelTest extends TestCase
 {
     private $basePath;
 
-    public function setUp()
+    public function setUp(): void
     {
-        global $pth, $tx;
+        global $pth, $tx, $plugin_cf;
 
         vfsStreamWrapper::register();
         vfsStreamWrapper::setRoot(new vfsStreamDirectory('test'));
@@ -63,6 +63,7 @@ class ModelTest extends PHPUnit_Framework_TestCase
                 'cntopen' => '', 'cntwriteto' => '', 'notreadable' => ''
             )
         );
+        $plugin_cf = XH_includeVar("./config/config.php", "plugin_cf");
         $this->model = new Model();
     }
 
