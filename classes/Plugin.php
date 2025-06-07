@@ -30,7 +30,10 @@ class Plugin
 
     public static function infoController(): InfoController
     {
+        global $pth;
         return new InfoController(
+            $pth['folder']['language'],
+            $pth["folder"]["plugins"],
             new SystemChecker(),
             self::view()
         );

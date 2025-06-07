@@ -26,11 +26,19 @@ use Plib\View;
 
 class InfoController
 {
+    private string $languageFolder;
+    private string $pluginsFolder;
     private SystemChecker $systemChecker;
     private View $view;
 
-    public function __construct(SystemChecker $systemChecker, View $view)
-    {
+    public function __construct(
+        string $languageFolder,
+        string $pluginsFolder,
+        SystemChecker $systemChecker,
+        View $view
+    ) {
+        $this->languageFolder = $languageFolder;
+        $this->pluginsFolder = $pluginsFolder;
         $this->systemChecker = $systemChecker;
         $this->view = $view;
     }
@@ -40,10 +48,8 @@ class InfoController
      */
     public function defaultAction()
     {
-        global $pth;
-
         echo $this->view->render("info", [
-            'logo' => "{$pth['folder']['plugin']}translator.png",
+            'logo' => $this->pluginsFolder . "translator/translator.png",
             'version' => Plugin::VERSION,
             'checks' => $this->checks()
         ]);
@@ -52,20 +58,18 @@ class InfoController
     /** @return list<object{state:string,label:string,stateLabel:string}> */
     private function checks()
     {
-        global $pth;
-
         $model = new Model();
         $checks = [
             $this->checkPhpVersion("7.4.0"),
             $this->checkExtension("zlib"),
             $this->checkXhVersion("1.6.3"),
             $this->checkWritabilty($model->downloadFolder()),
-            $this->checkWritabilty($pth['folder']['language']),
-            $this->checkWritabilty("{$pth['folder']['plugins']}translator/css/"),
-            $this->checkWritabilty("{$pth['folder']['plugins']}translator/config/"),
+            $this->checkWritabilty($this->languageFolder),
+            $this->checkWritabilty($this->pluginsFolder . "translator/css/"),
+            $this->checkWritabilty($this->pluginsFolder . "translator/config/"),
         ];
         foreach ($model->plugins() as $plugin) {
-            $checks[] = $this->checkWritabilty("{$pth['folder']['plugins']}$plugin/languages/");
+            $checks[] = $this->checkWritabilty($this->pluginsFolder . "$plugin/languages/");
         }
         return $checks;
     }
