@@ -23,8 +23,7 @@ namespace Translator;
 
 use Exception;
 use stdClass;
-use Pfw\View\View;
-use Pfw\View\HtmlString;
+use Plib\View;
 use XH\CSRFProtection;
 
 class MainController
@@ -49,10 +48,12 @@ class MainController
      */
     private $csrfProtector;
 
+    private View $view;
+
     /**
      * @return void
      */
-    public function __construct()
+    public function __construct(View $view)
     {
         global $plugin_cf, $plugin_tx, $_XH_csrfProtection;
 
@@ -60,6 +61,7 @@ class MainController
         $this->conf = $plugin_cf['translator'];
         $this->lang = $plugin_tx['translator'];
         $this->csrfProtector = $_XH_csrfProtection;
+        $this->view = $view;
     }
 
     /**
@@ -90,7 +92,7 @@ class MainController
         $modules = isset($_POST['translator_modules'])
             ? $this->sanitizedName($_POST['translator_modules'])
             : array();
-        $this->prepareMainView($action, $url, $filename, $modules)->render();
+        echo $this->prepareMainView($action, $url, $filename, $modules);
     }
 
     /**
@@ -98,18 +100,16 @@ class MainController
      * @param string $url
      * @param string $filename
      * @param list<string> $modules
-     * @return View
+     * @return string
      */
     private function prepareMainView($action, $url, $filename, array $modules)
     {
-        return (new View('translator'))
-            ->template('main')
-            ->data([
-                'action' => $action,
-                'modules' => $this->getModules($url, $modules),
-                'filename' => $filename,
-                'csrfTokenInput' => new HtmlString($this->csrfProtector->tokenInput())
-            ]);
+        return $this->view->render("main", [
+            'action' => $action,
+            'modules' => $this->getModules($url, $modules),
+            'filename' => $filename,
+            'csrfTokenInput' => $this->csrfProtector->tokenInput(),
+        ]);
     }
 
     /**
@@ -141,7 +141,7 @@ class MainController
         $url = $sn . '?&translator&admin=plugin_main&action=save'
             . '&translator_from=' . $from . '&translator_to=' . $to
             . '&translator_module=' . $module;
-        $this->prepareEditorView($url, $module, $from, $to)->render();
+        echo $this->prepareEditorView($url, $module, $from, $to);
     }
 
     /**
@@ -149,20 +149,18 @@ class MainController
      * @param string $module
      * @param string $sourceLanguage
      * @param string $destinationLanguage
-     * @return View
+     * @return string
      */
     private function prepareEditorView($action, $module, $sourceLanguage, $destinationLanguage)
     {
-        return (new View('translator'))
-            ->template('editor')
-            ->data([
-                'action' => $action,
-                'moduleName' => ucfirst($module),
-                'sourceLabel' => new HtmlString($this->languageLabel($sourceLanguage)),
-                'destinationLabel' => new HtmlString($this->languageLabel($destinationLanguage)),
-                'rows' => $this->getEditorRows($module, $sourceLanguage, $destinationLanguage),
-                'csrfTokenInput' => new HtmlString($this->csrfProtector->tokenInput())
-            ]);
+        return $this->view->render("editor", [
+            'action' => $action,
+            'moduleName' => ucfirst($module),
+            'sourceLabel' => $this->languageLabel($sourceLanguage),
+            'destinationLabel' => $this->languageLabel($destinationLanguage),
+            'rows' => $this->getEditorRows($module, $sourceLanguage, $destinationLanguage),
+            'csrfTokenInput' => $this->csrfProtector->tokenInput(),
+        ]);
     }
 
     /**
@@ -274,14 +272,9 @@ class MainController
         $o = $this->saveMessage($saved, $filename);
         $this->defaultAction();
         if ($saved) {
-            ob_start();
-            (new View('translator'))
-                ->template('download')
-                ->data([
-                    'url' => $this->model->canonicalUrl($this->baseUrl() . $filename)
-                ])
-                ->render();
-            $o .= ob_get_clean();
+            $o .= $this->view->render("download", [
+                'url' => $this->model->canonicalUrl($this->baseUrl() . $filename)
+            ]);
         }
         echo $o;
     }

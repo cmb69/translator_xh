@@ -1,7 +1,7 @@
 <?php
 
 use Pfw\SystemCheck;
-use Pfw\View\View;
+use Plib\View;
 
 /**
  * @var View $this
@@ -12,9 +12,9 @@ use Pfw\View\View;
 ?>
 
 <h1>Translator</h1>
-<img src="<?=$logo?>" alt="<?=$this->text('alt_logo')?>" class="pfw_logo">
+<img src="<?=$this->esc($logo)?>" alt="<?=$this->text('alt_logo')?>" class="pfw_logo">
 <p>
-    Version: <?=$version?>
+    Version: <?=$this->esc($version)?>
 </p>
 <p>
     Copyright © 2011-2017 <a href="http://3-magi.net/">Christoph M. Becker</a>
@@ -39,6 +39,6 @@ use Pfw\View\View;
 <div class="pfw_syscheck">
     <h2><?=$this->text('syscheck_title')?></h2>
 <?php foreach ($checks as $check):?>
-    <p class="xh_<?=$check->getState()?>"><?=$this->text('syscheck_message', $check->getLabel(), $check->getStateLabel())?></p>
+    <p class="xh_<?=$this->esc($check->getState())?>"><?=$this->text('syscheck_message', $check->getLabel(), $check->getStateLabel())?></p>
 <?php endforeach?>
 </div>

@@ -21,18 +21,26 @@
 
 namespace Translator;
 
+use Plib\View;
+
 class Plugin
 {
     public const VERSION = '1.0beta8';
 
     public static function infoController(): InfoController
     {
-        return new InfoController();
+        return new InfoController(self::view());
     }
 
     public static function mainController(): MainController
     {
-        return new MainController();
+        return new MainController(self::view());
+    }
+
+    private static function view(): View
+    {
+        global $pth, $plugin_tx;
+        return new View($pth["folder"]["plugins"] . "translator/views/", $plugin_tx["translator"]);
     }
 
     /**

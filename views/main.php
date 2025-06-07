@@ -1,6 +1,6 @@
 <?php
 
-use Pfw\View\View;
+use Plib\View;
 
 /**
  * @var View $this
@@ -11,13 +11,13 @@ use Pfw\View\View;
  */
 ?>
 
-<form id="translator_list" action="<?=$action?>" method="post">
+<form id="translator_list" action="<?=$this->esc($action)?>" method="post">
     <h1>Translator – <?=$this->text('menu_main')?></h1>
     <ul>
 <?php foreach ($modules as $module):?>
         <li>
-            <input type="checkbox" name="translator_modules[]" value="<?=$module->module?>" <?=$module->checked?>>
-            <a href="<?=$module->url?><?=$module->module?>"><?=$module->name?></a>
+            <input type="checkbox" name="translator_modules[]" value="<?=$this->esc($module->module)?>" <?=$this->esc($module->checked)?>>
+            <a href="<?=$this->esc($module->url)?><?=$this->esc($module->module)?>"><?=$this->esc($module->name)?></a>
         </li>
 <?php endforeach?>
     </ul>
@@ -27,8 +27,8 @@ use Pfw\View\View;
     </p>
     <p>
         <?=$this->text('label_filename')?>
-        <input type="text" name="translator_filename" value="<?=$filename?>">.zip
+        <input type="text" name="translator_filename" value="<?=$this->esc($filename)?>">.zip
         <input type="submit" class="submit" value="<?=$this->text('label_generate')?>">
     </p>
-    <?=$csrfTokenInput?>
+    <?=$this->raw($csrfTokenInput)?>
 </form>

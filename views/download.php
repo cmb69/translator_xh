@@ -1,6 +1,6 @@
 <?php
 
-use Pfw\View\View;
+use Plib\View;
 
 /**
  * @var View $this
@@ -10,5 +10,5 @@ use Pfw\View\View;
 
 <p>
     <?=$this->text('label_download_url')?><br>
-    <input id="translator_download_link" type="text" readonly="readonly" value="<?=$url?>">
+    <input id="translator_download_link" type="text" readonly="readonly" value="<?=$this->esc($url)?>">
 </p>

@@ -21,12 +21,19 @@
 
 namespace Translator;
 
-use Pfw\View\View;
 use Pfw\SystemCheck;
 use Pfw\SystemCheckService;
+use Plib\View;
 
 class InfoController
 {
+    private View $view;
+
+    public function __construct(View $view)
+    {
+        $this->view = $view;
+    }
+
     /**
      * @return void
      */
@@ -34,14 +41,11 @@ class InfoController
     {
         global $pth;
 
-        (new View('translator'))
-            ->template('info')
-            ->data([
-                'logo' => "{$pth['folder']['plugin']}translator.png",
-                'version' => Plugin::VERSION,
-                'checks' => $this->getSystemChecks()
-            ])
-            ->render();
+        echo $this->view->render("info", [
+            'logo' => "{$pth['folder']['plugin']}translator.png",
+            'version' => Plugin::VERSION,
+            'checks' => $this->getSystemChecks()
+        ]);
     }
 
     /**
