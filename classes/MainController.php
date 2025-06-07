@@ -39,11 +39,6 @@ class MainController
     private array $conf;
 
     /**
-     * @var array<string,string>
-     */
-    private $lang;
-
-    /**
      * @var CSRFProtection
      */
     private $csrfProtector;
@@ -56,12 +51,11 @@ class MainController
         array $conf,
         View $view
     ) {
-        global $plugin_tx, $_XH_csrfProtection;
+        global $_XH_csrfProtection;
 
         $this->pluginFolder = $pluginFolder;
         $this->model = new Model();
         $this->conf = $conf;
-        $this->lang = $plugin_tx['translator'];
         $this->csrfProtector = $_XH_csrfProtection;
         $this->view = $view;
     }
@@ -189,8 +183,8 @@ class MainController
     {
         if (isset($destinationTexts[$key])) {
             $destinationText = $destinationTexts[$key];
-        } elseif ($this->lang['default_translation'] != '') {
-            $destinationText = $this->lang['default_translation'];
+        } elseif ($this->view->plain("default_translation") != '') {
+            $destinationText = $this->view->plain("default_translation");
         } else {
             $destinationText = $sourceText;
         }
@@ -229,7 +223,7 @@ class MainController
         }
         foreach (array_keys($sourceTexts) as $key) {
             $value = $_POST['translator_string_' . $key];
-            if ($value != '' && $value != $this->lang['default_translation']) {
+            if ($value != '' && $value != $this->view->plain("default_translation")) {
                 $destinationTexts[$key] = $value;
             }
         }
@@ -243,7 +237,7 @@ class MainController
         $this->csrfProtector->check();
         $language = $this->sanitizedName($_GET['translator_lang']);
         if (empty($_POST['translator_modules'])) {
-            return  XH_message('warning', $this->lang['message_no_module']) . $this->defaultAction();
+            return $this->view->message("warning", "message_no_module") . $this->defaultAction();
         }
         $modules = $this->sanitizedName($_POST['translator_modules']);
         try {
@@ -304,6 +298,6 @@ class MainController
     private function saveMessage($success, $filename)
     {
         $type = $success ? 'success' : 'fail';
-        return XH_message($type, $this->lang["message_save_{$type}"], $filename);
+        return $this->view->message($type, "message_save_{$type}", $filename);
     }
 }
