@@ -58,7 +58,7 @@ class Model
                     array_splice($parts, $i, 1);
                     break;
                 case '..':
-                    array_splice($parts, $i-1, 2);
+                    array_splice($parts, $i - 1, 2);
                     $i--;
                     break;
                 default:
@@ -173,8 +173,7 @@ class Model
             if (in_array($module, $this->specialModules)) {
                 foreach ($$varname as $key1 => $val1) {
                     foreach ($val1 as $key2 => $val2) {
-                        if ($key1 != 'error' || $key2 == 'plugin_error'
-                        ) {
+                        if ($key1 != 'error' || $key2 == 'plugin_error') {
                             $texts[$key1 . '|' . $key2] = $val2;
                         }
                     }

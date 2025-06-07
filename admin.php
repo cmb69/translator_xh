@@ -19,4 +19,4 @@
  * along with Translator_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-(new Translator\Plugin)->run();
+(new Translator\Plugin())->run();

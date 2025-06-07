@@ -23,7 +23,7 @@ namespace Translator;
 
 class Plugin
 {
-    const VERSION = '1.0beta8';
+    public const VERSION = '1.0beta8';
 
     /**
      * @return void
@@ -38,11 +38,11 @@ class Plugin
             switch ($admin) {
                 case '':
                     ob_start();
-                    (new InfoController)->defaultAction();
+                    (new InfoController())->defaultAction();
                     $o .= ob_get_clean();
                     break;
                 case 'plugin_main':
-                    $controller = new MainController;
+                    $controller = new MainController();
                     ob_start();
                     switch ($action) {
                         case 'plugin_text':

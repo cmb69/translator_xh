@@ -50,8 +50,8 @@ class InfoController
     {
         global $pth;
 
-        $model = new Model;
-        $systemCheckService = (new SystemCheckService)
+        $model = new Model();
+        $systemCheckService = (new SystemCheckService())
             ->minPhpVersion('5.4.0')
             ->extension('zlib')
             ->minXhVersion('1.6.3')
