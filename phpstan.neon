@@ -1,0 +1,19 @@
+parameters:
+  level: 8
+  paths:
+    - classes
+    - views
+    - admin.php
+#    - index.php
+  bootstrapFiles:
+    - phpstan.php
+  scanFiles:
+    - ../../cmsimple/classes/CSRFProtection.php
+    - ../../cmsimple/adminfuncs.php
+    - ../../cmsimple/functions.php
+    - ./zip.lib.php
+  scanDirectories:
+    - ../pfw/classes
+#    - ../plib/classes
+  ignoreErrors:
+    - '/Call to protected method text\(\) of class Pfw\\View\\View\./'

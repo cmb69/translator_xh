@@ -21,9 +21,11 @@
 
 namespace Translator;
 
+use Exception;
 use stdClass;
 use Pfw\View\View;
 use Pfw\View\HtmlString;
+use XH\CSRFProtection;
 
 class MainController
 {
@@ -33,17 +35,17 @@ class MainController
     private $model;
 
     /**
-     * @var array
+     * @var array<string,string>
      */
     private $conf;
 
     /**
-     * @var array
+     * @var array<string,string>
      */
     private $lang;
 
     /**
-     * @var XH_CSRFProtection
+     * @var CSRFProtection
      */
     private $csrfProtector;
 
@@ -95,6 +97,7 @@ class MainController
      * @param string $action
      * @param string $url
      * @param string $filename
+     * @param list<string> $modules
      * @return View
      */
     private function prepareMainView($action, $url, $filename, array $modules)
@@ -111,7 +114,8 @@ class MainController
 
     /**
      * @param string $url
-     * @return HtmlString[]
+     * @param list<string> $modules
+     * @return list<object{module:string,name:string,url:string,checked:string}>
      */
     private function getModules($url, array $modules)
     {
@@ -184,6 +188,7 @@ class MainController
     /**
      * @param string $key
      * @param string $sourceText
+     * @param array<string,string> $destinationTexts
      * @return stdClass
      */
     private function getEditorRow($key, $sourceText, array $destinationTexts)
@@ -239,9 +244,8 @@ class MainController
         }
         $saved = $this->model->writeLanguage($module, $destinationLanguage, $destinationTexts);
         $filename = $this->model->filename($module, $destinationLanguage);
-        $o = $this->saveMessage($saved, $filename);
-        $o .= $this->defaultAction();
-        echo $o;
+        echo $this->saveMessage($saved, $filename);
+        $this->defaultAction();
     }
 
     /**
@@ -252,23 +256,23 @@ class MainController
         $this->csrfProtector->check();
         $language = $this->sanitizedName($_GET['translator_lang']);
         if (empty($_POST['translator_modules'])) {
-            echo XH_message('warning', $this->lang['message_no_module'])
-                . $this->defaultAction();
+            echo XH_message('warning', $this->lang['message_no_module']);
+            $this->defaultAction();
             return;
         }
         $modules = $this->sanitizedName($_POST['translator_modules']);
         try {
             $contents = $this->model->zipArchive($modules, $language);
         } catch (Exception $exception) {
-            echo XH_message('fail', $exception->getMessage())
-                . $this->defaultAction();
+            echo XH_message('fail', $exception->getMessage());
+            $this->defaultAction();
             return;
         }
         $filename = $this->sanitizedName($_POST['translator_filename']);
         $filename = $this->model->downloadFolder() . $filename . '.zip';
         $saved = file_put_contents($filename, $contents) !== false;
-        $o = $this->saveMessage($saved, $filename)
-            . $this->defaultAction();
+        $o = $this->saveMessage($saved, $filename);
+        $this->defaultAction();
         if ($saved) {
             ob_start();
             (new View('translator'))

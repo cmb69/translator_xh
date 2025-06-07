@@ -1,3 +1,16 @@
+<?php
+
+use Pfw\SystemCheck;
+use Pfw\View\View;
+
+/**
+ * @var View $this
+ * @var string $logo
+ * @var string $version
+ * @var list<SystemCheck> $checks
+ */
+?>
+
 <h1>Translator</h1>
 <img src="<?=$logo?>" alt="<?=$this->text('alt_logo')?>" class="pfw_logo">
 <p>

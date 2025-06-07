@@ -1,3 +1,16 @@
+<?php
+
+use Pfw\View\View;
+
+/**
+ * @var View $this
+ * @var string $action
+ * @var list<object{module:string,name:string,url:string,checked:string}> $modules
+ * @var string $filename
+ * @var string $csrfTokenInput
+ */
+?>
+
 <form id="translator_list" action="<?=$action?>" method="post">
     <h1>Translator – <?=$this->text('menu_main')?></h1>
     <ul>

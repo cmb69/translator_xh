@@ -22,6 +22,7 @@
 namespace Translator;
 
 use Pfw\View\View;
+use Pfw\SystemCheck;
 use Pfw\SystemCheckService;
 
 class InfoController

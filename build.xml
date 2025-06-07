@@ -18,4 +18,10 @@
     </exec>
   </target>
 
+  <target name="stan" description="run static analysis">
+    <exec executable="phpstan" passthru="true" checkreturn="true">
+      <arg line="--ansi analyze"/>
+    </exec>
+  </target>
+
 </project>

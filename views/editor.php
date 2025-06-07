@@ -1,3 +1,18 @@
+<?php
+
+use Pfw\View\View;
+
+/**
+ * @var View $this
+ * @var string $action
+ * @var string $moduleName
+ * @var string $sourceLabel
+ * @var string $destinationLabel
+ * @var list<object{key:string,displayKey:string,className:string,sourceText:string,destinationText:string}> $rows
+ * @var string $csrfTokenInput
+ */
+?>
+
 <form id="translator" method="post" action="<?=$action?>">
     <h1>Translator – <?=$moduleName?></h1>
     <input type="submit" class="submit" value="<?=$this->text('label_save')?>">

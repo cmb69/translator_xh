@@ -61,7 +61,7 @@ class Plugin
                     $o .= ob_get_clean();
                     break;
                 default:
-                    $o .= plugin_admin_common($action, $admin, 'translator');
+                    $o .= plugin_admin_common($action, $admin, 'translator'); // @phpstan-ignore-line
             }
         }
     }

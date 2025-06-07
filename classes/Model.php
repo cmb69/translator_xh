@@ -21,12 +21,13 @@
 
 namespace Translator;
 
+use Exception;
 use zipfile;
 
 class Model
 {
     /**
-     * @var array
+     * @var list<string>
      */
     private $specialModules = array('CORE');
 
@@ -70,7 +71,7 @@ class Model
 
     /**
      * @param string $language
-     * @return string
+     * @return string|false
      */
     public function flagIconPath($language)
     {
@@ -94,7 +95,7 @@ class Model
     }
 
     /**
-     * @return array
+     * @return list<string>
      */
     public function plugins()
     {
@@ -116,7 +117,7 @@ class Model
     }
 
     /**
-     * @return array
+     * @return list<string>
      */
     public function modules()
     {
@@ -161,7 +162,7 @@ class Model
     /**
      * @param string $module
      * @param string $lang
-     * @return array
+     * @return array<string,string>
      */
     public function readLanguage($module, $lang)
     {
@@ -180,7 +181,7 @@ class Model
                 }
             } else {
                 foreach (${$varname}[$module] as $key => $val) {
-                    $key = preg_replace('/_/', '|', $key, 1);
+                    $key = (string) preg_replace('/_/', '|', $key, 1);
                     $texts[$key] = $val;
                 }
             }
@@ -218,6 +219,7 @@ EOT;
      * @param string $varname
      * @param string $key1
      * @param string $key2
+     * @param string $value
      * @return string
      */
     private function elementDefinition($varname, $key1, $key2, $value)
@@ -230,6 +232,7 @@ EOT;
 
     /**
      * @param string $module
+     * @param array<string,mixed> $texts
      * @return string
      */
     private function phpCode($module, array $texts)
@@ -257,6 +260,7 @@ EOT;
     /**
      * @param string $module
      * @param string $lang
+     * @param array<string,mixed> $texts
      * @return bool
      */
     public function writeLanguage($module, $lang, array $texts)
@@ -267,6 +271,7 @@ EOT;
     }
 
     /**
+     * @param list<string> $modules
      * @param string $language
      * @return string
      * @throws Exception
