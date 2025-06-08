@@ -82,9 +82,6 @@ class MainController
             : $this->conf["translate_to"];
         $url = $request->url()->with("action", "edit")->with("translator_from", $this->conf["translate_from"])
             ->with("translator_to", $language);
-        if ($this->conf["translate_fullscreen"]) {
-            $url = $url->with("print");
-        }
         $filename = $request->post("translator_filename") !== null
             ? $this->sanitizedName($request->post("translator_filename"))
             : "";

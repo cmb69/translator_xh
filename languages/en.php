@@ -31,7 +31,6 @@ $plugin_tx['translator']['cf_default_translation'] = "<p>The default translation
 $plugin_tx['translator']['cf_sort_load'] = "Wether the language strings should be sorted by keys after loading? \"1\" (yes) or \"0\" (no)";
 $plugin_tx['translator']['cf_sort_save'] = "Wether the language strings should be sorted by keys before saving (requires sort_load=1)? \"1\" (yes) or \"0\" (no)";
 $plugin_tx['translator']['cf_translate_from'] = "The language to translate from.";
-$plugin_tx['translator']['cf_translate_fullscreen'] = "Whether the translation form shall be displayed in full screen mode: \"1\" (yes) or \"0\" (no).";
 $plugin_tx['translator']['cf_translate_to'] = "The language to translate to. Defaults to the current CMSimple language, if empty.";
 $plugin_tx['translator']['cf_translation_author'] = "The name of the translator. Will be commented as copyright holder in the translated language file, if translation_license is not empty.";
 $plugin_tx['translator']['cf_translation_license'] = "The license under which to put the translated language file. It should fit to the license of the plugin.";

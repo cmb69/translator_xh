@@ -31,7 +31,6 @@ $plugin_tx['translator']['cf_default_translation'] = "<p>Die Vorgabe-Übersetzun
 $plugin_tx['translator']['cf_sort_load'] = "Sollen die Sprach-Zeichenketten beim Laden nach ihren Schlüsseln sortiert werden? \"1\" (ja) oder \"0\" (nein)";
 $plugin_tx['translator']['cf_sort_save'] = "Sollen die Sprach-Zeichenketten beim Speichern nach ihren Schlüsseln sortiert werden? \"1\" (ja) oder \"0\" (nein)";
 $plugin_tx['translator']['cf_translate_from'] = "Die Sprache von der übersetzt werden soll.";
-$plugin_tx['translator']['cf_translate_fullscreen'] = "Ob das Übersetzungsformular im Vollbildmodus angezeigt werden soll: \"1\" (ja) oder \"0\" (nein).";
 $plugin_tx['translator']['cf_translate_to'] = "Die Sprache in die übersetzt werden soll. Voreingestellt ist die aktuelle CMSimple-Sprache, falls das Feld leer ist.";
 $plugin_tx['translator']['cf_translation_author'] = "Der Name des Übersetzers. Dieser wird als Urheber in der übersetzten Sprachdatei angegeben, wenn translation_license nich leer ist.";
 $plugin_tx['translator']['cf_translation_license'] = "Die Lizenz unter der die übersetzte Sprachdatei steht. Diese sollte zur Lizenz des Plugins passen.";
