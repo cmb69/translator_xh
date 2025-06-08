@@ -191,9 +191,13 @@ class MainController
         } else {
             $destinationText = $sourceText;
         }
-        $className = isset($destinationTexts[$key]) ? "" : "translator_new";
-        $displayKey = strtr($key, "_|", "  ");
-        return (object) compact("key", "displayKey", "className", "sourceText", "destinationText");
+        return (object) [
+            "key" => $key,
+            "displayKey" => strtr($key, "_|", "  "),
+            "className" => isset($destinationTexts[$key]) ? "" : "translator_new",
+            "sourceText" => $sourceText,
+            "destinationText" => $destinationText,
+        ];
     }
 
     private function languageLabel(string $language): string
