@@ -32,20 +32,6 @@ class Model
     private $specialModules = array('CORE');
 
     /**
-     * @return string
-     */
-    public function xhVersion()
-    {
-        $version = CMSIMPLE_XH_VERSION;
-        if (strpos($version, 'CMSimple_XH') === 0) {
-            $version = substr($version, strlen('CMSimple_XH '));
-        } else {
-            $version = '0';
-        }
-        return $version;
-    }
-
-    /**
      * @param string $language
      * @return string|false
      */
@@ -254,9 +240,7 @@ EOT;
      */
     public function zipArchive(array $modules, $language)
     {
-        global $pth;
-
-        include_once $pth['folder']['plugins'] . 'translator/zip.lib.php';
+        include_once __DIR__ . "/../zip.lib.php";
         $zip = new zipfile();
         foreach ($modules as $module) {
             $source = $this->filename($module, $language);

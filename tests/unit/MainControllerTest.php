@@ -1,0 +1,116 @@
+<?php
+
+namespace Translator;
+
+use ApprovalTests\Approvals;
+use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\TestCase;
+use Plib\FakeRequest;
+use Plib\View;
+use XH\CSRFProtection;
+
+class MainControllerTest extends TestCase
+{
+    private array $conf;
+    private View $view;
+
+    protected function setUp(): void
+    {
+        global $pth, $plugin_cf, $_XH_csrfProtection;
+        vfsStream::setup("root", null, [
+            "plugins" => [
+                "translator" => ["languages" => [
+                    "en.php" => <<<'EOS'
+                        <?php
+
+                        $plugin_tx['translator']['default_translation'] = "*** NEW LANGUAGE STRING ***";
+                        EOS,
+                    "de.php" => <<<'EOS'
+                        <?php
+
+                        $plugin_tx['translator']['default_translation'] = "*** NEUER SPRACH-TEXT ***";
+                        EOS,
+                ]],
+            ],
+            "userfiles" => [
+                "downloads" => [],
+                "images" => ["flags" => ["de.gif" => "", "en.gif" => ""]],
+            ]
+        ]);
+        $pth = ["folder" => [
+            "downloads" => vfsStream::url("root/userfiles/downloads/"),
+            "flags" => vfsStream::url("root/userfiles/images/flags/"),
+            "plugins" => vfsStream::url("root/plugins/"),
+        ]];
+        $_XH_csrfProtection = $this->createMock(CSRFProtection::class);
+        $_XH_csrfProtection->expects($this->any())->method("tokenInput")->willReturn(
+            '<input type="hidden" name="csrf_token" value="0123456789ABCDEF">'
+        );
+        $plugin_cf = XH_includeVar("./config/config.php", "plugin_cf");
+        $this->conf = $plugin_cf["translator"];
+        $this->view = new View("./views/", XH_includeVar("./languages/en.php", "plugin_tx")["translator"]);
+    }
+
+    private function sut(): MainController
+    {
+        return new MainController("./", $this->conf, $this->view);
+    }
+
+    public function testRendersOverview(): void
+    {
+        $request = new FakeRequest();
+        $output = $this->sut()->defaultAction($request);
+        Approvals::verifyHtml($output);
+    }
+
+    public function testRendersEditor(): void
+    {
+        $_GET = [
+            "translator_module" => "translator",
+            "translator_from" => "en",
+            "translator_to" => "de",
+        ];
+        $request = new FakeRequest();
+        $output = $this->sut()->editAction($request);
+        Approvals::verifyHtml($output);
+    }
+
+    public function testSavesTranslation(): void
+    {
+        $_GET = [
+            "translator_module" => "translator",
+            "translator_from" => "en",
+            "translator_to" => "de",
+        ];
+        $_POST = [
+            "translator_string_default|translation" => "neue Übersetzung",
+        ];
+        $request = new FakeRequest();
+        $output = $this->sut()->saveAction($request);
+        $this->assertStringContainsString(
+            "neue Übersetzung",
+            file_get_contents(vfsStream::url("root/plugins/translator/languages/de.php"))
+        );
+        $this->assertStringContainsString(
+            "The file &quot;vfs://root/plugins/translator/languages/de.php&quot; has been successfully saved.",
+            $output
+        );
+    }
+
+    public function testCreatesZip(): void
+    {
+        $_GET = ["translator_lang" => "de"];
+        $_POST = [
+            "translator_modules" => ["translator"],
+            "translator_filename" => "test",
+        ];
+        $request = new FakeRequest();
+        $output = $this->sut()->zipAction($request);
+        $this->assertFileExists(vfsStream::url("root/userfiles/downloads/test.zip"));
+        $this->assertStringContainsString(
+            "The file &quot;vfs://root/userfiles/downloads/test.zip&quot; has been successfully saved.",
+            $output
+        );
+        $this->assertStringContainsString("http://example.com/vfs://root/userfiles/downloads/test.zip", $output);
+    }
+}
