@@ -4,15 +4,17 @@ use Plib\View;
 
 /**
  * @var View $this
- * @var string $action
+ * @var string $language
  * @var list<object{module:string,name:string,url:string,checked:string}> $modules
  * @var string $filename
- * @var string $csrf_token
  */
 ?>
 
-<form id="translator_list" action="<?=$this->esc($action)?>" method="post">
+<form id="translator_list" method="get">
   <h1>Translator – <?=$this->text('menu_main')?></h1>
+  <input type="hidden" name="selected" value="translator">
+  <input type="hidden" name="admin" value="plugin_main">
+  <input type="hidden" name="translator_lang" value="<?=$this->esc($language)?>">
   <ul>
 <?php foreach ($modules as $module):?>
     <li>
@@ -28,7 +30,6 @@ use Plib\View;
   <p>
     <?=$this->text('label_filename')?>
     <input type="text" name="translator_filename" value="<?=$this->esc($filename)?>">.zip
-    <input type="submit" class="submit" value="<?=$this->text('label_generate')?>">
+    <button class="submit" name="action" value="zip"><?=$this->text('label_generate')?></button>
   </p>
-  <input type="hidden" name="translator_token" value="<?=$this->esc($csrf_token)?>">
 </form>

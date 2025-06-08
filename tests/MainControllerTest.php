@@ -112,28 +112,11 @@ class MainControllerTest extends TestCase
     {
         $this->csrfProtector->method("check")->willReturn(true);
         $request = new FakeRequest([
-            "url" => "http://example.com/?&action=zip&translator_lang=de",
-            "post" => [
-                "translator_modules" => ["translator"],
-                "translator_filename" => "test",
-            ],
+            "url" => "http://example.com/?&action=zip&translator_lang=de&translator_filename=test"
+                . "&translator_modules[]=translator",
         ]);
         $response = $this->sut()($request);
         $this->assertSame("application/zip", $response->contentType());
         $this->assertSame("test.zip", $response->attachment());
-    }
-
-    public function testZipCreationIsCsrfProtected(): void
-    {
-        $this->csrfProtector->method("check")->willReturn(false);
-        $request = new FakeRequest([
-            "url" => "http://example.com/?&action=zip&translator_lang=de",
-            "post" => [
-                "translator_modules" => ["translator"],
-                "translator_filename" => "test",
-            ],
-        ]);
-        $response = $this->sut()($request);
-        $this->assertSame(403, $response->status());
     }
 }

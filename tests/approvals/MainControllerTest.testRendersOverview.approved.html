@@ -1,6 +1,9 @@
 
-<form id="translator_list" action="/?&amp;action=zip&amp;translator_lang=de" method="post">
+<form id="translator_list" method="get">
   <h1>Translator – Translations</h1>
+  <input type="hidden" name="selected" value="translator">
+  <input type="hidden" name="admin" value="plugin_main">
+  <input type="hidden" name="translator_lang" value="de">
   <ul>
     <li>
       <input type="checkbox" name="translator_modules[]" value="CORE" >
@@ -17,7 +20,6 @@
   </p>
   <p>
     Filename:    <input type="text" name="translator_filename" value="">.zip
-    <input type="submit" class="submit" value="Generate Language Pack">
+    <button class="submit" name="action" value="zip">Generate Language Pack</button>
   </p>
-  <input type="hidden" name="translator_token" value="0123456789ABCDEF">
 </form>

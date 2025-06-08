@@ -88,7 +88,6 @@ class MainController
         $language = ($this->conf["translate_to"] == "")
             ? $request->language()
             : $this->conf["translate_to"];
-        $action = $request->url()->with("action", "zip")->with("translator_lang", $language)->relative();
         $url = $request->url()->with("action", "edit")->with("translator_from", $this->conf["translate_from"])
             ->with("translator_to", $language);
         if ($this->conf["translate_fullscreen"]) {
@@ -100,17 +99,16 @@ class MainController
         $modules = $request->postArray("translator_modules") !== null
             ? $this->sanitizedName($request->postArray("translator_modules"))
             : [];
-        return Response::create($this->prepareMainView($action, $url, $filename, $modules));
+        return Response::create($this->prepareMainView($language, $url, $filename, $modules));
     }
 
     /** @param list<string> $modules */
-    private function prepareMainView(string $action, Url $url, string $filename, array $modules): string
+    private function prepareMainView(string $language, Url $url, string $filename, array $modules): string
     {
         return $this->view->render("main", [
-            "action" => $action,
+            "language" => $language,
             "modules" => $this->getModules($url, $modules),
             "filename" => $filename,
-            "csrf_token" => $this->csrfProtector->token(),
         ]);
     }
 
@@ -261,11 +259,8 @@ class MainController
 
     private function zipAction(Request $request): Response
     {
-        if (!$this->csrfProtector->check($request->post("translator_token"))) {
-            return Response::error(403);
-        }
         $language = $this->sanitizedName($request->get("translator_lang") ?? "");
-        $modules = $request->postArray("translator_modules");
+        $modules = $request->getArray("translator_modules");
         if (empty($modules)) {
             $response = $this->defaultAction($request);
             return Response::create($this->view->message("warning", "message_no_module") . $response->output());
@@ -276,7 +271,7 @@ class MainController
             $response = $this->defaultAction($request);
             return Response::create($this->view->message("fail", "error_zip") . $response->output());
         }
-        $filename = $this->sanitizedName($request->post("translator_filename") ?? "");
+        $filename = $this->sanitizedName($request->get("translator_filename") ?? "");
         return Response::create($contents)->withContentType("application/zip")
             ->withAttachment("$filename.zip")->withLength(strlen($contents));
     }
