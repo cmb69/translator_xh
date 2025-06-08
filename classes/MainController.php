@@ -63,7 +63,21 @@ class MainController
         $this->view = $view;
     }
 
-    public function defaultAction(Request $request): string
+    public function __invoke(Request $request): string
+    {
+        switch ($request->get("action")) {
+            default:
+                return $this->defaultAction($request);
+            case "edit":
+                return $this->editAction($request);
+            case "save":
+                return $this->saveAction($request);
+            case "zip":
+                return $this->zipAction($request);
+        }
+    }
+
+    private function defaultAction(Request $request): string
     {
         global $hjs;
 
@@ -122,7 +136,7 @@ class MainController
         return $modules;
     }
 
-    public function editAction(Request $request): string
+    private function editAction(Request $request): string
     {
         $module = $this->sanitizedName($request->get("translator_module") ?? "");
         $from = $this->sanitizedName($request->get("translator_from") ?? "");
@@ -193,7 +207,7 @@ class MainController
         }
     }
 
-    public function saveAction(Request $request): string
+    private function saveAction(Request $request): string
     {
         $this->csrfProtector->check();
         $module = $this->sanitizedName($request->get("translator_module") ?? "");
@@ -239,7 +253,7 @@ class MainController
         return "";
     }
 
-    public function zipAction(Request $request): string
+    private function zipAction(Request $request): string
     {
         $this->csrfProtector->check();
         $language = $this->sanitizedName($request->get("translator_lang") ?? "");

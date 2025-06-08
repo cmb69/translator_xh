@@ -60,7 +60,7 @@ class Plugin
 
     public function run(): void
     {
-        global $o, $admin, $action;
+        global $o, $admin;
 
         XH_registerStandardPluginMenuItems(true);
         if (XH_wantsPluginAdministration('translator')) {
@@ -70,21 +70,7 @@ class Plugin
                     $o .= self::InfoController()->defaultAction();
                     break;
                 case 'plugin_main':
-                    $controller = self::mainController();
-                    switch ($action) {
-                        case 'plugin_text':
-                            $o .= $controller->defaultAction(Request::current());
-                            break;
-                        case 'edit':
-                            $o .= $controller->editAction(Request::current());
-                            break;
-                        case 'save':
-                            $o .= $controller->saveAction(Request::current());
-                            break;
-                        case 'zip':
-                            $o .= $controller->zipAction(Request::current());
-                            break;
-                    }
+                    $o .= self::mainController()(Request::current());
                     break;
                 default:
                     $o .= plugin_admin_common();

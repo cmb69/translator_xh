@@ -66,16 +66,17 @@ class MainControllerTest extends TestCase
     public function testRendersOverview(): void
     {
         $request = new FakeRequest();
-        $output = $this->sut()->defaultAction($request);
+        $output = $this->sut()($request);
         Approvals::verifyHtml($output);
     }
 
     public function testRendersEditor(): void
     {
         $request = new FakeRequest([
-            "url" => "http://example.com/?&translator_module=translator&translator_from=en&translator_to=de",
+            "url" => "http://example.com/?&action=edit&translator_module=translator"
+                . "&translator_from=en&translator_to=de",
         ]);
-        $output = $this->sut()->editAction($request);
+        $output = $this->sut()($request);
         Approvals::verifyHtml($output);
     }
 
@@ -83,10 +84,11 @@ class MainControllerTest extends TestCase
     {
         $this->cSRFProtection->expects($this->once())->method("check");
         $request = new FakeRequest([
-            "url" => "http://example.com/?&translator_module=translator&translator_from=en&translator_to=de",
+            "url" => "http://example.com/?&action=save&translator_module=translator"
+                . "&translator_from=en&translator_to=de",
             "post" => ["translator_string_default|translation" => "neue Übersetzung"],
         ]);
-        $output = $this->sut()->saveAction($request);
+        $output = $this->sut()($request);
         $this->assertStringContainsString(
             "neue Übersetzung",
             file_get_contents(vfsStream::url("root/plugins/translator/languages/de.php"))
@@ -101,13 +103,13 @@ class MainControllerTest extends TestCase
     {
         $this->cSRFProtection->expects($this->once())->method("check");
         $request = new FakeRequest([
-            "url" => "http://example.com/?&translator_lang=de",
+            "url" => "http://example.com/?&action=zip&translator_lang=de",
             "post" => [
                 "translator_modules" => ["translator"],
                 "translator_filename" => "test",
             ],
         ]);
-        $output = $this->sut()->zipAction($request);
+        $output = $this->sut()($request);
         $this->assertFileExists(vfsStream::url("root/userfiles/downloads/test.zip"));
         $this->assertStringContainsString(
             "The file &quot;vfs://root/userfiles/downloads/test.zip&quot; has been successfully saved.",
