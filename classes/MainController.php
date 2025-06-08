@@ -86,12 +86,12 @@ class MainController
         if ($this->conf["translate_fullscreen"]) {
             $url = $url->with("print");
         }
-        $filename = isset($_POST['translator_filename'])
-            ? $this->sanitizedName($_POST['translator_filename'])
+        $filename = $request->post("translator_filename") !== null
+            ? $this->sanitizedName($request->post("translator_filename"))
             : '';
-        $modules = isset($_POST['translator_modules'])
-            ? $this->sanitizedName($_POST['translator_modules'])
-            : array();
+        $modules = $request->postArray("translator_modules") !== null
+            ? $this->sanitizedName($request->postArray("translator_modules"))
+            : [];
         return $this->prepareMainView($action, $url, $filename, $modules);
     }
 
@@ -133,9 +133,9 @@ class MainController
 
     public function editAction(Request $request): string
     {
-        $module = $this->sanitizedName($_GET['translator_module']);
-        $from = $this->sanitizedName($_GET['translator_from']);
-        $to = $this->sanitizedName($_GET['translator_to']);
+        $module = $this->sanitizedName($request->get("translator_module"));
+        $from = $this->sanitizedName($request->get("translator_from"));
+        $to = $this->sanitizedName($request->get("translator_to"));
         $url = $request->url()->with("action", "save")->with("translator_from", $from)
             ->with("translator_to", $to)->with("translator_module", $module)->relative();
         return $this->prepareEditorView($url, $module, $from, $to);
@@ -219,9 +219,9 @@ class MainController
     public function saveAction(Request $request): string
     {
         $this->csrfProtector->check();
-        $module = $this->sanitizedName($_GET['translator_module']);
-        $sourceLanguage = $this->sanitizedName($_GET['translator_from']);
-        $destinationLanguage = $this->sanitizedName($_GET['translator_to']);
+        $module = $this->sanitizedName($request->get("translator_module"));
+        $sourceLanguage = $this->sanitizedName($request->get("translator_from"));
+        $destinationLanguage = $this->sanitizedName($request->get("translator_to"));
         $destinationL10n = Localization::modify($module, $destinationLanguage, $this->store);
         if ($destinationL10n === null) {
             return $this->saveMessage(false, $this->model->filename($module, $destinationLanguage))
@@ -234,7 +234,7 @@ class MainController
             ksort($sourceTexts);
         }
         foreach (array_keys($sourceTexts) as $key) {
-            $value = $_POST['translator_string_' . $key];
+            $value = $request->post("translator_string_$key");
             if ($value != '' && $value != $this->view->plain("default_translation")) {
                 $destinationTexts[$key] = $value;
             }
@@ -265,17 +265,18 @@ class MainController
     public function zipAction(Request $request): string
     {
         $this->csrfProtector->check();
-        $language = $this->sanitizedName($_GET['translator_lang']);
-        if (empty($_POST['translator_modules'])) {
+        $language = $this->sanitizedName($request->get("translator_lang"));
+        $modules = $request->postArray("translator_modules");
+        if (empty($modules)) {
             return $this->view->message("warning", "message_no_module") . $this->defaultAction($request);
         }
-        $modules = $this->sanitizedName($_POST['translator_modules']);
+        $modules = $this->sanitizedName($modules);
         try {
             $contents = $this->model->zipArchive($modules, $language);
         } catch (Exception $exception) {
             return XH_message('fail', $exception->getMessage()) . $this->defaultAction($request);
         }
-        $filename = $this->sanitizedName($_POST['translator_filename']);
+        $filename = $this->sanitizedName($request->post("translator_filename"));
         $filename = $this->model->downloadFolder() . $filename . '.zip';
         $saved = file_put_contents($filename, $contents) !== false;
         $o = $this->saveMessage($saved, $filename);
