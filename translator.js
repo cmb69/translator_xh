@@ -46,7 +46,7 @@
          * Initializes everything.
          */
         function init() {
-            var form, downloadUrl;
+            var form;
 
             form = document.getElementById("translator_list");
             checkboxes = [];
@@ -71,12 +71,6 @@
             deselectAllButton.addEventListener("click", function () {
                 deSelectModules(false);
             });
-            downloadUrl = document.getElementById("translator_download_link");
-            if (downloadUrl) {
-                downloadUrl.addEventListener("click", function () {
-                    this.select();
-                });
-            }
         }
 
         init();

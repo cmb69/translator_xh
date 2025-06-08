@@ -6,10 +6,6 @@
     margin-right: 1em;
 }
 
-#translator_download_link {
-    width: 99%;
-}
-
 #translator {
     overflow: auto;
 }
