@@ -26,7 +26,6 @@ use Plib\DocumentStore2 as DocumentStore;
 use Plib\Request;
 use Plib\Response;
 use Plib\Url;
-use stdClass;
 use Plib\View;
 use Translator\Model\Localization;
 
@@ -161,7 +160,7 @@ class MainController
         ]);
     }
 
-    /** @return list<stdClass> */
+    /** @return list<object{key:string,displayKey:string,className:string,sourceText:string,destinationText:string}> */
     private function getEditorRows(string $module, string $sourceLanguage, string $destinationLanguage): array
     {
         $sourceL10n = Localization::read($module, $sourceLanguage, $this->store);
@@ -180,7 +179,7 @@ class MainController
 
     /**
      * @param array<string,string> $destinationTexts
-     * @return stdClass
+     * @return object{key:string,displayKey:string,className:string,sourceText:string,destinationText:string}
      */
     private function getEditorRow(string $key, string $sourceText, array $destinationTexts)
     {
