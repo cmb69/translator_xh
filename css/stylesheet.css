@@ -14,18 +14,28 @@
     overflow: auto;
 }
 
-#translator table {
-    width: 100%;
-    margin-top: 1em;
+#translator > div {
+    display: grid;
+    grid-template-columns: 1fr 4fr 4fr;
 }
 
-#translator td {
-    vertical-align: top;
+/* for narrow content area *//*
+#translator > div > div.translator_key {
+    grid-column: 1/2;
+}
+#translator > div > div.translator_from {
+    grid-column: 2/4;
+}
+#translator > div > div.translator_to {
+    grid-column: 2/4;
+}*/
+
+
+#translator > div > p {
+    text-align: center;
 }
 
-#translator .translator_key {
-    width: 5em;
-}
+#translator .translator_key {}
 
 #translator textarea {
     padding: 0;
