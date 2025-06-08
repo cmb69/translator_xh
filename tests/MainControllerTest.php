@@ -66,8 +66,8 @@ class MainControllerTest extends TestCase
     public function testRendersOverview(): void
     {
         $request = new FakeRequest();
-        $output = $this->sut()($request);
-        Approvals::verifyHtml($output);
+        $response = $this->sut()($request);
+        Approvals::verifyHtml($response->output());
     }
 
     public function testRendersEditor(): void
@@ -76,8 +76,8 @@ class MainControllerTest extends TestCase
             "url" => "http://example.com/?&action=edit&translator_module=translator"
                 . "&translator_from=en&translator_to=de",
         ]);
-        $output = $this->sut()($request);
-        Approvals::verifyHtml($output);
+        $response = $this->sut()($request);
+        Approvals::verifyHtml($response->output());
     }
 
     public function testSavesTranslation(): void
@@ -88,14 +88,14 @@ class MainControllerTest extends TestCase
                 . "&translator_from=en&translator_to=de",
             "post" => ["translator_string_default|translation" => "neue Übersetzung"],
         ]);
-        $output = $this->sut()($request);
+        $response = $this->sut()($request);
         $this->assertStringContainsString(
             "neue Übersetzung",
             file_get_contents(vfsStream::url("root/plugins/translator/languages/de.php"))
         );
         $this->assertStringContainsString(
             "The file &quot;vfs://root/plugins/translator/languages/de.php&quot; has been successfully saved.",
-            $output
+            $response->output()
         );
     }
 
@@ -109,12 +109,15 @@ class MainControllerTest extends TestCase
                 "translator_filename" => "test",
             ],
         ]);
-        $output = $this->sut()($request);
+        $response = $this->sut()($request);
         $this->assertFileExists(vfsStream::url("root/userfiles/downloads/test.zip"));
         $this->assertStringContainsString(
             "The file &quot;vfs://root/userfiles/downloads/test.zip&quot; has been successfully saved.",
-            $output
+            $response->output()
         );
-        $this->assertStringContainsString("http://example.com/vfs://root/userfiles/downloads/test.zip", $output);
+        $this->assertStringContainsString(
+            "http://example.com/vfs://root/userfiles/downloads/test.zip",
+            $response->output()
+        );
     }
 }

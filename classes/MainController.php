@@ -23,6 +23,7 @@ namespace Translator;
 
 use Plib\DocumentStore2 as DocumentStore;
 use Plib\Request;
+use Plib\Response;
 use Plib\Url;
 use stdClass;
 use Plib\View;
@@ -62,7 +63,7 @@ class MainController
         $this->view = $view;
     }
 
-    public function __invoke(Request $request): string
+    public function __invoke(Request $request): Response
     {
         switch ($request->get("action")) {
             default:
@@ -76,7 +77,7 @@ class MainController
         }
     }
 
-    private function defaultAction(Request $request): string
+    private function defaultAction(Request $request): Response
     {
         global $hjs;
 
@@ -101,7 +102,7 @@ class MainController
         $modules = $request->postArray("translator_modules") !== null
             ? $this->sanitizedName($request->postArray("translator_modules"))
             : [];
-        return $this->prepareMainView($action, $url, $filename, $modules);
+        return Response::create($this->prepareMainView($action, $url, $filename, $modules));
     }
 
     /** @param list<string> $modules */
@@ -135,14 +136,14 @@ class MainController
         return $modules;
     }
 
-    private function editAction(Request $request): string
+    private function editAction(Request $request): Response
     {
         $module = $this->sanitizedName($request->get("translator_module") ?? "");
         $from = $this->sanitizedName($request->get("translator_from") ?? "");
         $to = $this->sanitizedName($request->get("translator_to") ?? "");
         $url = $request->url()->with("action", "save")->with("translator_from", $from)
             ->with("translator_to", $to)->with("translator_module", $module)->relative();
-        return $this->prepareEditorView($url, $module, $from, $to);
+        return Response::create($this->prepareEditorView($url, $module, $from, $to));
     }
 
     private function prepareEditorView(
@@ -210,7 +211,7 @@ class MainController
         }
     }
 
-    private function saveAction(Request $request): string
+    private function saveAction(Request $request): Response
     {
         $this->csrfProtector->check();
         $module = $this->sanitizedName($request->get("translator_module") ?? "");
@@ -218,8 +219,9 @@ class MainController
         $destinationLanguage = $this->sanitizedName($request->get("translator_to") ?? "");
         $destinationL10n = Localization::modify($module, $destinationLanguage, $this->store);
         if ($destinationL10n === null) {
-            return $this->saveMessage(false, $this->model->filename($module, $destinationLanguage))
-                . $this->defaultAction($request);
+            $response = $this->defaultAction($request);
+            return Response::create($this->saveMessage(false, $this->model->filename($module, $destinationLanguage))
+                . $response->output());
         }
         $destinationTexts = [];
         $sourceL10n = Localization::read($module, $sourceLanguage, $this->store);
@@ -237,7 +239,8 @@ class MainController
         $destinationL10n->setCopyright($this->copyright($request));
         $saved = $this->store->commit();
         $filename = $this->model->filename($module, $destinationLanguage);
-        return $this->saveMessage($saved, $filename) . $this->defaultAction($request);
+        $response = $this->defaultAction($request);
+        return Response::create($this->saveMessage($saved, $filename) . $response->output());
     }
 
     private function copyright(Request $request): string
@@ -256,30 +259,32 @@ class MainController
         return "";
     }
 
-    private function zipAction(Request $request): string
+    private function zipAction(Request $request): Response
     {
         $this->csrfProtector->check();
         $language = $this->sanitizedName($request->get("translator_lang") ?? "");
         $modules = $request->postArray("translator_modules");
         if (empty($modules)) {
-            return $this->view->message("warning", "message_no_module") . $this->defaultAction($request);
+            $response = $this->defaultAction($request);
+            return Response::create($this->view->message("warning", "message_no_module") . $response->output());
         }
         $modules = $this->sanitizedName($modules);
         $contents = $this->model->zipArchive($modules, $language);
         if ($contents === null) {
-            return $this->view->message("fail", "error_zip") . $this->defaultAction($request);
+            $response = $this->defaultAction($request);
+            return Response::create($this->view->message("fail", "error_zip") . $response->output());
         }
         $filename = $this->sanitizedName($request->post("translator_filename") ?? "");
         $filename = $this->model->downloadFolder() . $filename . ".zip";
         $saved = file_put_contents($filename, $contents) !== false;
         $o = $this->saveMessage($saved, $filename);
-        $o .= $this->defaultAction($request);
+        $o .= $this->defaultAction($request)->output();
         if ($saved) {
             $o .= $this->view->render("download", [
                 "url" => $request->url()->path($filename)->absolute(),
             ]);
         }
-        return $o;
+        return Response::create($o);
     }
 
     /**

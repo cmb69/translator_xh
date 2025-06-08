@@ -34,7 +34,7 @@ if (XH_wantsPluginAdministration("translator")) {
             $o .= Plugin::InfoController()->defaultAction();
             break;
         case "plugin_main":
-            $o .= Plugin::mainController()(Request::current());
+            $o .= Plugin::mainController()(Request::current())();
             break;
         default:
             $o .= plugin_admin_common();
