@@ -9,7 +9,7 @@ use Plib\View;
  * @var string $sourceLabel
  * @var string $destinationLabel
  * @var list<object{key:string,displayKey:string,className:string,sourceText:string,destinationText:string}> $rows
- * @var string $csrfTokenInput
+ * @var string $csrf_token
  */
 ?>
 
@@ -35,5 +35,5 @@ use Plib\View;
 <?php endforeach?>
     </table>
     <input type="submit" class="submit" value="<?=$this->text('label_save')?>">
-    <?=$this->raw($csrfTokenInput)?>
+    <input type="hidden" name="translator_token" value="<?=$this->esc($csrf_token)?>">
 </form>

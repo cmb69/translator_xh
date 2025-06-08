@@ -5,6 +5,7 @@ require_once "./vendor/autoload.php";
 require_once "../../cmsimple/classes/CSRFProtection.php";
 require_once "../../cmsimple/functions.php";
 
+require_once "../plib/classes/CsrfProtector.php";
 require_once "../plib/classes/Document2.php";
 require_once "../plib/classes/DocumentStore2.php";
 require_once "../plib/classes/Request.php";

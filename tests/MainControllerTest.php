@@ -4,24 +4,24 @@ namespace Translator;
 
 use ApprovalTests\Approvals;
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
+use Plib\CsrfProtector;
 use Plib\DocumentStore2 as DocumentStore;
 use Plib\FakeRequest;
 use Plib\View;
-use XH\CSRFProtection;
 
 class MainControllerTest extends TestCase
 {
     private array $conf;
-    /** @var CSRFProtection&MockObject */
-    private $cSRFProtection;
+    /** @var CsrfProtector&Stub */
+    private $csrfProtector;
     private DocumentStore $store;
     private View $view;
 
     protected function setUp(): void
     {
-        global $pth, $plugin_cf, $_XH_csrfProtection;
+        global $pth, $plugin_cf;
         vfsStream::setup("root", null, [
             "plugins" => [
                 "translator" => ["languages" => [
@@ -47,11 +47,8 @@ class MainControllerTest extends TestCase
             "flags" => vfsStream::url("root/userfiles/images/flags/"),
             "plugins" => vfsStream::url("root/plugins/"),
         ]];
-        $this->cSRFProtection = $this->createMock(CSRFProtection::class);
-        $this->cSRFProtection->expects($this->any())->method("tokenInput")->willReturn(
-            '<input type="hidden" name="csrf_token" value="0123456789ABCDEF">'
-        );
-        $_XH_csrfProtection = $this->cSRFProtection;
+        $this->csrfProtector = $this->createStub(CsrfProtector::class);
+        $this->csrfProtector->method("token")->willReturn("0123456789ABCDEF");
         $plugin_cf = XH_includeVar("./config/config.php", "plugin_cf");
         $this->conf = $plugin_cf["translator"];
         $this->store = new DocumentStore(vfsStream::url("root/"));
@@ -60,7 +57,7 @@ class MainControllerTest extends TestCase
 
     private function sut(): MainController
     {
-        return new MainController("./", $this->conf, $this->store, $this->view);
+        return new MainController("./", $this->conf, $this->csrfProtector, $this->store, $this->view);
     }
 
     public function testRendersOverview(): void
@@ -82,7 +79,7 @@ class MainControllerTest extends TestCase
 
     public function testSavesTranslation(): void
     {
-        $this->cSRFProtection->expects($this->once())->method("check");
+        $this->csrfProtector->method("check")->willReturn(true);
         $request = new FakeRequest([
             "url" => "http://example.com/?&action=save&translator_module=translator"
                 . "&translator_from=en&translator_to=de",
@@ -99,9 +96,21 @@ class MainControllerTest extends TestCase
         );
     }
 
+    public function testSavingIsCsrfProtected(): void
+    {
+        $this->csrfProtector->method("check")->willReturn(false);
+        $request = new FakeRequest([
+            "url" => "http://example.com/?&action=save&translator_module=translator"
+                . "&translator_from=en&translator_to=de",
+            "post" => ["translator_string_default|translation" => "neue Übersetzung"],
+        ]);
+        $response = $this->sut()($request);
+        $this->assertSame(403, $response->status());
+    }
+
     public function testCreatesZip(): void
     {
-        $this->cSRFProtection->expects($this->once())->method("check");
+        $this->csrfProtector->method("check")->willReturn(true);
         $request = new FakeRequest([
             "url" => "http://example.com/?&action=zip&translator_lang=de",
             "post" => [
@@ -119,5 +128,19 @@ class MainControllerTest extends TestCase
             "http://example.com/vfs://root/userfiles/downloads/test.zip",
             $response->output()
         );
+    }
+
+    public function testZipCreationIsCsrfProtected(): void
+    {
+        $this->csrfProtector->method("check")->willReturn(false);
+        $request = new FakeRequest([
+            "url" => "http://example.com/?&action=zip&translator_lang=de",
+            "post" => [
+                "translator_modules" => ["translator"],
+                "translator_filename" => "test",
+            ],
+        ]);
+        $response = $this->sut()($request);
+        $this->assertSame(403, $response->status());
     }
 }

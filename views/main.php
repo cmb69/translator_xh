@@ -7,7 +7,7 @@ use Plib\View;
  * @var string $action
  * @var list<object{module:string,name:string,url:string,checked:string}> $modules
  * @var string $filename
- * @var string $csrfTokenInput
+ * @var string $csrf_token
  */
 ?>
 
@@ -30,5 +30,5 @@ use Plib\View;
         <input type="text" name="translator_filename" value="<?=$this->esc($filename)?>">.zip
         <input type="submit" class="submit" value="<?=$this->text('label_generate')?>">
     </p>
-    <?=$this->raw($csrfTokenInput)?>
+    <input type="hidden" name="translator_token" value="<?=$this->esc($csrf_token)?>">
 </form>

@@ -21,6 +21,7 @@
 
 namespace Translator;
 
+use Plib\CsrfProtector;
 use Plib\DocumentStore2 as DocumentStore;
 use Plib\SystemChecker;
 use Plib\View;
@@ -46,6 +47,7 @@ class Plugin
         return new MainController(
             $pth["folder"]["plugins"] . "translator/",
             $plugin_cf["translator"],
+            new CsrfProtector(),
             new DocumentStore($pth["folder"]["base"]),
             self::view()
         );

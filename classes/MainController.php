@@ -21,6 +21,7 @@
 
 namespace Translator;
 
+use Plib\CsrfProtector;
 use Plib\DocumentStore2 as DocumentStore;
 use Plib\Request;
 use Plib\Response;
@@ -28,7 +29,6 @@ use Plib\Url;
 use stdClass;
 use Plib\View;
 use Translator\Model\Localization;
-use XH\CSRFProtection;
 
 class MainController
 {
@@ -39,7 +39,7 @@ class MainController
     /** @var array<string,string> */
     private array $conf;
 
-    /** @var CSRFProtection */
+    /** @var CsrfProtector */
     private $csrfProtector;
 
     private DocumentStore $store;
@@ -50,15 +50,14 @@ class MainController
     public function __construct(
         string $pluginFolder,
         array $conf,
+        CsrfProtector $csrfProtector,
         DocumentStore $store,
         View $view
     ) {
-        global $_XH_csrfProtection;
-
         $this->pluginFolder = $pluginFolder;
         $this->model = new Model();
         $this->conf = $conf;
-        $this->csrfProtector = $_XH_csrfProtection;
+        $this->csrfProtector = $csrfProtector;
         $this->store = $store;
         $this->view = $view;
     }
@@ -112,7 +111,7 @@ class MainController
             "action" => $action,
             "modules" => $this->getModules($url, $modules),
             "filename" => $filename,
-            "csrfTokenInput" => $this->csrfProtector->tokenInput(),
+            "csrf_token" => $this->csrfProtector->token(),
         ]);
     }
 
@@ -158,7 +157,7 @@ class MainController
             "sourceLabel" => $this->languageLabel($sourceLanguage),
             "destinationLabel" => $this->languageLabel($destinationLanguage),
             "rows" => $this->getEditorRows($module, $sourceLanguage, $destinationLanguage),
-            "csrfTokenInput" => $this->csrfProtector->tokenInput(),
+            "csrf_token" => $this->csrfProtector->token(),
         ]);
     }
 
@@ -213,7 +212,9 @@ class MainController
 
     private function saveAction(Request $request): Response
     {
-        $this->csrfProtector->check();
+        if (!$this->csrfProtector->check($request->post("translator_token"))) {
+            return Response::error(403);
+        }
         $module = $this->sanitizedName($request->get("translator_module") ?? "");
         $sourceLanguage = $this->sanitizedName($request->get("translator_from") ?? "");
         $destinationLanguage = $this->sanitizedName($request->get("translator_to") ?? "");
@@ -261,7 +262,9 @@ class MainController
 
     private function zipAction(Request $request): Response
     {
-        $this->csrfProtector->check();
+        if (!$this->csrfProtector->check($request->post("translator_token"))) {
+            return Response::error(403);
+        }
         $language = $this->sanitizedName($request->get("translator_lang") ?? "");
         $modules = $request->postArray("translator_modules");
         if (empty($modules)) {
