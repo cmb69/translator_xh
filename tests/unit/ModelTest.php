@@ -67,14 +67,6 @@ class ModelTest extends TestCase
         $this->model = new Model();
     }
 
-    public function testCanonicalUrl()
-    {
-        $url = 'http://example.com/./foo/bar/../baz/./index.html';
-        $expected = 'http://example.com/foo/baz/index.html';
-        $actual = $this->model->canonicalUrl($url);
-        $this->assertEquals($expected, $actual);
-    }
-
     public function testFlagIconPath()
     {
         $expected = $this->basePath . 'images/flags/en.gif';

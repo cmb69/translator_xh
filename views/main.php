@@ -17,7 +17,7 @@ use Plib\View;
 <?php foreach ($modules as $module):?>
         <li>
             <input type="checkbox" name="translator_modules[]" value="<?=$this->esc($module->module)?>" <?=$this->esc($module->checked)?>>
-            <a href="<?=$this->esc($module->url)?><?=$this->esc($module->module)?>"><?=$this->esc($module->name)?></a>
+            <a href="<?=$this->esc($module->url)?>"><?=$this->esc($module->name)?></a>
         </li>
 <?php endforeach?>
     </ul>

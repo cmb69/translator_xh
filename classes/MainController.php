@@ -22,6 +22,8 @@
 namespace Translator;
 
 use Exception;
+use Plib\Request;
+use Plib\Url;
 use stdClass;
 use Plib\View;
 use XH\CSRFProtection;
@@ -60,9 +62,9 @@ class MainController
         $this->view = $view;
     }
 
-    public function defaultAction(): string
+    public function defaultAction(Request $request): string
     {
-        global $sn, $sl, $hjs;
+        global $hjs;
 
         $filename = $this->pluginFolder . "translator.min.js";
         if (!file_exists($filename)) {
@@ -71,14 +73,14 @@ class MainController
         $hjs .= '<script type="text/javascript" src="' . $filename
             . '"></script>' . PHP_EOL;
         $language = ($this->conf["translate_to"] == '')
-            ? $sl
+            ? $request->language()
             : $this->conf["translate_to"];
-        $action = $sn . '?&translator&admin=plugin_main&action=zip'
-            . '&translator_lang=' . $language;
-        $url = $sn . '?&translator&admin=plugin_main&action=edit'
-            . ($this->conf["translate_fullscreen"] ? '&print' : '')
-            . '&translator_from=' . $this->conf["translate_from"]
-            . '&translator_to=' . $language . '&translator_module=';
+        $action = $request->url()->with("action", "zip")->with("translator_lang", $language)->relative();
+        $url = $request->url()->with("action", "edit")->with("translator_from", $this->conf["translate_from"])
+            ->with("translator_to", $language);
+        if ($this->conf["translate_fullscreen"]) {
+            $url = $url->with("print");
+        }
         $filename = isset($_POST['translator_filename'])
             ? $this->sanitizedName($_POST['translator_filename'])
             : '';
@@ -90,12 +92,11 @@ class MainController
 
     /**
      * @param string $action
-     * @param string $url
      * @param string $filename
      * @param list<string> $modules
      * @return string
      */
-    private function prepareMainView($action, $url, $filename, array $modules)
+    private function prepareMainView($action, Url $url, $filename, array $modules)
     {
         return $this->view->render("main", [
             'action' => $action,
@@ -106,31 +107,32 @@ class MainController
     }
 
     /**
-     * @param string $url
      * @param list<string> $modules
      * @return list<object{module:string,name:string,url:string,checked:string}>
      */
-    private function getModules($url, array $modules)
+    private function getModules(Url $url, array $modules)
     {
         $modules = [];
         foreach ($this->model->modules() as $module) {
             $name = ucfirst($module);
             $checked = in_array($module, $modules) ? 'checked' : '';
-            $modules[] = (object) compact('module', 'name', 'url', 'checked');
+            $modules[] = (object) [
+                "module" => $module,
+                "name" => $name,
+                "url" => $url->with("translator_module", $module)->relative(),
+                "checked" => $checked,
+            ];
         }
         return $modules;
     }
 
-    public function editAction(): string
+    public function editAction(Request $request): string
     {
-        global $sn;
-
         $module = $this->sanitizedName($_GET['translator_module']);
         $from = $this->sanitizedName($_GET['translator_from']);
         $to = $this->sanitizedName($_GET['translator_to']);
-        $url = $sn . '?&translator&admin=plugin_main&action=save'
-            . '&translator_from=' . $from . '&translator_to=' . $to
-            . '&translator_module=' . $module;
+        $url = $request->url()->with("action", "save")->with("translator_from", $from)
+            ->with("translator_to", $to)->with("translator_module", $module)->relative();
         return $this->prepareEditorView($url, $module, $from, $to);
     }
 
@@ -210,7 +212,7 @@ class MainController
         }
     }
 
-    public function saveAction(): string
+    public function saveAction(Request $request): string
     {
         $this->csrfProtector->check();
         $module = $this->sanitizedName($_GET['translator_module']);
@@ -229,30 +231,30 @@ class MainController
         }
         $saved = $this->model->writeLanguage($module, $destinationLanguage, $destinationTexts);
         $filename = $this->model->filename($module, $destinationLanguage);
-        return $this->saveMessage($saved, $filename) . $this->defaultAction();
+        return $this->saveMessage($saved, $filename) . $this->defaultAction($request);
     }
 
-    public function zipAction(): string
+    public function zipAction(Request $request): string
     {
         $this->csrfProtector->check();
         $language = $this->sanitizedName($_GET['translator_lang']);
         if (empty($_POST['translator_modules'])) {
-            return $this->view->message("warning", "message_no_module") . $this->defaultAction();
+            return $this->view->message("warning", "message_no_module") . $this->defaultAction($request);
         }
         $modules = $this->sanitizedName($_POST['translator_modules']);
         try {
             $contents = $this->model->zipArchive($modules, $language);
         } catch (Exception $exception) {
-            return XH_message('fail', $exception->getMessage()) . $this->defaultAction();
+            return XH_message('fail', $exception->getMessage()) . $this->defaultAction($request);
         }
         $filename = $this->sanitizedName($_POST['translator_filename']);
         $filename = $this->model->downloadFolder() . $filename . '.zip';
         $saved = file_put_contents($filename, $contents) !== false;
         $o = $this->saveMessage($saved, $filename);
-        $o .= $this->defaultAction();
+        $o .= $this->defaultAction($request);
         if ($saved) {
             $o .= $this->view->render("download", [
-                'url' => $this->model->canonicalUrl($this->baseUrl() . $filename)
+                "url" => $request->url()->path($filename)->absolute(),
             ]);
         }
         return $o;
@@ -275,19 +277,6 @@ class MainController
         } else {
             return preg_replace('/[^a-z0-9_-]/i', '', $input);
         }
-    }
-
-    /**
-     * @return string
-     */
-    private function baseUrl()
-    {
-        global $sn;
-
-        return 'http'
-            . (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 's' : '')
-            . '://' . $_SERVER['HTTP_HOST']
-            . preg_replace('/index\.php$/', '', $sn);
     }
 
     /**

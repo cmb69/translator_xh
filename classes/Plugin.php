@@ -21,6 +21,7 @@
 
 namespace Translator;
 
+use Plib\Request;
 use Plib\SystemChecker;
 use Plib\View;
 
@@ -73,16 +74,16 @@ class Plugin
                     $controller = self::mainController();
                     switch ($action) {
                         case 'plugin_text':
-                            $o .= $controller->defaultAction();
+                            $o .= $controller->defaultAction(Request::current());
                             break;
                         case 'edit':
-                            $o .= $controller->editAction();
+                            $o .= $controller->editAction(Request::current());
                             break;
                         case 'save':
-                            $o .= $controller->saveAction();
+                            $o .= $controller->saveAction(Request::current());
                             break;
                         case 'zip':
-                            $o .= $controller->zipAction();
+                            $o .= $controller->zipAction(Request::current());
                             break;
                     }
                     break;
