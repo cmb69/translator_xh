@@ -4,6 +4,7 @@ namespace Translator;
 
 use ApprovalTests\Approvals;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Plib\FakeRequest;
 use Plib\View;
@@ -12,6 +13,8 @@ use XH\CSRFProtection;
 class MainControllerTest extends TestCase
 {
     private array $conf;
+    /** @var CSRFProtection&MockObject */
+    private $cSRFProtection;
     private View $view;
 
     protected function setUp(): void
@@ -42,10 +45,11 @@ class MainControllerTest extends TestCase
             "flags" => vfsStream::url("root/userfiles/images/flags/"),
             "plugins" => vfsStream::url("root/plugins/"),
         ]];
-        $_XH_csrfProtection = $this->createMock(CSRFProtection::class);
-        $_XH_csrfProtection->expects($this->any())->method("tokenInput")->willReturn(
+        $this->cSRFProtection = $this->createMock(CSRFProtection::class);
+        $this->cSRFProtection->expects($this->any())->method("tokenInput")->willReturn(
             '<input type="hidden" name="csrf_token" value="0123456789ABCDEF">'
         );
+        $_XH_csrfProtection = $this->cSRFProtection;
         $plugin_cf = XH_includeVar("./config/config.php", "plugin_cf");
         $this->conf = $plugin_cf["translator"];
         $this->view = new View("./views/", XH_includeVar("./languages/en.php", "plugin_tx")["translator"]);
@@ -85,6 +89,7 @@ class MainControllerTest extends TestCase
         $_POST = [
             "translator_string_default|translation" => "neue Übersetzung",
         ];
+        $this->cSRFProtection->expects($this->once())->method("check");
         $request = new FakeRequest();
         $output = $this->sut()->saveAction($request);
         $this->assertStringContainsString(
@@ -104,6 +109,7 @@ class MainControllerTest extends TestCase
             "translator_modules" => ["translator"],
             "translator_filename" => "test",
         ];
+        $this->cSRFProtection->expects($this->once())->method("check");
         $request = new FakeRequest();
         $output = $this->sut()->zipAction($request);
         $this->assertFileExists(vfsStream::url("root/userfiles/downloads/test.zip"));
