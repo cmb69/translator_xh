@@ -57,24 +57,4 @@ class Plugin
         global $pth, $plugin_tx;
         return new View($pth["folder"]["plugins"] . "translator/views/", $plugin_tx["translator"]);
     }
-
-    public function run(): void
-    {
-        global $o, $admin;
-
-        XH_registerStandardPluginMenuItems(true);
-        if (XH_wantsPluginAdministration('translator')) {
-            $o .= print_plugin_admin('on');
-            switch ($admin) {
-                case '':
-                    $o .= self::InfoController()->defaultAction();
-                    break;
-                case 'plugin_main':
-                    $o .= self::mainController()(Request::current());
-                    break;
-                default:
-                    $o .= plugin_admin_common();
-            }
-        }
-    }
 }
