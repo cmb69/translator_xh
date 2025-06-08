@@ -9,7 +9,7 @@ class PluginTest extends TestCase
     protected function setUp(): void
     {
         global $pth, $plugin_cf, $plugin_tx;
-        $pth = ["folder" => ["language" => "", "plugins" => ""]];
+        $pth = ["folder" => ["base" => "", "language" => "", "plugins" => ""]];
         $plugin_cf = ["translator" => []];
         $plugin_tx = ["translator" => []];
     }

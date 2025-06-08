@@ -6,6 +6,7 @@ use ApprovalTests\Approvals;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Plib\DocumentStore2 as DocumentStore;
 use Plib\FakeRequest;
 use Plib\View;
 use XH\CSRFProtection;
@@ -15,6 +16,7 @@ class MainControllerTest extends TestCase
     private array $conf;
     /** @var CSRFProtection&MockObject */
     private $cSRFProtection;
+    private DocumentStore $store;
     private View $view;
 
     protected function setUp(): void
@@ -52,12 +54,13 @@ class MainControllerTest extends TestCase
         $_XH_csrfProtection = $this->cSRFProtection;
         $plugin_cf = XH_includeVar("./config/config.php", "plugin_cf");
         $this->conf = $plugin_cf["translator"];
+        $this->store = new DocumentStore(vfsStream::url("root/"));
         $this->view = new View("./views/", XH_includeVar("./languages/en.php", "plugin_tx")["translator"]);
     }
 
     private function sut(): MainController
     {
-        return new MainController("./", $this->conf, $this->view);
+        return new MainController("./", $this->conf, $this->store, $this->view);
     }
 
     public function testRendersOverview(): void

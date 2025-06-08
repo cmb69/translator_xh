@@ -22,10 +22,12 @@
 namespace Translator;
 
 use Exception;
+use Plib\DocumentStore2 as DocumentStore;
 use Plib\Request;
 use Plib\Url;
 use stdClass;
 use Plib\View;
+use Translator\Model\Localization;
 use XH\CSRFProtection;
 
 class MainController
@@ -45,12 +47,14 @@ class MainController
      */
     private $csrfProtector;
 
+    private DocumentStore $store;
     private View $view;
 
     /** @param array<string,string> $conf */
     public function __construct(
         string $pluginFolder,
         array $conf,
+        DocumentStore $store,
         View $view
     ) {
         global $_XH_csrfProtection;
@@ -59,6 +63,7 @@ class MainController
         $this->model = new Model();
         $this->conf = $conf;
         $this->csrfProtector = $_XH_csrfProtection;
+        $this->store = $store;
         $this->view = $view;
     }
 
@@ -163,8 +168,10 @@ class MainController
      */
     private function getEditorRows($module, $sourceLanguage, $destinationLanguage)
     {
-        $sourceTexts = $this->model->readLanguage($module, $sourceLanguage);
-        $destinationTexts = $this->model->readLanguage($module, $destinationLanguage);
+        $sourceL10n = Localization::read($module, $sourceLanguage, $this->store);
+        $sourceTexts = $sourceL10n->texts();
+        $destinationL10n = Localization::read($module, $destinationLanguage, $this->store);
+        $destinationTexts = $destinationL10n->texts();
         if ($this->conf["sort_load"]) {
             ksort($sourceTexts);
         }
@@ -218,8 +225,14 @@ class MainController
         $module = $this->sanitizedName($_GET['translator_module']);
         $sourceLanguage = $this->sanitizedName($_GET['translator_from']);
         $destinationLanguage = $this->sanitizedName($_GET['translator_to']);
-        $destinationTexts = array();
-        $sourceTexts = $this->model->readLanguage($module, $sourceLanguage);
+        $destinationL10n = Localization::modify($module, $destinationLanguage, $this->store);
+        if ($destinationL10n === null) {
+            return $this->saveMessage(false, $this->model->filename($module, $destinationLanguage))
+                . $this->defaultAction($request);
+        }
+        $destinationTexts = [];
+        $sourceL10n = Localization::read($module, $sourceLanguage, $this->store);
+        $sourceTexts = $sourceL10n->texts();
         if ($this->conf["sort_save"]) {
             ksort($sourceTexts);
         }
@@ -229,9 +242,27 @@ class MainController
                 $destinationTexts[$key] = $value;
             }
         }
-        $saved = $this->model->writeLanguage($module, $destinationLanguage, $destinationTexts);
+        $destinationL10n->setTexts($destinationTexts);
+        $destinationL10n->setCopyright($this->copyright($request));
+        $saved = $this->store->commit();
         $filename = $this->model->filename($module, $destinationLanguage);
         return $this->saveMessage($saved, $filename) . $this->defaultAction($request);
+    }
+
+    private function copyright(Request $request): string
+    {
+        if ($this->conf["translation_author"] && $this->conf["translation_license"]) {
+            $year = date("Y", $request->time());
+            $license = wordwrap($this->conf["translation_license"], 75, "\n * ");
+            return <<<EOT
+                /**
+                 * Copyright (c) $year {$this->conf["translation_author"]}
+                 *
+                 * $license
+                 */
+                EOT . "\n\n";
+        }
+        return "";
     }
 
     public function zipAction(Request $request): string

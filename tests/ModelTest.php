@@ -115,32 +115,4 @@ class ModelTest extends TestCase
         $actual = $this->model->filename($module, $language);
         $this->assertEquals($expected, $actual);
     }
-
-    public function dataForWritingAndReading()
-    {
-        return array(
-            array(
-                'CORE', 'en',
-                array(
-                    'a|1' => 'one', 'a|2' => 'two',
-                    'b|1' => 'three', 'b|2' => 'four'
-                )
-            ),
-            array(
-                'foo', 'en',
-                array('a' => 'one', 'b' => 'two')
-            )
-        );
-    }
-
-    /**
-     * @dataProvider dataForWritingAndReading
-     */
-    public function testWritingAndReading($module, $language, $array)
-    {
-        $success = $this->model->writeLanguage($module, $language, $array);
-        $this->assertTrue($success);
-        $texts = $this->model->readLanguage($module, $language);
-        $this->assertEquals($array, $texts);
-    }
 }
