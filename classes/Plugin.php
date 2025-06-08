@@ -87,7 +87,7 @@ class Plugin
                     }
                     break;
                 default:
-                    $o .= plugin_admin_common($action, $admin, 'translator'); // @phpstan-ignore-line
+                    $o .= plugin_admin_common();
             }
         }
     }
