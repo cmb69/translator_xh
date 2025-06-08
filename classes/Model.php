@@ -21,7 +21,6 @@
 
 namespace Translator;
 
-use Exception;
 use zipfile;
 
 class Model
@@ -31,7 +30,7 @@ class Model
     {
         global $pth;
 
-        $filename = $pth['folder']['flags'] . $language . '.gif';
+        $filename = $pth["folder"]["flags"] . $language . ".gif";
         if (!file_exists($filename)) {
             $filename = false;
         }
@@ -42,7 +41,7 @@ class Model
     {
         global $pth;
 
-        return $pth['folder']['downloads'];
+        return $pth["folder"]["downloads"];
     }
 
     /** @return list<string> */
@@ -51,11 +50,11 @@ class Model
         global $pth;
 
         $plugins = array();
-        $dir = $pth['folder']['plugins'];
+        $dir = $pth["folder"]["plugins"];
         $handle = opendir($dir);
         if ($handle) {
             while (($entry = readdir($handle)) !== false) {
-                if ($entry[0] != '.' && is_dir($dir . $entry . '/languages/')) {
+                if ($entry[0] != "." && is_dir($dir . $entry . "/languages/")) {
                     $plugins[] = $entry;
                 }
             }
@@ -69,7 +68,7 @@ class Model
     public function modules(): array
     {
         $modules = $this->plugins();
-        array_unshift($modules, 'CORE');
+        array_unshift($modules, "CORE");
         return $modules;
     }
 
@@ -77,30 +76,26 @@ class Model
     {
         global $pth;
 
-        $filename = ($module == 'CORE')
-            ? $pth['folder']['language']
-            : $pth['folder']['plugins'] . $module . '/languages/';
+        $filename = ($module == "CORE")
+            ? $pth["folder"]["language"]
+            : $pth["folder"]["plugins"] . $module . "/languages/";
         $filename .= $language;
-        $filename .= '.php';
+        $filename .= ".php";
         return $filename;
     }
 
-    /**
-     * @param list<string> $modules
-     * @throws Exception
-     */
-    public function zipArchive(array $modules, string $language): string
+    /** @param list<string> $modules */
+    public function zipArchive(array $modules, string $language): ?string
     {
         include_once __DIR__ . "/../zip.lib.php";
         $zip = new zipfile();
         foreach ($modules as $module) {
             $source = $this->filename($module, $language);
-            $destination = ltrim($source, './');
-            if (file_exists($source)) {
-                $contents = file_get_contents($source);
-            } else {
-                throw new Exception('missing language: ' . $source);
+            $destination = ltrim($source, "./");
+            if (!file_exists($source)) {
+                return null;
             }
+            $contents = file_get_contents($source);
             $zip->addFile($contents, $destination);
         }
         $contents = $zip->file();

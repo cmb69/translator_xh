@@ -22,19 +22,18 @@
 namespace Translator;
 
 use Plib\DocumentStore2 as DocumentStore;
-use Plib\Request;
 use Plib\SystemChecker;
 use Plib\View;
 
 class Plugin
 {
-    public const VERSION = '1.0beta8';
+    public const VERSION = "1.0beta8";
 
     public static function infoController(): InfoController
     {
         global $pth;
         return new InfoController(
-            $pth['folder']['language'],
+            $pth["folder"]["language"],
             $pth["folder"]["plugins"],
             new SystemChecker(),
             self::view()

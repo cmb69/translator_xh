@@ -21,7 +21,6 @@
 
 namespace Translator;
 
-use Exception;
 use Plib\DocumentStore2 as DocumentStore;
 use Plib\Request;
 use Plib\Url;
@@ -87,7 +86,7 @@ class MainController
         }
         $hjs .= '<script type="text/javascript" src="' . $filename
             . '"></script>' . PHP_EOL;
-        $language = ($this->conf["translate_to"] == '')
+        $language = ($this->conf["translate_to"] == "")
             ? $request->language()
             : $this->conf["translate_to"];
         $action = $request->url()->with("action", "zip")->with("translator_lang", $language)->relative();
@@ -98,7 +97,7 @@ class MainController
         }
         $filename = $request->post("translator_filename") !== null
             ? $this->sanitizedName($request->post("translator_filename"))
-            : '';
+            : "";
         $modules = $request->postArray("translator_modules") !== null
             ? $this->sanitizedName($request->postArray("translator_modules"))
             : [];
@@ -109,10 +108,10 @@ class MainController
     private function prepareMainView(string $action, Url $url, string $filename, array $modules): string
     {
         return $this->view->render("main", [
-            'action' => $action,
-            'modules' => $this->getModules($url, $modules),
-            'filename' => $filename,
-            'csrfTokenInput' => $this->csrfProtector->tokenInput(),
+            "action" => $action,
+            "modules" => $this->getModules($url, $modules),
+            "filename" => $filename,
+            "csrfTokenInput" => $this->csrfProtector->tokenInput(),
         ]);
     }
 
@@ -125,7 +124,7 @@ class MainController
         $modules = [];
         foreach ($this->model->modules() as $module) {
             $name = ucfirst($module);
-            $checked = in_array($module, $modules) ? 'checked' : '';
+            $checked = in_array($module, $modules) ? "checked" : "";
             $modules[] = (object) [
                 "module" => $module,
                 "name" => $name,
@@ -153,12 +152,12 @@ class MainController
         string $destinationLanguage
     ): string {
         return $this->view->render("editor", [
-            'action' => $action,
-            'moduleName' => ucfirst($module),
-            'sourceLabel' => $this->languageLabel($sourceLanguage),
-            'destinationLabel' => $this->languageLabel($destinationLanguage),
-            'rows' => $this->getEditorRows($module, $sourceLanguage, $destinationLanguage),
-            'csrfTokenInput' => $this->csrfProtector->tokenInput(),
+            "action" => $action,
+            "moduleName" => ucfirst($module),
+            "sourceLabel" => $this->languageLabel($sourceLanguage),
+            "destinationLabel" => $this->languageLabel($destinationLanguage),
+            "rows" => $this->getEditorRows($module, $sourceLanguage, $destinationLanguage),
+            "csrfTokenInput" => $this->csrfProtector->tokenInput(),
         ]);
     }
 
@@ -187,14 +186,14 @@ class MainController
     {
         if (isset($destinationTexts[$key])) {
             $destinationText = $destinationTexts[$key];
-        } elseif ($this->view->plain("default_translation") != '') {
+        } elseif ($this->view->plain("default_translation") != "") {
             $destinationText = $this->view->plain("default_translation");
         } else {
             $destinationText = $sourceText;
         }
-        $className = isset($destinationTexts[$key]) ? '' : 'translator_new';
-        $displayKey = strtr($key, '_|', '  ');
-        return (object) compact('key', 'displayKey', 'className', 'sourceText', 'destinationText');
+        $className = isset($destinationTexts[$key]) ? "" : "translator_new";
+        $displayKey = strtr($key, "_|", "  ");
+        return (object) compact("key", "displayKey", "className", "sourceText", "destinationText");
     }
 
     private function languageLabel(string $language): string
@@ -226,7 +225,7 @@ class MainController
         }
         foreach (array_keys($sourceTexts) as $key) {
             $value = $request->post("translator_string_$key");
-            if ($value != '' && $value != $this->view->plain("default_translation")) {
+            if ($value != "" && $value != $this->view->plain("default_translation")) {
                 $destinationTexts[$key] = $value;
             }
         }
@@ -262,13 +261,12 @@ class MainController
             return $this->view->message("warning", "message_no_module") . $this->defaultAction($request);
         }
         $modules = $this->sanitizedName($modules);
-        try {
-            $contents = $this->model->zipArchive($modules, $language);
-        } catch (Exception $exception) {
-            return XH_message('fail', $exception->getMessage()) . $this->defaultAction($request);
+        $contents = $this->model->zipArchive($modules, $language);
+        if ($contents === null) {
+            return $this->view->message("fail", "error_zip") . $this->defaultAction($request);
         }
         $filename = $this->sanitizedName($request->post("translator_filename") ?? "");
-        $filename = $this->model->downloadFolder() . $filename . '.zip';
+        $filename = $this->model->downloadFolder() . $filename . ".zip";
         $saved = file_put_contents($filename, $contents) !== false;
         $o = $this->saveMessage($saved, $filename);
         $o .= $this->defaultAction($request);
@@ -293,15 +291,15 @@ class MainController
     private function sanitizedName($input)
     {
         if (is_array($input)) {
-            return array_map(array($this, 'sanitizedName'), $input);
+            return array_map(array($this, "sanitizedName"), $input);
         } else {
-            return (string) preg_replace('/[^a-z0-9_-]/i', '', $input);
+            return (string) preg_replace('/[^a-z0-9_-]/i', "", $input);
         }
     }
 
     private function saveMessage(bool $success, string $filename): string
     {
-        $type = $success ? 'success' : 'fail';
+        $type = $success ? "success" : "fail";
         return $this->view->message($type, "message_save_{$type}", $filename);
     }
 }

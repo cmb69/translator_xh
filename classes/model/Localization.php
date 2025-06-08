@@ -57,7 +57,7 @@ final class Localization implements Document
         }
         $texts = [];
         foreach ($tx[$module] as $key => $val) {
-            $key = (string) preg_replace('/_/', '|', $key, 1);
+            $key = (string) preg_replace('/_/', "|", $key, 1);
             $texts[$key] = $val;
         }
         return new self($module, $texts);
