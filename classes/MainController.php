@@ -77,14 +77,6 @@ class MainController
 
     private function defaultAction(Request $request): Response
     {
-        global $hjs;
-
-        $filename = $this->pluginFolder . "translator.min.js";
-        if (!file_exists($filename)) {
-            $filename = $this->pluginFolder . "translator.js";
-        }
-        $hjs .= '<script type="text/javascript" src="' . $filename
-            . '"></script>' . PHP_EOL;
         $language = ($this->conf["translate_to"] == "")
             ? $request->language()
             : $this->conf["translate_to"];
@@ -105,7 +97,12 @@ class MainController
     /** @param list<string> $modules */
     private function prepareMainView(string $language, Url $url, string $filename, array $modules): string
     {
+        $script = $this->pluginFolder . "translator.min.js";
+        if (!file_exists($script)) {
+            $script = $this->pluginFolder . "translator.js";
+        }
         return $this->view->render("main", [
+            "script" => $script,
             "language" => $language,
             "modules" => $this->getModules($url, $modules),
             "filename" => $filename,
