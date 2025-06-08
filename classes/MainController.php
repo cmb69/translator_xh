@@ -133,9 +133,9 @@ class MainController
 
     public function editAction(Request $request): string
     {
-        $module = $this->sanitizedName($request->get("translator_module"));
-        $from = $this->sanitizedName($request->get("translator_from"));
-        $to = $this->sanitizedName($request->get("translator_to"));
+        $module = $this->sanitizedName($request->get("translator_module") ?? "");
+        $from = $this->sanitizedName($request->get("translator_from") ?? "");
+        $to = $this->sanitizedName($request->get("translator_to") ?? "");
         $url = $request->url()->with("action", "save")->with("translator_from", $from)
             ->with("translator_to", $to)->with("translator_module", $module)->relative();
         return $this->prepareEditorView($url, $module, $from, $to);
@@ -219,9 +219,9 @@ class MainController
     public function saveAction(Request $request): string
     {
         $this->csrfProtector->check();
-        $module = $this->sanitizedName($request->get("translator_module"));
-        $sourceLanguage = $this->sanitizedName($request->get("translator_from"));
-        $destinationLanguage = $this->sanitizedName($request->get("translator_to"));
+        $module = $this->sanitizedName($request->get("translator_module") ?? "");
+        $sourceLanguage = $this->sanitizedName($request->get("translator_from") ?? "");
+        $destinationLanguage = $this->sanitizedName($request->get("translator_to") ?? "");
         $destinationL10n = Localization::modify($module, $destinationLanguage, $this->store);
         if ($destinationL10n === null) {
             return $this->saveMessage(false, $this->model->filename($module, $destinationLanguage))
@@ -265,7 +265,7 @@ class MainController
     public function zipAction(Request $request): string
     {
         $this->csrfProtector->check();
-        $language = $this->sanitizedName($request->get("translator_lang"));
+        $language = $this->sanitizedName($request->get("translator_lang") ?? "");
         $modules = $request->postArray("translator_modules");
         if (empty($modules)) {
             return $this->view->message("warning", "message_no_module") . $this->defaultAction($request);
@@ -276,7 +276,7 @@ class MainController
         } catch (Exception $exception) {
             return XH_message('fail', $exception->getMessage()) . $this->defaultAction($request);
         }
-        $filename = $this->sanitizedName($request->post("translator_filename"));
+        $filename = $this->sanitizedName($request->post("translator_filename") ?? "");
         $filename = $this->model->downloadFolder() . $filename . '.zip';
         $saved = file_put_contents($filename, $contents) !== false;
         $o = $this->saveMessage($saved, $filename);
@@ -296,15 +296,15 @@ class MainController
      * characters are the 26 roman letters, the 10 arabic digits, the hyphen
      * and the underscore.
      *
-     * @param mixed $input A name resp. an array of names.
-     * @return mixed
+     * @param string|list<string> $input
+     * @phpstan-return ($input is string ? string : list<string>)
      */
     private function sanitizedName($input)
     {
         if (is_array($input)) {
             return array_map(array($this, 'sanitizedName'), $input);
         } else {
-            return preg_replace('/[^a-z0-9_-]/i', '', $input);
+            return (string) preg_replace('/[^a-z0-9_-]/i', '', $input);
         }
     }
 

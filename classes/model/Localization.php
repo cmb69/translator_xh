@@ -40,6 +40,9 @@ final class Localization implements Document
     {
         $module = self::module($key);
         $tx = self::eval($module, $contents);
+        if (!is_array($tx)) {
+            return null;
+        }
         if ($module === "CORE") {
             $texts = [];
             foreach ($tx as $key1 => $val1) {
