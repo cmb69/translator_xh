@@ -210,10 +210,7 @@ class MainController
     {
         $filename = $this->model->flagIconPath($language);
         if ($filename !== false) {
-            return tag(
-                'img src="' . $filename . '" alt="' . $language
-                . '" title="' . $language . '"'
-            );
+            return '<img src="' . $filename . '" alt="' . $language . '" title="' . $language . '">';
         } else {
             return $language;
         }
