@@ -34,20 +34,16 @@ class MainController
 {
     private string $pluginFolder;
 
-    /**
-     * @var Model
-     */
-    private $model;
+    private Model $model;
 
     /** @var array<string,string> */
     private array $conf;
 
-    /**
-     * @var CSRFProtection
-     */
+    /** @var CSRFProtection */
     private $csrfProtector;
 
     private DocumentStore $store;
+
     private View $view;
 
     /** @param array<string,string> $conf */
@@ -95,13 +91,8 @@ class MainController
         return $this->prepareMainView($action, $url, $filename, $modules);
     }
 
-    /**
-     * @param string $action
-     * @param string $filename
-     * @param list<string> $modules
-     * @return string
-     */
-    private function prepareMainView($action, Url $url, $filename, array $modules)
+    /** @param list<string> $modules */
+    private function prepareMainView(string $action, Url $url, string $filename, array $modules): string
     {
         return $this->view->render("main", [
             'action' => $action,
@@ -115,7 +106,7 @@ class MainController
      * @param list<string> $modules
      * @return list<object{module:string,name:string,url:string,checked:string}>
      */
-    private function getModules(Url $url, array $modules)
+    private function getModules(Url $url, array $modules): array
     {
         $modules = [];
         foreach ($this->model->modules() as $module) {
@@ -141,15 +132,12 @@ class MainController
         return $this->prepareEditorView($url, $module, $from, $to);
     }
 
-    /**
-     * @param string $action
-     * @param string $module
-     * @param string $sourceLanguage
-     * @param string $destinationLanguage
-     * @return string
-     */
-    private function prepareEditorView($action, $module, $sourceLanguage, $destinationLanguage)
-    {
+    private function prepareEditorView(
+        string $action,
+        string $module,
+        string $sourceLanguage,
+        string $destinationLanguage
+    ): string {
         return $this->view->render("editor", [
             'action' => $action,
             'moduleName' => ucfirst($module),
@@ -160,13 +148,8 @@ class MainController
         ]);
     }
 
-    /**
-     * @param string $module
-     * @param string $sourceLanguage
-     * @param string $destinationLanguage
-     * @return stdClass[]
-     */
-    private function getEditorRows($module, $sourceLanguage, $destinationLanguage)
+    /** @return list<stdClass> */
+    private function getEditorRows(string $module, string $sourceLanguage, string $destinationLanguage): array
     {
         $sourceL10n = Localization::read($module, $sourceLanguage, $this->store);
         $sourceTexts = $sourceL10n->texts();
@@ -183,12 +166,10 @@ class MainController
     }
 
     /**
-     * @param string $key
-     * @param string $sourceText
      * @param array<string,string> $destinationTexts
      * @return stdClass
      */
-    private function getEditorRow($key, $sourceText, array $destinationTexts)
+    private function getEditorRow(string $key, string $sourceText, array $destinationTexts)
     {
         if (isset($destinationTexts[$key])) {
             $destinationText = $destinationTexts[$key];
@@ -202,11 +183,7 @@ class MainController
         return (object) compact('key', 'displayKey', 'className', 'sourceText', 'destinationText');
     }
 
-    /**
-     * @param string $language
-     * @return string
-     */
-    private function languageLabel($language)
+    private function languageLabel(string $language): string
     {
         $filename = $this->model->flagIconPath($language);
         if ($filename !== false) {
@@ -292,8 +269,8 @@ class MainController
     /**
      * Returns a sanitized name resp. an array of sanitized names.
      *
-     * Sanitizing means, that all invalid characters are stripped; valid
-     * characters are the 26 roman letters, the 10 arabic digits, the hyphen
+     * Sanitizing means that all invalid characters are stripped; valid
+     * characters are the 26 latin letters, the 10 arabic digits, the hyphen
      * and the underscore.
      *
      * @param string|list<string> $input
@@ -308,12 +285,7 @@ class MainController
         }
     }
 
-    /**
-     * @param bool $success
-     * @param string $filename
-     * @return string
-     */
-    private function saveMessage($success, $filename)
+    private function saveMessage(bool $success, string $filename): string
     {
         $type = $success ? 'success' : 'fail';
         return $this->view->message($type, "message_save_{$type}", $filename);

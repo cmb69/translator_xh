@@ -26,11 +26,8 @@ use zipfile;
 
 class Model
 {
-    /**
-     * @param string $language
-     * @return string|false
-     */
-    public function flagIconPath($language)
+    /** @return string|false */
+    public function flagIconPath(string $language)
     {
         global $pth;
 
@@ -41,20 +38,15 @@ class Model
         return $filename;
     }
 
-    /**
-     * @return string
-     */
-    public function downloadFolder()
+    public function downloadFolder(): string
     {
         global $pth;
 
         return $pth['folder']['downloads'];
     }
 
-    /**
-     * @return list<string>
-     */
-    public function plugins()
+    /** @return list<string> */
+    public function plugins(): array
     {
         global $pth;
 
@@ -73,22 +65,15 @@ class Model
         return $plugins;
     }
 
-    /**
-     * @return list<string>
-     */
-    public function modules()
+    /** @return list<string> */
+    public function modules(): array
     {
         $modules = $this->plugins();
         array_unshift($modules, 'CORE');
         return $modules;
     }
 
-    /**
-     * @param string $module
-     * @param string $language
-     * @return string
-     */
-    public function filename($module, $language)
+    public function filename(string $module, string $language): string
     {
         global $pth;
 
@@ -102,11 +87,9 @@ class Model
 
     /**
      * @param list<string> $modules
-     * @param string $language
-     * @return string
      * @throws Exception
      */
-    public function zipArchive(array $modules, $language)
+    public function zipArchive(array $modules, string $language): string
     {
         include_once __DIR__ . "/../zip.lib.php";
         $zip = new zipfile();

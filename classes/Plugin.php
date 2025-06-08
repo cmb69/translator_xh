@@ -58,10 +58,7 @@ class Plugin
         return new View($pth["folder"]["plugins"] . "translator/views/", $plugin_tx["translator"]);
     }
 
-    /**
-     * @return void
-     */
-    public function run()
+    public function run(): void
     {
         global $o, $admin, $action;
 
