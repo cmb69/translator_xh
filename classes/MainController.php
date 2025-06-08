@@ -83,10 +83,10 @@ class MainController
         $url = $request->url()->with("action", "edit")->with("translator_from", $this->conf["translate_from"])
             ->with("translator_to", $language);
         $filename = $request->post("translator_filename") !== null
-            ? $this->sanitizedName($request->post("translator_filename"))
+            ? $this->sanitize($request->post("translator_filename"))
             : "";
         $modules = $request->postArray("translator_modules") !== null
-            ? $this->sanitizedName($request->postArray("translator_modules"))
+            ? $this->sanitize($request->postArray("translator_modules"))
             : [];
         return Response::create($this->prepareMainView($language, $url, $filename, $modules));
     }
@@ -128,9 +128,9 @@ class MainController
 
     private function editAction(Request $request): Response
     {
-        $module = $this->sanitizedName($request->get("translator_module") ?? "");
-        $from = $this->sanitizedName($request->get("translator_from") ?? "");
-        $to = $this->sanitizedName($request->get("translator_to") ?? "");
+        $module = $this->sanitize($request->get("translator_module") ?? "");
+        $from = $this->sanitize($request->get("translator_from") ?? "");
+        $to = $this->sanitize($request->get("translator_to") ?? "");
         $url = $request->url()->with("action", "save")->with("translator_from", $from)
             ->with("translator_to", $to)->with("translator_module", $module)->relative();
         return Response::create($this->prepareEditorView($url, $module, $from, $to));
@@ -206,9 +206,9 @@ class MainController
         if (!$this->csrfProtector->check($request->post("translator_token"))) {
             return Response::error(403);
         }
-        $module = $this->sanitizedName($request->get("translator_module") ?? "");
-        $sourceLanguage = $this->sanitizedName($request->get("translator_from") ?? "");
-        $destinationLanguage = $this->sanitizedName($request->get("translator_to") ?? "");
+        $module = $this->sanitize($request->get("translator_module") ?? "");
+        $sourceLanguage = $this->sanitize($request->get("translator_from") ?? "");
+        $destinationLanguage = $this->sanitize($request->get("translator_to") ?? "");
         $destinationL10n = Localization::modify($module, $destinationLanguage, $this->store);
         if ($destinationL10n === null) {
             $response = $this->defaultAction($request);
@@ -253,37 +253,31 @@ class MainController
 
     private function zipAction(Request $request): Response
     {
-        $language = $this->sanitizedName($request->get("translator_lang") ?? "");
+        $language = $this->sanitize($request->get("translator_lang") ?? "");
         $modules = $request->getArray("translator_modules");
         if (empty($modules)) {
             $response = $this->defaultAction($request);
             return Response::create($this->view->message("warning", "message_no_module") . $response->output());
         }
-        $modules = $this->sanitizedName($modules);
+        $modules = $this->sanitize($modules);
         $contents = $this->model->zipArchive($modules, $language);
         if ($contents === null) {
             $response = $this->defaultAction($request);
             return Response::create($this->view->message("fail", "error_zip") . $response->output());
         }
-        $filename = $this->sanitizedName($request->get("translator_filename") ?? "");
+        $filename = $this->sanitize($request->get("translator_filename") ?? "");
         return Response::create($contents)->withContentType("application/zip")
             ->withAttachment("$filename.zip")->withLength(strlen($contents));
     }
 
     /**
-     * Returns a sanitized name resp. an array of sanitized names.
-     *
-     * Sanitizing means that all invalid characters are stripped; valid
-     * characters are the 26 latin letters, the 10 arabic digits, the hyphen
-     * and the underscore.
-     *
      * @param string|list<string> $input
      * @phpstan-return ($input is string ? string : list<string>)
      */
-    private function sanitizedName($input)
+    private function sanitize($input)
     {
         if (is_array($input)) {
-            return array_map(array($this, "sanitizedName"), $input);
+            return array_map([$this, "sanitize"], $input);
         } else {
             return (string) preg_replace('/[^a-z0-9_-]/i', "", $input);
         }
