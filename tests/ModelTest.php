@@ -77,13 +77,6 @@ class ModelTest extends TestCase
         $this->assertFalse($actual);
     }
 
-    public function testDownloadFolder()
-    {
-        $expected = $this->basePath . 'downloads/';
-        $actual = $this->model->downloadFolder();
-        $this->assertEquals($expected, $actual);
-    }
-
     public function testPlugins()
     {
         $expected = array('bar', 'foo');

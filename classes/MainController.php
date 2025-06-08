@@ -277,16 +277,8 @@ class MainController
             return Response::create($this->view->message("fail", "error_zip") . $response->output());
         }
         $filename = $this->sanitizedName($request->post("translator_filename") ?? "");
-        $filename = $this->model->downloadFolder() . $filename . ".zip";
-        $saved = file_put_contents($filename, $contents) !== false;
-        $o = $this->saveMessage($saved, $filename);
-        $o .= $this->defaultAction($request)->output();
-        if ($saved) {
-            $o .= $this->view->render("download", [
-                "url" => $request->url()->path($filename)->absolute(),
-            ]);
-        }
-        return Response::create($o);
+        return Response::create($contents)->withContentType("application/zip")
+            ->withAttachment("$filename.zip")->withLength(strlen($contents));
     }
 
     /**

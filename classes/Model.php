@@ -37,13 +37,6 @@ class Model
         return $filename;
     }
 
-    public function downloadFolder(): string
-    {
-        global $pth;
-
-        return $pth["folder"]["downloads"];
-    }
-
     /** @return list<string> */
     public function plugins(): array
     {

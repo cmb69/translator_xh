@@ -108,7 +108,7 @@ class MainControllerTest extends TestCase
         $this->assertSame(403, $response->status());
     }
 
-    public function testCreatesZip(): void
+    public function testDeliversZip(): void
     {
         $this->csrfProtector->method("check")->willReturn(true);
         $request = new FakeRequest([
@@ -119,15 +119,8 @@ class MainControllerTest extends TestCase
             ],
         ]);
         $response = $this->sut()($request);
-        $this->assertFileExists(vfsStream::url("root/userfiles/downloads/test.zip"));
-        $this->assertStringContainsString(
-            "The file &quot;vfs://root/userfiles/downloads/test.zip&quot; has been successfully saved.",
-            $response->output()
-        );
-        $this->assertStringContainsString(
-            "http://example.com/vfs://root/userfiles/downloads/test.zip",
-            $response->output()
-        );
+        $this->assertSame("application/zip", $response->contentType());
+        $this->assertSame("test.zip", $response->attachment());
     }
 
     public function testZipCreationIsCsrfProtected(): void
