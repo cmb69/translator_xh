@@ -1,23 +1,23 @@
 
 <form id="translator_list" action="/?&amp;action=zip&amp;translator_lang=de" method="post">
-    <h1>Translator – Translations</h1>
-    <ul>
-        <li>
-            <input type="checkbox" name="translator_modules[]" value="CORE" >
-            <a href="/?&amp;action=edit&amp;translator_from=en&amp;translator_to=de&amp;translator_module=CORE">CORE</a>
-        </li>
-        <li>
-            <input type="checkbox" name="translator_modules[]" value="translator" >
-            <a href="/?&amp;action=edit&amp;translator_from=en&amp;translator_to=de&amp;translator_module=translator">Translator</a>
-        </li>
-    </ul>
-    <p style="display: none">
-        <button id="translator_select_all" type="button">Select all</button>
-        <button id="translator_deselect_all" type="button" disabled="disabled">Deselect all</button>
-    </p>
-    <p>
-        Filename:        <input type="text" name="translator_filename" value="">.zip
-        <input type="submit" class="submit" value="Generate Language Pack">
-    </p>
-    <input type="hidden" name="translator_token" value="0123456789ABCDEF">
+  <h1>Translator – Translations</h1>
+  <ul>
+    <li>
+      <input type="checkbox" name="translator_modules[]" value="CORE" >
+      <a href="/?&amp;action=edit&amp;translator_from=en&amp;translator_to=de&amp;translator_module=CORE">CORE</a>
+    </li>
+    <li>
+      <input type="checkbox" name="translator_modules[]" value="translator" >
+      <a href="/?&amp;action=edit&amp;translator_from=en&amp;translator_to=de&amp;translator_module=translator">Translator</a>
+    </li>
+  </ul>
+  <p style="display: none">
+    <button id="translator_select_all" type="button">Select all</button>
+    <button id="translator_deselect_all" type="button" disabled="disabled">Deselect all</button>
+  </p>
+  <p>
+    Filename:    <input type="text" name="translator_filename" value="">.zip
+    <input type="submit" class="submit" value="Generate Language Pack">
+  </p>
+  <input type="hidden" name="translator_token" value="0123456789ABCDEF">
 </form>
