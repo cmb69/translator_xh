@@ -13,11 +13,16 @@ article.translator_translations li {
     grid-template-columns: subgrid;
 }
 article.translator_translations input[type=checkbox],
-article.translator_translations li .translator_edit {
+article.translator_translations li .translator_edit,
+article.translator_translations .translator_controls button {
     margin: auto;
 }
 article.translator_translations li label {
     margin: auto 1em;
+}
+article.translator_translations .translator_controls {
+    display: flex;
+    justify-content: space-around;
 }
 
 /* edit */

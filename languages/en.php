@@ -2,10 +2,9 @@
 
 $plugin_tx['translator']['default_translation'] = "*** NEW LANGUAGE STRING ***";
 $plugin_tx['translator']['label_deselect_all'] = "Deselect all";
-$plugin_tx['translator']['label_download_url'] = "Download url:";
 $plugin_tx['translator']['label_edit'] = "Edit";
-$plugin_tx['translator']['label_filename'] = "Filename:";
-$plugin_tx['translator']['label_generate'] = "Generate Language Pack";
+$plugin_tx['translator']['label_filename'] = "Filename";
+$plugin_tx['translator']['label_download'] = "Download";
 $plugin_tx['translator']['label_save'] = "Save";
 $plugin_tx['translator']['label_select_all'] = "Select all";
 $plugin_tx['translator']['label_translate_from'] = "Translate from:";
