@@ -21,6 +21,7 @@
 
 namespace Translator;
 
+use Plib\Response;
 use Plib\SystemChecker;
 use Plib\View;
 
@@ -43,13 +44,13 @@ class InfoController
         $this->view = $view;
     }
 
-    public function defaultAction(): string
+    public function __invoke(): Response
     {
-        return $this->view->render("info", [
+        return Response::create($this->view->render("info", [
             "logo" => $this->pluginsFolder . "translator/translator.png",
             "version" => Plugin::VERSION,
             "checks" => $this->checks()
-        ]);
+        ]))->withTitle("Translator " . $this->view->esc(Plugin::VERSION));
     }
 
     /** @return list<object{state:string,label:string,stateLabel:string}> */

@@ -28,7 +28,8 @@ class InfoControllerTest extends TestCase
 
     public function testRendersPluginInfo(): void
     {
-        $output = $this->sut()->defaultAction();
-        Approvals::verifyHtml($output);
+        $response = $this->sut()();
+        $this->assertSame("Translator 1.0beta8", $response->title());
+        Approvals::verifyHtml($response->output());
     }
 }

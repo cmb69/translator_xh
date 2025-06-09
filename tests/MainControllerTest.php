@@ -64,6 +64,7 @@ class MainControllerTest extends TestCase
     {
         $request = new FakeRequest();
         $response = $this->sut()($request);
+        $this->assertSame("Translator – Translations", $response->title());
         Approvals::verifyHtml($response->output());
     }
 
@@ -73,6 +74,7 @@ class MainControllerTest extends TestCase
             "url" => "http://example.com/?&action=edit&translator_modules%5B%5D=translator",
         ]);
         $response = $this->sut()($request);
+        $this->assertSame("Translator – Translator", $response->title());
         Approvals::verifyHtml($response->output());
     }
 

@@ -31,7 +31,7 @@ if (XH_wantsPluginAdministration("translator")) {
     $o .= print_plugin_admin("on");
     switch ($admin) {
         case "":
-            $o .= Plugin::InfoController()->defaultAction();
+            $o .= Plugin::InfoController()()();
             break;
         case "plugin_main":
             $o .= Plugin::mainController()(Request::current())();

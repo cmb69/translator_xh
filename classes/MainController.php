@@ -65,7 +65,7 @@ class MainController
     {
         switch ($request->get("action")) {
             default:
-                return $this->defaultAction($request);
+                return $this->respondWithOverview($request);
             case "edit":
                 return $this->editAction($request);
             case "zip":
@@ -73,12 +73,13 @@ class MainController
         }
     }
 
-    private function defaultAction(Request $request): Response
+    private function respondWithOverview(Request $request, string $error = ""): Response
     {
-        return Response::create($this->renderMainView($request));
+        return Response::create($this->renderMainView($request, $error))
+            ->withTitle("Translator – " . $this->view->text("menu_main"));
     }
 
-    private function renderMainView(Request $request, string $error = ""): string
+    private function renderMainView(Request $request, string $error): string
     {
         $to = ($this->conf["translate_to"] == "") ? $request->language() : $this->conf["translate_to"];
         $filename = $this->sanitize($request->get("translator_filename") ?? "lang_$to");
@@ -121,23 +122,29 @@ class MainController
         }
         $modules = $request->getArray("translator_modules");
         if (empty($modules)) {
-            $error = $this->view->message("fail", "error_no_module");
-            return Response::create($this->renderMainView($request, $error));
+            return $this->respondWithOverview($request, $this->view->message("fail", "error_no_module"));
         }
-        return Response::create($this->renderEditorView($request, $modules));
+        return $this->respondWithEditor($request, $modules);
     }
 
     /**
      * @param non-empty-list<string> $modules
      * @param ?array<string,string> $totexts
      */
-    private function renderEditorView(
+    private function respondWithEditor(
         Request $request,
         array $modules,
         string $error = "",
         ?array $totexts = null
-    ): string {
+    ): Response {
         $module = $this->sanitize($modules[array_key_first($modules)]);
+        return Response::create($this->renderEditorView($request, $module, $error, $totexts))
+            ->withTitle("Translator – " . ucfirst($module));
+    }
+
+    /** @param ?array<string,string> $totexts*/
+    private function renderEditorView(Request $request, string $module, string $error, ?array $totexts): string
+    {
         $from = $this->conf["translate_from"];
         $to = ($this->conf["translate_to"] == "") ? $request->language() : $this->conf["translate_to"];
         return $this->view->render("editor", [
@@ -225,13 +232,13 @@ class MainController
         $totexts = $this->postedTexts($request, $fromtexts);
         if ($tol10n === null) {
             $error = $this->view->message("fail", "error_save", $this->model->filename($module, $tolang));
-            return Response::create($this->renderEditorView($request, $modules, $error, $totexts));
+            return $this->respondWithEditor($request, $modules, $error, $totexts);
         }
         $tol10n->setTexts($totexts);
         $tol10n->setCopyright($this->copyright($request));
         if (!$this->store->commit()) {
             $error = $this->view->message("fail", "error_save", $this->model->filename($module, $tolang));
-            return Response::create($this->renderEditorView($request, $modules, $error, $totexts));
+            return $this->respondWithEditor($request, $modules, $error, $totexts);
         }
         return Response::redirect($request->url()->without("action")->absolute());
     }
@@ -273,14 +280,12 @@ class MainController
         $language = ($this->conf["translate_to"] == "") ? $request->language() : $this->conf["translate_to"];
         $modules = $request->getArray("translator_modules");
         if (empty($modules)) {
-            $error = $this->view->message("fail", "error_no_module");
-            return Response::create($this->renderMainView($request, $error));
+            return $this->respondWithOverview($request, $this->view->message("fail", "error_no_module"));
         }
         $modules = $this->sanitize($modules);
         $contents = $this->model->zipArchive($modules, $language);
         if ($contents === null) {
-            $error = $this->view->message("fail", "error_zip");
-            return Response::create($this->renderMainView($request, $error));
+            return $this->respondWithOverview($request, $this->view->message("fail", "error_zip"));
         }
         $filename = $this->sanitize($request->get("translator_filename") ?? "");
         return Response::create($contents)->withContentType("application/zip")
