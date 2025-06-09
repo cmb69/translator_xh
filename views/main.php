@@ -7,12 +7,16 @@ use Plib\View;
  * @var string $script
  * @var list<object{module:string,name:string,checked:string}> $modules
  * @var string $filename
+ * @var string $error
  */
 ?>
 
 <script src="<?=$this->esc($script)?>"></script>
 <form id="translator_list" method="get">
   <h1>Translator – <?=$this->text('menu_main')?></h1>
+<?php if ($error):?>
+  <?=$this->raw($error)?>
+<?php endif?>
   <input type="hidden" name="selected" value="translator">
   <input type="hidden" name="admin" value="plugin_main">
   <ul>
@@ -32,7 +36,7 @@ use Plib\View;
   </p>
   <p>
     <?=$this->text('label_filename')?>
-    <input type="text" name="translator_filename" value="<?=$this->esc($filename)?>">.zip
+    <input type="text" name="translator_filename" value="<?=$this->esc($filename)?>" required>.zip
     <button class="submit" name="action" value="zip"><?=$this->text('label_generate')?></button>
   </p>
 </form>

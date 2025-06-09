@@ -6,12 +6,16 @@
   <input type="hidden" name="admin" value="plugin_main">
   <ul>
     <li>
-      <input type="checkbox" name="translator_modules[]" value="CORE" >
-      <span>CORE</span>
+      <label>
+        <input type="checkbox" name="translator_modules[]" value="CORE" >
+        <span>CORE</span>
+      </label>
     </li>
     <li>
-      <input type="checkbox" name="translator_modules[]" value="translator" >
-      <span>Translator</span>
+      <label>
+        <input type="checkbox" name="translator_modules[]" value="translator" >
+        <span>Translator</span>
+      </label>
     </li>
   </ul>
   <p>
@@ -20,7 +24,7 @@
     <button name="action" value="edit">Edit</button>
   </p>
   <p>
-    Filename:    <input type="text" name="translator_filename" value="">.zip
+    Filename:    <input type="text" name="translator_filename" value="lang_de" required>.zip
     <button class="submit" name="action" value="zip">Generate Language Pack</button>
   </p>
 </form>

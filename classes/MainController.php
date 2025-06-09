@@ -75,18 +75,14 @@ class MainController
 
     private function defaultAction(Request $request): Response
     {
-        $filename = $request->post("translator_filename") !== null
-            ? $this->sanitize($request->post("translator_filename"))
-            : "";
-        $modules = $request->postArray("translator_modules") !== null
-            ? $this->sanitize($request->postArray("translator_modules"))
-            : [];
-        return Response::create($this->prepareMainView($filename, $modules));
+        return Response::create($this->renderMainView($request));
     }
 
-    /** @param list<string> $modules */
-    private function prepareMainView(string $filename, array $modules): string
+    private function renderMainView(Request $request, string $error = ""): string
     {
+        $to = ($this->conf["translate_to"] == "") ? $request->language() : $this->conf["translate_to"];
+        $filename = $this->sanitize($request->get("translator_filename") ?? "lang_$to");
+        $modules = $this->sanitize($request->getArray("translator_modules") ?? []);
         $script = $this->pluginFolder . "translator.min.js";
         if (!file_exists($script)) {
             $script = $this->pluginFolder . "translator.js";
@@ -95,6 +91,7 @@ class MainController
             "script" => $script,
             "modules" => $this->getModules($modules),
             "filename" => $filename,
+            "error" => $error,
         ]);
     }
 
@@ -104,17 +101,17 @@ class MainController
      */
     private function getModules(array $modules): array
     {
-        $modules = [];
+        $res = [];
         foreach ($this->model->modules() as $module) {
             $name = ucfirst($module);
             $checked = in_array($module, $modules) ? "checked" : "";
-            $modules[] = (object) [
+            $res[] = (object) [
                 "module" => $module,
                 "name" => $name,
                 "checked" => $checked,
             ];
         }
-        return $modules;
+        return $res;
     }
 
     private function editAction(Request $request): Response
@@ -124,65 +121,76 @@ class MainController
         }
         $modules = $request->getArray("translator_modules");
         if (empty($modules)) {
-            // TODO error
-            return $this->defaultAction($request);
+            $error = $this->view->message("fail", "error_no_module");
+            return Response::create($this->renderMainView($request, $error));
         }
+        return Response::create($this->renderEditorView($request, $modules));
+    }
+
+    /**
+     * @param non-empty-list<string> $modules
+     * @param ?array<string,string> $totexts
+     */
+    private function renderEditorView(
+        Request $request,
+        array $modules,
+        string $error = "",
+        ?array $totexts = null
+    ): string {
         $module = $this->sanitize($modules[array_key_first($modules)]);
         $from = $this->conf["translate_from"];
         $to = ($this->conf["translate_to"] == "") ? $request->language() : $this->conf["translate_to"];
-        return Response::create($this->prepareEditorView($module, $from, $to));
-    }
-
-    private function prepareEditorView(
-        string $module,
-        string $sourceLanguage,
-        string $destinationLanguage
-    ): string {
         return $this->view->render("editor", [
             "moduleName" => ucfirst($module),
-            "sourceLabel" => $this->languageLabel($sourceLanguage),
-            "destinationLabel" => $this->languageLabel($destinationLanguage),
-            "rows" => $this->getEditorRows($module, $sourceLanguage, $destinationLanguage),
+            "from_label" => $this->languageLabel($from),
+            "to_label" => $this->languageLabel($to),
+            "rows" => $this->getEditorRows($module, $from, $to, $totexts),
             "csrf_token" => $this->csrfProtector->token(),
+            "error" => $error,
         ]);
     }
 
-    /** @return list<object{key:string,displayKey:string,className:string,sourceText:string,destinationText:string}> */
-    private function getEditorRows(string $module, string $sourceLanguage, string $destinationLanguage): array
+    /**
+     * @param ?array<string,string> $totexts
+     * @return list<object{key:string,displayKey:string,className:string,fromtext:string,totext:string}>
+     */
+    private function getEditorRows(string $module, string $fromlang, string $tolang, ?array $totexts): array
     {
-        $sourceL10n = Localization::read($module, $sourceLanguage, $this->store);
-        $sourceTexts = $sourceL10n->texts();
-        $destinationL10n = Localization::read($module, $destinationLanguage, $this->store);
-        $destinationTexts = $destinationL10n->texts();
+        $froml10n = Localization::read($module, $fromlang, $this->store);
+        $fromtexts = $froml10n->texts();
+        if ($totexts === null) {
+            $tol10n = Localization::read($module, $tolang, $this->store);
+            $totexts = $tol10n->texts();
+        }
         if ($this->conf["sort_load"]) {
-            ksort($sourceTexts);
+            ksort($fromtexts);
         }
         $rows = [];
-        foreach ($sourceTexts as $key => $sourceText) {
-            $rows[] = $this->getEditorRow($key, $sourceText, $destinationTexts);
+        foreach ($fromtexts as $key => $fromtext) {
+            $rows[] = $this->getEditorRow($key, $fromtext, $totexts);
         }
         return $rows;
     }
 
     /**
-     * @param array<string,string> $destinationTexts
-     * @return object{key:string,displayKey:string,className:string,sourceText:string,destinationText:string}
+     * @param array<string,string> $totexts
+     * @return object{key:string,displayKey:string,className:string,fromtext:string,totext:string}
      */
-    private function getEditorRow(string $key, string $sourceText, array $destinationTexts)
+    private function getEditorRow(string $key, string $fromtext, array $totexts)
     {
-        if (isset($destinationTexts[$key])) {
-            $destinationText = $destinationTexts[$key];
+        if (isset($totexts[$key])) {
+            $totext = $totexts[$key];
         } elseif ($this->view->plain("default_translation") != "") {
-            $destinationText = $this->view->plain("default_translation");
+            $totext = $this->view->plain("default_translation");
         } else {
-            $destinationText = $sourceText;
+            $totext = $fromtext;
         }
         return (object) [
             "key" => $key,
             "displayKey" => strtr($key, "_|", "  "),
-            "className" => isset($destinationTexts[$key]) ? "" : "translator_new",
-            "sourceText" => $sourceText,
-            "destinationText" => $destinationText,
+            "className" => isset($totexts[$key]) ? "" : "translator_new",
+            "fromtext" => $fromtext,
+            "totext" => $totext,
         ];
     }
 
@@ -203,36 +211,45 @@ class MainController
         }
         $modules = $request->getArray("translator_modules");
         if (empty($modules)) {
-            // TODO error
-            return $this->defaultAction($request);
+            return Response::redirect($request->url()->without("action")->absolute());
         }
         $module = $this->sanitize($modules[array_key_first($modules)]);
-        $sourceLanguage = $this->conf["translate_from"];
-        $destinationLanguage = ($this->conf["translate_to"] == "") ? $request->language() : $this->conf["translate_to"];
-        $destinationL10n = Localization::modify($module, $destinationLanguage, $this->store);
-        if ($destinationL10n === null) {
-            $response = $this->defaultAction($request);
-            return Response::create($this->saveMessage(false, $this->model->filename($module, $destinationLanguage))
-                . $response->output());
-        }
-        $destinationTexts = [];
-        $sourceL10n = Localization::read($module, $sourceLanguage, $this->store);
-        $sourceTexts = $sourceL10n->texts();
+        $fromlang = $this->conf["translate_from"];
+        $tolang = ($this->conf["translate_to"] == "") ? $request->language() : $this->conf["translate_to"];
+        $tol10n = Localization::modify($module, $tolang, $this->store);
+        $froml10n = Localization::read($module, $fromlang, $this->store);
+        $fromtexts = $froml10n->texts();
         if ($this->conf["sort_save"]) {
-            ksort($sourceTexts);
+            ksort($fromtexts);
         }
-        foreach (array_keys($sourceTexts) as $key) {
+        $totexts = $this->postedTexts($request, $fromtexts);
+        if ($tol10n === null) {
+            $error = $this->view->message("fail", "error_save", $this->model->filename($module, $tolang));
+            return Response::create($this->renderEditorView($request, $modules, $error, $totexts));
+        }
+        $tol10n->setTexts($totexts);
+        $tol10n->setCopyright($this->copyright($request));
+        if (!$this->store->commit()) {
+            $error = $this->view->message("fail", "error_save", $this->model->filename($module, $tolang));
+            return Response::create($this->renderEditorView($request, $modules, $error, $totexts));
+        }
+        return Response::redirect($request->url()->without("action")->absolute());
+    }
+
+    /**
+     * @param array<string,string> $fromtexts
+     * @return array<string,string>
+     */
+    private function postedTexts(Request $request, array $fromtexts): array
+    {
+        $totexts = [];
+        foreach (array_keys($fromtexts) as $key) {
             $value = $request->post("translator_string_$key");
             if ($value != "" && $value != $this->view->plain("default_translation")) {
-                $destinationTexts[$key] = $value;
+                $totexts[$key] = $value;
             }
         }
-        $destinationL10n->setTexts($destinationTexts);
-        $destinationL10n->setCopyright($this->copyright($request));
-        $saved = $this->store->commit();
-        $filename = $this->model->filename($module, $destinationLanguage);
-        $response = $this->defaultAction($request);
-        return Response::create($this->saveMessage($saved, $filename) . $response->output());
+        return $totexts;
     }
 
     private function copyright(Request $request): string
@@ -256,14 +273,14 @@ class MainController
         $language = ($this->conf["translate_to"] == "") ? $request->language() : $this->conf["translate_to"];
         $modules = $request->getArray("translator_modules");
         if (empty($modules)) {
-            $response = $this->defaultAction($request);
-            return Response::create($this->view->message("warning", "message_no_module") . $response->output());
+            $error = $this->view->message("fail", "error_no_module");
+            return Response::create($this->renderMainView($request, $error));
         }
         $modules = $this->sanitize($modules);
         $contents = $this->model->zipArchive($modules, $language);
         if ($contents === null) {
-            $response = $this->defaultAction($request);
-            return Response::create($this->view->message("fail", "error_zip") . $response->output());
+            $error = $this->view->message("fail", "error_zip");
+            return Response::create($this->renderMainView($request, $error));
         }
         $filename = $this->sanitize($request->get("translator_filename") ?? "");
         return Response::create($contents)->withContentType("application/zip")
@@ -281,11 +298,5 @@ class MainController
         } else {
             return (string) preg_replace('/[^a-z0-9_-]/i', "", $input);
         }
-    }
-
-    private function saveMessage(bool $success, string $filename): string
-    {
-        $type = $success ? "success" : "fail";
-        return $this->view->message($type, "message_save_{$type}", $filename);
     }
 }

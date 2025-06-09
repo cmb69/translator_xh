@@ -11,10 +11,9 @@ $plugin_tx['translator']['label_select_all'] = "Select all";
 $plugin_tx['translator']['label_translate_from'] = "Translate from:";
 $plugin_tx['translator']['label_translate_to'] = "Translate to:";
 $plugin_tx['translator']['menu_main'] = "Translations";
-$plugin_tx['translator']['message_no_module'] = "You must select at least one module!";
-$plugin_tx['translator']['message_save_fail'] = "The file \"%s\" couldn't be saved.";
-$plugin_tx['translator']['message_save_success'] = "The file \"%s\" has been successfully saved.";
-$plugin_tx['translator']['error_zip'] = "The ZIP archive could not be created";
+$plugin_tx['translator']['error_no_module'] = "You must select at least one module!";
+$plugin_tx['translator']['error_save'] = "The file \"%s\" could not be saved!";
+$plugin_tx['translator']['error_zip'] = "The ZIP archive could not be created!";
 $plugin_tx['translator']['alt_logo'] = "Translation";
 
 $plugin_tx['translator']['syscheck_extension'] = "the PHP extension '%s' is loaded";
