@@ -30,6 +30,8 @@ function init() {
     var deselectAllButton;
     /** @type {HTMLButtonElement} */
     var editButton;
+    /** @type {HTMLButtonElement} */
+    var downloadButton;
 
     checkboxes = /** @type NodeListOf<HTMLInputElement> */
         document.querySelectorAll("article.translator_translations input[type=checkbox]");
@@ -42,6 +44,16 @@ function init() {
     element = document.querySelector("button.translator_edit");
     if (!(element instanceof HTMLButtonElement)) return;
     editButton = element;
+    element = document.querySelector("button.translator_download");
+    if (!(element instanceof HTMLButtonElement)) return;
+    downloadButton = element;
+
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener("click", () => {
+            downloadButton.disabled = !moduleSelected();
+        });
+    })
+
     selectAllButton.style.display = "";
     deselectAllButton.style.display = "none";
     selectAllButton.addEventListener("click", () => {
@@ -64,6 +76,19 @@ function init() {
     });
     editButton.remove();
 
+    downloadButton.disabled = !moduleSelected();
+
+    function moduleSelected() {
+        let result = false;
+        checkboxes.forEach(checkbox => {
+            if (checkbox.checked) {
+                result = true;
+                return;
+            }
+        });
+        return result;
+    }
+
     /** @param {boolean} select */
     function deSelectModules(select) {
         checkboxes.forEach(checkbox => {
@@ -71,5 +96,6 @@ function init() {
         });
         selectAllButton.style.display = select ? "none" : "";
         deselectAllButton.style.display = select ? "" : "none";
+        downloadButton.disabled = !select;
     }
 }

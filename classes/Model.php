@@ -78,17 +78,14 @@ class Model
     }
 
     /** @param list<string> $modules */
-    public function zipArchive(array $modules, string $language): ?string
+    public function zipArchive(array $modules, string $language): string
     {
         include_once __DIR__ . "/../zip.lib.php";
         $zip = new zipfile();
         foreach ($modules as $module) {
             $source = $this->filename($module, $language);
             $destination = ltrim($source, "./");
-            if (!file_exists($source)) {
-                return null;
-            }
-            $contents = file_get_contents($source);
+            $contents = is_readable($source) ? file_get_contents($source) : "";
             $zip->addFile($contents, $destination);
         }
         $contents = $zip->file();

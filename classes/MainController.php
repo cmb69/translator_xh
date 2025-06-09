@@ -285,9 +285,6 @@ class MainController
         }
         $modules = $this->sanitize($modules);
         $contents = $this->model->zipArchive($modules, $language);
-        if ($contents === null) {
-            return $this->respondWithOverview($request, $this->view->message("fail", "error_zip"));
-        }
         $filename = $this->sanitize($request->get("translator_filename") ?? "");
         return Response::create($contents)->withContentType("application/zip")
             ->withAttachment("$filename.zip")->withLength(strlen($contents));
