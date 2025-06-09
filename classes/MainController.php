@@ -75,12 +75,8 @@ class MainController
 
     private function defaultAction(Request $request): Response
     {
-        $filename = $request->post("translator_filename") !== null
-            ? $this->sanitize($request->post("translator_filename"))
-            : "";
-        $modules = $request->postArray("translator_modules") !== null
-            ? $this->sanitize($request->postArray("translator_modules"))
-            : [];
+        $filename = $this->sanitize($request->get("translator_filename") ?? "");
+        $modules = $this->sanitize($request->getArray("translator_modules") ?? []);
         return Response::create($this->prepareMainView($filename, $modules));
     }
 
@@ -104,17 +100,17 @@ class MainController
      */
     private function getModules(array $modules): array
     {
-        $modules = [];
+        $res = [];
         foreach ($this->model->modules() as $module) {
             $name = ucfirst($module);
             $checked = in_array($module, $modules) ? "checked" : "";
-            $modules[] = (object) [
+            $res[] = (object) [
                 "module" => $module,
                 "name" => $name,
                 "checked" => $checked,
             ];
         }
-        return $modules;
+        return $res;
     }
 
     private function editAction(Request $request): Response
