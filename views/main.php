@@ -14,20 +14,20 @@ use Plib\View;
 <script type="module" src="<?=$this->esc($script)?>"></script>
 <form id="translator_list" method="get">
   <h1>Translator – <?=$this->text('menu_main')?></h1>
-<?php if ($error):?>
+<?if ($error):?>
   <?=$this->raw($error)?>
-<?php endif?>
+<?endif?>
   <input type="hidden" name="selected" value="translator">
   <input type="hidden" name="admin" value="plugin_main">
   <ul>
-<?php foreach ($modules as $module):?>
+<?foreach ($modules as $module):?>
     <li>
       <label>
         <input type="checkbox" name="translator_modules[]" value="<?=$this->esc($module->module)?>" <?=$this->esc($module->checked)?>>
         <span><?=$this->esc($module->name)?></span>
       </label>
     </li>
-<?php endforeach?>
+<?endforeach?>
   </ul>
   <p>
     <button id="translator_select_all" type="button" style="display: none"><?=$this->text('label_select_all')?></button>
