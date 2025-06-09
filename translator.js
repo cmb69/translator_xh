@@ -28,6 +28,8 @@ function init() {
     var selectAllButton;
     /** @type {HTMLButtonElement} */
     var deselectAllButton;
+    /** @type {HTMLButtonElement} */
+    var editButton;
 
     checkboxes = /** @type NodeListOf<HTMLInputElement> */
         document.querySelectorAll("article.translator_translations input[type=checkbox]");
@@ -37,6 +39,9 @@ function init() {
     element = document.querySelector("button.translator_deselect_all");
     if (!(element instanceof HTMLButtonElement)) return;
     deselectAllButton = element;
+    element = document.querySelector("button.translator_edit");
+    if (!(element instanceof HTMLButtonElement)) return;
+    editButton = element;
     checkboxes.forEach(checkbox => {
         checkbox.addEventListener("change", event => {
             if (!(event.currentTarget instanceof HTMLInputElement)) return;
@@ -55,6 +60,21 @@ function init() {
     deselectAllButton.addEventListener("click", () => {
         deSelectModules(false);
     });
+
+    const lis = document.querySelectorAll("article.translator_translations li");
+    lis.forEach(li => {
+        const clone = editButton.cloneNode(true);
+        // const div = li.lastElementChild;
+        // if (!(div instanceof HTMLDivElement)) return;
+        li.appendChild(clone);
+        clone.addEventListener("click", () => {
+            deSelectModules(false);
+            const checkbox = li.querySelector("input[type=checkbox]");
+            if (!(checkbox instanceof HTMLInputElement)) return;
+            checkbox.checked = true;
+        });
+    });
+    editButton.remove();
 
     /** @param {boolean} select */
     function deSelectModules(select) {

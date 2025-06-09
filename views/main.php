@@ -7,7 +7,7 @@ if (!defined("CMSIMPLE_XH_VERSION")) {http_response_code(403); exit;}
 /**
  * @var View $this
  * @var string $script
- * @var list<object{module:string,name:string,checked:string}> $modules
+ * @var list<object{module:string,id:string,name:string,checked:string}> $modules
  * @var string $filename
  * @var string $error
  */
@@ -25,17 +25,15 @@ if (!defined("CMSIMPLE_XH_VERSION")) {http_response_code(403); exit;}
     <ul>
 <?foreach ($modules as $module):?>
       <li>
-        <label>
-          <input type="checkbox" name="translator_modules[]" value="<?=$this->esc($module->module)?>" <?=$this->esc($module->checked)?>>
-          <span><?=$this->esc($module->name)?></span>
-        </label>
+        <input type="checkbox" id="<?=$this->esc($module->id)?>" name="translator_modules[]" value="<?=$this->esc($module->module)?>" <?=$this->esc($module->checked)?>>
+        <label for="<?=$this->esc($module->id)?>"><?=$this->esc($module->name)?></label>
       </li>
 <?endforeach?>
     </ul>
     <p>
       <button class="translator_select_all" type="button" style="display: none"><?=$this->text('label_select_all')?></button>
       <button class="translator_deselect_all" type="button" disabled="disabled" style="display: none"><?=$this->text('label_deselect_all')?></button>
-      <button name="action" value="edit"><?=$this->text("label_edit")?></button>
+      <button class="translator_edit" name="action" value="edit"><?=$this->text("label_edit")?></button>
     </p>
     <p>
       <?=$this->text('label_filename')?>
