@@ -120,7 +120,7 @@ class MainController
         $modules = $request->getArray("translator_modules");
         if (empty($modules)) {
             // TODO error
-            return $this->defaultAction($request);
+            return Response::create($this->renderMainView($request));
         }
         $module = $this->sanitize($modules[array_key_first($modules)]);
         $from = $this->conf["translate_from"];
@@ -198,8 +198,7 @@ class MainController
         }
         $modules = $request->getArray("translator_modules");
         if (empty($modules)) {
-            // TODO error
-            return $this->defaultAction($request);
+            return Response::redirect($request->url()->without("action")->absolute());
         }
         $module = $this->sanitize($modules[array_key_first($modules)]);
         $sourceLanguage = $this->conf["translate_from"];
@@ -251,14 +250,14 @@ class MainController
         $language = ($this->conf["translate_to"] == "") ? $request->language() : $this->conf["translate_to"];
         $modules = $request->getArray("translator_modules");
         if (empty($modules)) {
-            $response = $this->defaultAction($request);
-            return Response::create($this->view->message("warning", "message_no_module") . $response->output());
+            return Response::create($this->view->message("warning", "message_no_module")
+                . $this->renderMainView($request));
         }
         $modules = $this->sanitize($modules);
         $contents = $this->model->zipArchive($modules, $language);
         if ($contents === null) {
-            $response = $this->defaultAction($request);
-            return Response::create($this->view->message("fail", "error_zip") . $response->output());
+            return Response::create($this->view->message("fail", "error_zip")
+                . $this->renderMainView($request));
         }
         $filename = $this->sanitize($request->get("translator_filename") ?? "");
         return Response::create($contents)->withContentType("application/zip")
