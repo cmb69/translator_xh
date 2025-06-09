@@ -19,9 +19,13 @@
 
 // @ts-check
 
-init();
+document.querySelectorAll("article.translator_translations").forEach(article => {
+    if (!(article instanceof HTMLElement)) return;
+    initOverview(article);
+});
 
-function init() {
+/** @param {HTMLElement} article */
+function initOverview(article) {
     /** @type {NodeListOf<HTMLInputElement>} */
     var checkboxes;
     /** @type {HTMLButtonElement} */
@@ -34,22 +38,22 @@ function init() {
     var downloadButton;
 
     checkboxes = /** @type NodeListOf<HTMLInputElement> */
-        document.querySelectorAll("article.translator_translations input[type=checkbox]");
-    const template = document.querySelector("article.translator_translations .translator_template");
+        article.querySelectorAll("input[type=checkbox]");
+    const template = article.querySelector(".translator_template");
     if (!(template instanceof HTMLTemplateElement)) return;
-    const controls = document.querySelector("article.translator_translations .translator_controls");
+    const controls = article.querySelector(".translator_controls");
     if (!(controls instanceof HTMLElement)) return;
     controls.prepend(template.content);
-    let element = document.querySelector("button.translator_select_all");
+    let element = article.querySelector("button.translator_select_all");
     if (!(element instanceof HTMLButtonElement)) return;
     selectAllButton = element;
-    element = document.querySelector("button.translator_deselect_all");
+    element = article.querySelector("button.translator_deselect_all");
     if (!(element instanceof HTMLButtonElement)) return;
     deselectAllButton = element;
-    element = document.querySelector("button.translator_edit");
+    element = article.querySelector("button.translator_edit");
     if (!(element instanceof HTMLButtonElement)) return;
     editButton = element;
-    element = document.querySelector("button.translator_download");
+    element = article.querySelector("button.translator_download");
     if (!(element instanceof HTMLButtonElement)) return;
     downloadButton = element;
 
@@ -68,7 +72,7 @@ function init() {
         deSelectModules(false);
     });
 
-    const lis = document.querySelectorAll("article.translator_translations li");
+    const lis = article.querySelectorAll(" li");
     lis.forEach(li => {
         const clone = editButton.cloneNode(true);
         li.appendChild(clone);
