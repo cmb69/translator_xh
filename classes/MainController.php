@@ -122,22 +122,22 @@ class MainController
             // TODO error
             return Response::create($this->renderMainView($request));
         }
+        return Response::create($this->renderEditorView($request, $modules));
+    }
+
+    /** @param non-empty-list<string> $modules */
+    private function renderEditorView(
+        Request $request,
+        array $modules
+    ): string {
         $module = $this->sanitize($modules[array_key_first($modules)]);
         $from = $this->conf["translate_from"];
         $to = ($this->conf["translate_to"] == "") ? $request->language() : $this->conf["translate_to"];
-        return Response::create($this->renderEditorView($module, $from, $to));
-    }
-
-    private function renderEditorView(
-        string $module,
-        string $sourceLanguage,
-        string $destinationLanguage
-    ): string {
         return $this->view->render("editor", [
             "moduleName" => ucfirst($module),
-            "sourceLabel" => $this->languageLabel($sourceLanguage),
-            "destinationLabel" => $this->languageLabel($destinationLanguage),
-            "rows" => $this->getEditorRows($module, $sourceLanguage, $destinationLanguage),
+            "sourceLabel" => $this->languageLabel($from),
+            "destinationLabel" => $this->languageLabel($to),
+            "rows" => $this->getEditorRows($module, $from, $to),
             "csrf_token" => $this->csrfProtector->token(),
         ]);
     }
