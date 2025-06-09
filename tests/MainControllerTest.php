@@ -98,6 +98,21 @@ class MainControllerTest extends TestCase
         $this->assertSame("http://example.com/?&translator_modules%5B0%5D=translator", $response->location());
     }
 
+    public function testAddsCopyrightHeaderWhenConfigured(): void
+    {
+        $this->conf["translation_author"] = "Christoph M. Becker";
+        $this->csrfProtector->method("check")->willReturn(true);
+        $request = new FakeRequest([
+            "url" => "http://example.com/?&action=edit&translator_modules%5B%5D=translator",
+            "time" => strtotime("2025-06-09T12:03:41+00:00"),
+            "post" => ["translator_string_default|translation" => "neue Übersetzung", "translator_do" => ""],
+        ]);
+        $this->sut()($request);
+        $contents = file_get_contents(vfsStream::url("root/plugins/translator/languages/de.php"));
+        $this->assertStringContainsString("Copyright (c) 2025 Christoph M. Becker", $contents);
+        $this->assertStringContainsString("This work is licensed under the GNU General Public License v3.", $contents);
+    }
+
     public function testSavingIsCsrfProtected(): void
     {
         $this->csrfProtector->method("check")->willReturn(false);
