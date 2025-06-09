@@ -11,7 +11,7 @@ use Plib\View;
  */
 ?>
 
-<script src="<?=$this->esc($script)?>"></script>
+<script type="module" src="<?=$this->esc($script)?>"></script>
 <form id="translator_list" method="get">
   <h1>Translator – <?=$this->text('menu_main')?></h1>
 <?php if ($error):?>
