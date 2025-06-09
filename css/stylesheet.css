@@ -2,7 +2,7 @@
 
 article.translator_translations ul {
     display: grid;
-    grid-template-columns: 2em auto 5em;
+    grid-template-columns: 2em auto 7em;
     justify-content: start;
     list-style: none;
     margin: 1em 0;
