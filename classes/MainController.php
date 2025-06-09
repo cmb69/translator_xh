@@ -205,9 +205,8 @@ class MainController
         $destinationLanguage = ($this->conf["translate_to"] == "") ? $request->language() : $this->conf["translate_to"];
         $destinationL10n = Localization::modify($module, $destinationLanguage, $this->store);
         if ($destinationL10n === null) {
-            $response = $this->defaultAction($request);
             return Response::create($this->saveMessage(false, $this->model->filename($module, $destinationLanguage))
-                . $response->output());
+                . $this->renderEditorView($request, $modules));
         }
         $destinationTexts = [];
         $sourceL10n = Localization::read($module, $sourceLanguage, $this->store);
@@ -223,10 +222,12 @@ class MainController
         }
         $destinationL10n->setTexts($destinationTexts);
         $destinationL10n->setCopyright($this->copyright($request));
-        $saved = $this->store->commit();
-        $filename = $this->model->filename($module, $destinationLanguage);
-        $response = $this->defaultAction($request);
-        return Response::create($this->saveMessage($saved, $filename) . $response->output());
+        if (!$this->store->commit()) {
+            $filename = $this->model->filename($module, $destinationLanguage);
+            return Response::create($this->saveMessage(false, $filename)
+                . $this->renderEditorView($request, $modules));
+        }
+        return Response::redirect($request->url()->without("action")->absolute());
     }
 
     private function copyright(Request $request): string

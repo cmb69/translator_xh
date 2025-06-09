@@ -90,9 +90,9 @@ class MainControllerTest extends TestCase
             "neue Übersetzung",
             file_get_contents(vfsStream::url("root/plugins/translator/languages/de.php"))
         );
-        $this->assertStringContainsString(
-            "The file &quot;vfs://root/plugins/translator/languages/de.php&quot; has been successfully saved.",
-            $response->output()
+        $this->assertSame(
+            "http://example.com/?&translator_modules%5B0%5D=translator&translator_from=en&translator_to=de",
+            $response->location()
         );
     }
 
