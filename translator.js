@@ -19,40 +19,27 @@
 
 var checkboxes, selectAllButton, deselectAllButton;
 
-var each = Array.prototype.forEach;
-
 /**
- * Selects resp. deselects all modules.
- *
- * @param {Boolean} select Whether to select all modules.
+ * @param {boolean} select
  */
 function deSelectModules(select) {
-    each.call(checkboxes, function (checkbox) {
+    checkboxes.forEach(checkbox => {
         checkbox.checked = select;
     });
     selectAllButton.disabled = select;
     deselectAllButton.disabled = !select;
 }
 
-/**
- * Initializes everything.
- */
 function init() {
-    var form;
-
-    form = document.getElementById("translator_list");
-    checkboxes = [];
-    each.call(form.elements, function (element) {
-        if (element.type == "checkbox") {
-            element.addEventListener("change", function () {
-                if (this.checked) {
-                    deselectAllButton.disabled = false;
-                } else {
-                    selectAllButton.disabled = false;
-                }
-            });
-            checkboxes.push(element);
-        }
+    checkboxes = document.querySelectorAll("#translator_list input[type=checkbox]");
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener("change", function () {
+            if (this.checked) {
+                deselectAllButton.disabled = false;
+            } else {
+                selectAllButton.disabled = false;
+            }
+        });
     });
     selectAllButton = document.getElementById("translator_select_all");
     deselectAllButton = document.getElementById("translator_deselect_all");
