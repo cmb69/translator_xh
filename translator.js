@@ -17,40 +17,51 @@
  * along with Translator_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-var checkboxes, selectAllButton, deselectAllButton;
+// @ts-check
 
-/**
- * @param {boolean} select
- */
-function deSelectModules(select) {
-    checkboxes.forEach(checkbox => {
-        checkbox.checked = select;
-    });
-    selectAllButton.disabled = select;
-    deselectAllButton.disabled = !select;
-}
+init();
 
 function init() {
-    checkboxes = document.querySelectorAll("#translator_list input[type=checkbox]");
+    /** @type {NodeListOf<HTMLInputElement>} */
+    var checkboxes;
+    /** @type {HTMLButtonElement} */
+    var selectAllButton;
+    /** @type {HTMLButtonElement} */
+    var deselectAllButton;
+
+    checkboxes = /** @type NodeListOf<HTMLInputElement> */
+        document.querySelectorAll("#translator_list input[type=checkbox]");
+    let element = document.getElementById("translator_select_all");
+    if (!(element instanceof HTMLButtonElement)) return;
+    selectAllButton = element;
+    element = document.getElementById("translator_deselect_all");
+    if (!(element instanceof HTMLButtonElement)) return;
+    deselectAllButton = element;
     checkboxes.forEach(checkbox => {
-        checkbox.addEventListener("change", function () {
-            if (this.checked) {
+        checkbox.addEventListener("change", event => {
+            if (!(event.currentTarget instanceof HTMLInputElement)) return;
+            if (event.currentTarget.checked) {
                 deselectAllButton.disabled = false;
             } else {
                 selectAllButton.disabled = false;
             }
         });
     });
-    selectAllButton = document.getElementById("translator_select_all");
-    deselectAllButton = document.getElementById("translator_deselect_all");
     selectAllButton.style.display = "";
     deselectAllButton.style.display = "";
-    selectAllButton.addEventListener("click", function () {
+    selectAllButton.addEventListener("click", () => {
         deSelectModules(true);
     });
-    deselectAllButton.addEventListener("click", function () {
+    deselectAllButton.addEventListener("click", () => {
         deSelectModules(false);
     });
-}
 
-init();
+    /** @param {boolean} select */
+    function deSelectModules(select) {
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = select;
+        });
+        selectAllButton.disabled = select;
+        deselectAllButton.disabled = !select;
+    }
+}
