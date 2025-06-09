@@ -201,7 +201,7 @@ class MainController
         }
         return (object) [
             "key" => $key,
-            "displayKey" => strtr($key, "_|", "  "),
+            "displayKey" => str_replace("|", "_", $key),
             "className" => isset($totexts[$key]) ? "" : "translator_new",
             "fromtext" => $fromtext,
             "totext" => $totext,
