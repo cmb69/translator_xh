@@ -50,6 +50,7 @@ article.translator_edit div.translator_to {
 article.translator_edit .translator_key {}
 article.translator_edit textarea {
     padding: 0;
+    resize: none;
 }
 article.translator_edit .translator_from textarea {
     width: 100%;
