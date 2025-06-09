@@ -75,10 +75,10 @@ class MainController
 
     private function defaultAction(Request $request): Response
     {
-        return Response::create($this->prepareMainView($request));
+        return Response::create($this->renderMainView($request));
     }
 
-    private function prepareMainView(Request $request): string
+    private function renderMainView(Request $request): string
     {
         $filename = $this->sanitize($request->get("translator_filename") ?? "");
         $modules = $this->sanitize($request->getArray("translator_modules") ?? []);
@@ -125,10 +125,10 @@ class MainController
         $module = $this->sanitize($modules[array_key_first($modules)]);
         $from = $this->conf["translate_from"];
         $to = ($this->conf["translate_to"] == "") ? $request->language() : $this->conf["translate_to"];
-        return Response::create($this->prepareEditorView($module, $from, $to));
+        return Response::create($this->renderEditorView($module, $from, $to));
     }
 
-    private function prepareEditorView(
+    private function renderEditorView(
         string $module,
         string $sourceLanguage,
         string $destinationLanguage
