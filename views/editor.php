@@ -25,9 +25,9 @@ if (!defined("CMSIMPLE_XH_VERSION")) {http_response_code(403); exit;}
   <form method="post">
     <button class="submit" name="translator_do"><?=$this->text('label_save')?></button>
     <div class="translator_translation">
-      <p></p>
-      <p><?=$this->text('label_translate_from')?> <?=$this->raw($from_label)?></p>
-      <p><?=$this->text('label_translate_to')?> <?=$this->raw($to_label)?></p>
+      <p class="translator_key"></p>
+      <p class="translator_from"><?=$this->text('label_translate_from')?> <?=$this->raw($from_label)?></p>
+      <p class="translator_to"><?=$this->text('label_translate_to')?> <?=$this->raw($to_label)?></p>
 <?foreach ($rows as $row):?>
       <div class="translator_key"><?=$this->esc($row->displayKey)?></div>
       <div class="translator_from">
