@@ -123,9 +123,9 @@ function initEditor(element) {
         if (sibling === null) return;
         textarea.addEventListener("focus", () => {
             const height = Math.max(textarea.scrollHeight, sibling.scrollHeight);
-            textarea.style.height = height + "px";
-            sibling.style.height = height + "px";
-            textarea.select()
+            textarea.style.height = (height + 1) + "px";
+            sibling.style.height = (height + 1) + "px";
+            textarea.select();
         });
         textarea.addEventListener("blur", () => {
             textarea.style.height = "";
