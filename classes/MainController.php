@@ -77,22 +77,18 @@ class MainController
 
     private function defaultAction(Request $request): Response
     {
-        $language = ($this->conf["translate_to"] == "")
-            ? $request->language()
-            : $this->conf["translate_to"];
-        $url = $request->url()->with("action", "edit")->with("translator_from", $this->conf["translate_from"])
-            ->with("translator_to", $language);
+        $url = $request->url()->with("action", "edit");
         $filename = $request->post("translator_filename") !== null
             ? $this->sanitize($request->post("translator_filename"))
             : "";
         $modules = $request->postArray("translator_modules") !== null
             ? $this->sanitize($request->postArray("translator_modules"))
             : [];
-        return Response::create($this->prepareMainView($language, $url, $filename, $modules));
+        return Response::create($this->prepareMainView($url, $filename, $modules));
     }
 
     /** @param list<string> $modules */
-    private function prepareMainView(string $language, Url $url, string $filename, array $modules): string
+    private function prepareMainView(Url $url, string $filename, array $modules): string
     {
         $script = $this->pluginFolder . "translator.min.js";
         if (!file_exists($script)) {
@@ -100,7 +96,6 @@ class MainController
         }
         return $this->view->render("main", [
             "script" => $script,
-            "language" => $language,
             "modules" => $this->getModules($url, $modules),
             "filename" => $filename,
         ]);
@@ -129,10 +124,9 @@ class MainController
     private function editAction(Request $request): Response
     {
         $module = $this->sanitize($request->get("translator_module") ?? "");
-        $from = $this->sanitize($request->get("translator_from") ?? "");
-        $to = $this->sanitize($request->get("translator_to") ?? "");
-        $url = $request->url()->with("action", "save")->with("translator_from", $from)
-            ->with("translator_to", $to)->with("translator_module", $module)->relative();
+        $from = $this->conf["translate_from"];
+        $to = ($this->conf["translate_to"] == "") ? $request->language() : $this->conf["translate_to"];
+        $url = $request->url()->with("action", "save")->with("translator_module", $module)->relative();
         return Response::create($this->prepareEditorView($url, $module, $from, $to));
     }
 
@@ -207,8 +201,8 @@ class MainController
             return Response::error(403);
         }
         $module = $this->sanitize($request->get("translator_module") ?? "");
-        $sourceLanguage = $this->sanitize($request->get("translator_from") ?? "");
-        $destinationLanguage = $this->sanitize($request->get("translator_to") ?? "");
+        $sourceLanguage = $this->conf["translate_from"];
+        $destinationLanguage = ($this->conf["translate_to"] == "") ? $request->language() : $this->conf["translate_to"];
         $destinationL10n = Localization::modify($module, $destinationLanguage, $this->store);
         if ($destinationL10n === null) {
             $response = $this->defaultAction($request);
@@ -253,7 +247,7 @@ class MainController
 
     private function zipAction(Request $request): Response
     {
-        $language = $this->sanitize($request->get("translator_lang") ?? "");
+        $language = ($this->conf["translate_to"] == "") ? $request->language() : $this->conf["translate_to"];
         $modules = $request->getArray("translator_modules");
         if (empty($modules)) {
             $response = $this->defaultAction($request);

@@ -5,7 +5,6 @@ use Plib\View;
 /**
  * @var View $this
  * @var string $script
- * @var string $language
  * @var list<object{module:string,name:string,url:string,checked:string}> $modules
  * @var string $filename
  */
@@ -16,7 +15,6 @@ use Plib\View;
   <h1>Translator – <?=$this->text('menu_main')?></h1>
   <input type="hidden" name="selected" value="translator">
   <input type="hidden" name="admin" value="plugin_main">
-  <input type="hidden" name="translator_lang" value="<?=$this->esc($language)?>">
   <ul>
 <?php foreach ($modules as $module):?>
     <li>
