@@ -84,16 +84,21 @@ class MainController
         $to = ($this->conf["translate_to"] == "") ? $request->language() : $this->conf["translate_to"];
         $filename = $this->sanitize($request->get("translator_filename") ?? "lang_$to");
         $modules = $this->sanitize($request->getArray("translator_modules") ?? []);
-        $script = $this->pluginFolder . "translator.min.js";
-        if (!file_exists($script)) {
-            $script = $this->pluginFolder . "translator.js";
-        }
         return $this->view->render("main", [
-            "script" => $script,
+            "script" => $this->script(),
             "modules" => $this->getModules($modules),
             "filename" => $filename,
             "error" => $error,
         ]);
+    }
+
+    private function script(): string
+    {
+        $script = $this->pluginFolder . "translator.min.js";
+        if (!file_exists($script)) {
+            $script = $this->pluginFolder . "translator.js";
+        }
+        return $script;
     }
 
     /**
@@ -149,6 +154,7 @@ class MainController
         $from = $this->conf["translate_from"];
         $to = ($this->conf["translate_to"] == "") ? $request->language() : $this->conf["translate_to"];
         return $this->view->render("editor", [
+            "script" => $this->script(),
             "moduleName" => ucfirst($module),
             "from_label" => $this->languageLabel($from),
             "to_label" => $this->languageLabel($to),
@@ -195,7 +201,7 @@ class MainController
         }
         return (object) [
             "key" => $key,
-            "displayKey" => strtr($key, "_|", "  "),
+            "displayKey" => str_replace("|", "_", $key),
             "className" => isset($totexts[$key]) ? "" : "translator_new",
             "fromtext" => $fromtext,
             "totext" => $totext,

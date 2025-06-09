@@ -31,38 +31,41 @@ article.translator_edit {}
 
 article.translator_edit .translator_translation {
     display: grid;
-    grid-template-columns: 1fr 4fr 4fr;
+    grid-template-columns: 1fr 1fr;
 }
-/* for narrow content area *//*
-article.translator_edit .translator_key {
-    grid-column: 1/2;
-}
-article.translator_edit .translator_from {
-    grid-column: 2/4;
-}
-article.translator_edit div.translator_to {
-    grid-column: 2/4;
-}*/
 article.translator_edit .translator_translation p {
     text-align: center;
+}
+article.translator_edit .translator_key {
+    grid-column: 1/3;
+    font-family: monospace;
+    font-size: smaller;
+}
+article.translator_edit .translator_from {
+    grid-column: 1/2;
+}
+article.translator_edit div.translator_to {
+    grid-column: 2/3;
 }
 article.translator_edit .translator_key {}
 article.translator_edit textarea {
     padding: 0;
+    resize: none;
 }
-article.translator_edit  .translator_from textarea {
-    /* adjust the following to your needs */
+article.translator_edit .translator_from textarea {
     width: 100%;
-    height: 4em;
 }
 article.translator_edit .translator_to textarea {
-    /* adjust the following to your needs */
     width: 100%;
-    height: 4em;
 }
 article.translator_edit .translator_new {
     background: yellow;
     color: black;
+}
+article.translator_edit .translator_controls {
+    display: flex;
+    justify-content: center;
+    margin: 1em 0;
 }
 
 /* plugin info */

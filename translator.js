@@ -24,6 +24,11 @@ document.querySelectorAll("article.translator_translations").forEach(article => 
     initOverview(article);
 });
 
+document.querySelectorAll("article.translator_edit").forEach(article => {
+    if (!(article instanceof HTMLElement)) return;
+    initEditor(article);
+});
+
 /** @param {HTMLElement} article */
 function initOverview(article) {
     /** @type {NodeListOf<HTMLInputElement>} */
@@ -107,4 +112,27 @@ function initOverview(article) {
         deselectAllButton.style.display = select ? "" : "none";
         downloadButton.disabled = !select;
     }
+}
+
+/** @param {HTMLElement} element */
+function initEditor(element) {
+    element.querySelectorAll(".translator_to textarea").forEach(textarea => {
+        if (!(textarea instanceof HTMLTextAreaElement)) return;
+        if (textarea.parentElement === null || textarea.parentElement.previousElementSibling === null) return;
+        const sibling = textarea.parentElement.previousElementSibling.querySelector("textarea");
+        if (sibling === null) return;
+        textarea.addEventListener("focus", () => {
+            const height = Math.max(textarea.scrollHeight, sibling.scrollHeight);
+            textarea.style.height = height + "px";
+            sibling.style.height = height + "px";
+            textarea.select()
+        });
+        textarea.addEventListener("blur", () => {
+            textarea.style.height = "";
+            sibling.style.height = "";
+        });
+    });
+    const first = element.querySelector(".translator_to textarea");
+    if (!(first instanceof HTMLTextAreaElement)) return;
+    first.focus();
 }
