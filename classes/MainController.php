@@ -222,13 +222,7 @@ class MainController
         if ($this->conf["sort_save"]) {
             ksort($fromtexts);
         }
-        $totexts = [];
-        foreach (array_keys($fromtexts) as $key) {
-            $value = $request->post("translator_string_$key");
-            if ($value != "" && $value != $this->view->plain("default_translation")) {
-                $totexts[$key] = $value;
-            }
-        }
+        $totexts = $this->postedTexts($request, $fromtexts);
         if ($tol10n === null) {
             $error = $this->view->message("fail", "error_save", $this->model->filename($module, $tolang));
             return Response::create($this->renderEditorView($request, $modules, $error, $totexts));
@@ -240,6 +234,22 @@ class MainController
             return Response::create($this->renderEditorView($request, $modules, $error, $totexts));
         }
         return Response::redirect($request->url()->without("action")->absolute());
+    }
+
+    /**
+     * @param array<string,string> $fromtexts
+     * @return array<string,string>
+     */
+    private function postedTexts(Request $request, array $fromtexts): array
+    {
+        $totexts = [];
+        foreach (array_keys($fromtexts) as $key) {
+            $value = $request->post("translator_string_$key");
+            if ($value != "" && $value != $this->view->plain("default_translation")) {
+                $totexts[$key] = $value;
+            }
+        }
+        return $totexts;
     }
 
     private function copyright(Request $request): string
