@@ -9,9 +9,9 @@
 
 $plugin_tx['translator']['menu_main'] = "Tłumaczenia";
 $plugin_tx['translator']['label_plugins'] = "Pliki językowe wtyczek";
-$plugin_tx['translator']['label_translate_from'] = "Tłumacz z:";
-$plugin_tx['translator']['label_translate_to'] = "Tłumacz na:";
-$plugin_tx['translator']['label_filename'] = "Nazwa pliku:";
+$plugin_tx['translator']['label_translate_from'] = "Tłumacz z";
+$plugin_tx['translator']['label_translate_to'] = "Tłumacz na";
+$plugin_tx['translator']['label_filename'] = "Nazwa pliku";
 $plugin_tx['translator']['message_no_plugin'] = "Musisz wybrać przynajmniej jedną wtyczkę!";
 $plugin_tx['translator']['cf_translate_from'] = "Język z którego tłumaczysz";
 $plugin_tx['translator']['cf_translate_to'] = "Język na który będą tłumaczone pliki językowe. Domyślnie (jeżeli pusty) jest to język w którym aktualnie pracujesz w skrypcie)";
