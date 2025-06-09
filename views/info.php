@@ -9,10 +9,12 @@ use Plib\View;
  */
 ?>
 
-<h1>Translator <?=$this->esc($version)?></h1>
-<div class="pfw_syscheck">
-  <h2><?=$this->text('syscheck_title')?></h2>
+<article class="translator_pluginfo">
+  <h1>Translator <?=$this->esc($version)?></h1>
+  <section class="translator_syscheck">
+    <h2><?=$this->text('syscheck_title')?></h2>
 <?foreach ($checks as $check):?>
-  <p class="xh_<?=$this->esc($check->state)?>"><?=$this->text('syscheck_message', $check->label, $check->stateLabel)?></p>
+    <p class="xh_<?=$this->esc($check->state)?>"><?=$this->text('syscheck_message', $check->label, $check->stateLabel)?></p>
 <?endforeach?>
-</div>
+  </section>
+</article>

@@ -1,55 +1,53 @@
-#translator_list ul {
+/* translations */
+
+article.translator_translations ul {
     list-style: none;
 }
-
-#translator_list input[type="checkbox"] {
+article.translator_translations input[type="checkbox"] {
     margin-right: 1em;
 }
 
-#translator {
-    overflow: auto;
-}
+/* edit */
 
-#translator > div {
+article.translator_edit {}
+
+article.translator_edit .translator_translation {
     display: grid;
     grid-template-columns: 1fr 4fr 4fr;
 }
-
 /* for narrow content area *//*
-#translator > div > div.translator_key {
+article.translator_edit .translator_key {
     grid-column: 1/2;
 }
-#translator > div > div.translator_from {
+article.translator_edit .translator_from {
     grid-column: 2/4;
 }
-#translator > div > div.translator_to {
+article.translator_edit div.translator_to {
     grid-column: 2/4;
 }*/
-
-
-#translator > div > p {
+article.translator_edit .translator_translation p {
     text-align: center;
 }
-
-#translator .translator_key {}
-
-#translator textarea {
+article.translator_edit .translator_key {}
+article.translator_edit textarea {
     padding: 0;
 }
-
-#translator .translator_from textarea {
+article.translator_edit  .translator_from textarea {
     /* adjust the following to your needs */
     width: 100%;
     height: 4em;
 }
-
-#translator .translator_to textarea {
+article.translator_edit .translator_to textarea {
     /* adjust the following to your needs */
     width: 100%;
     height: 4em;
 }
-
-#translator .translator_to .translator_new {
+article.translator_edit .translator_new {
     background: yellow;
     color: black;
 }
+
+/* plugin info */
+
+article.translator_pluginfo {}
+article.translator_pluginfo .translator_syscheck {}

@@ -1,19 +1,21 @@
 
-<form id="translator" method="post">
+<article class="translator_edit">
   <h1>Translator – Translator</h1>
-  <button class="submit" name="translator_do">Save</button>
-  <div>
-    <p></p>
-    <p>Translate from: <img src="vfs://root/userfiles/images/flags/en.gif" alt="en" title="en"></p>
-    <p>Translate to: <img src="vfs://root/userfiles/images/flags/de.gif" alt="de" title="de"></p>
-    <div class="translator_key">default translation</div>
-    <div class="translator_from">
-      <textarea rows="2" cols="40" readonly="readonly">*** NEW LANGUAGE STRING ***</textarea>
+  <form method="post">
+    <button class="submit" name="translator_do">Save</button>
+    <div class="translator_translation">
+      <p></p>
+      <p>Translate from: <img src="vfs://root/userfiles/images/flags/en.gif" alt="en" title="en"></p>
+      <p>Translate to: <img src="vfs://root/userfiles/images/flags/de.gif" alt="de" title="de"></p>
+      <div class="translator_key">default translation</div>
+      <div class="translator_from">
+        <textarea rows="2" cols="40" readonly="readonly">*** NEW LANGUAGE STRING ***</textarea>
+      </div>
+      <div class="translator_to">
+        <textarea name="translator_string_default|translation" class="" rows="2" cols="40">*** NEUER SPRACH-TEXT ***</textarea>
+      </div>
     </div>
-    <div class="translator_to">
-      <textarea name="translator_string_default|translation" class="" rows="2" cols="40">*** NEUER SPRACH-TEXT ***</textarea>
-    </div>
-  </div>
-  <button class="submit" name="translator_do">Save</button>
-  <input type="hidden" name="translator_token" value="0123456789ABCDEF">
-</form>
+    <button class="submit" name="translator_do">Save</button>
+    <input type="hidden" name="translator_token" value="0123456789ABCDEF">
+  </form>
+<article>

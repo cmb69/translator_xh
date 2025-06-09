@@ -30,11 +30,11 @@ function init() {
     var deselectAllButton;
 
     checkboxes = /** @type NodeListOf<HTMLInputElement> */
-        document.querySelectorAll("#translator_list input[type=checkbox]");
-    let element = document.getElementById("translator_select_all");
+        document.querySelectorAll("article.translator_translations input[type=checkbox]");
+    let element = document.querySelector("button.translator_select_all");
     if (!(element instanceof HTMLButtonElement)) return;
     selectAllButton = element;
-    element = document.getElementById("translator_deselect_all");
+    element = document.querySelector("button.translator_deselect_all");
     if (!(element instanceof HTMLButtonElement)) return;
     deselectAllButton = element;
     checkboxes.forEach(checkbox => {
