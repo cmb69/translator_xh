@@ -35,6 +35,11 @@ function init() {
 
     checkboxes = /** @type NodeListOf<HTMLInputElement> */
         document.querySelectorAll("article.translator_translations input[type=checkbox]");
+    const template = document.querySelector("article.translator_translations .translator_template");
+    if (!(template instanceof HTMLTemplateElement)) return;
+    const controls = document.querySelector("article.translator_translations .translator_controls");
+    if (!(controls instanceof HTMLElement)) return;
+    controls.prepend(template.content);
     let element = document.querySelector("button.translator_select_all");
     if (!(element instanceof HTMLButtonElement)) return;
     selectAllButton = element;
