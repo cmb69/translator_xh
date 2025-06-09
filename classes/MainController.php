@@ -75,14 +75,13 @@ class MainController
 
     private function defaultAction(Request $request): Response
     {
-        $filename = $this->sanitize($request->get("translator_filename") ?? "");
-        $modules = $this->sanitize($request->getArray("translator_modules") ?? []);
-        return Response::create($this->prepareMainView($filename, $modules));
+        return Response::create($this->prepareMainView($request));
     }
 
-    /** @param list<string> $modules */
-    private function prepareMainView(string $filename, array $modules): string
+    private function prepareMainView(Request $request): string
     {
+        $filename = $this->sanitize($request->get("translator_filename") ?? "");
+        $modules = $this->sanitize($request->getArray("translator_modules") ?? []);
         $script = $this->pluginFolder . "translator.min.js";
         if (!file_exists($script)) {
             $script = $this->pluginFolder . "translator.js";
