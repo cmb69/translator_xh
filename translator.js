@@ -42,18 +42,8 @@ function init() {
     element = document.querySelector("button.translator_edit");
     if (!(element instanceof HTMLButtonElement)) return;
     editButton = element;
-    checkboxes.forEach(checkbox => {
-        checkbox.addEventListener("change", event => {
-            if (!(event.currentTarget instanceof HTMLInputElement)) return;
-            if (event.currentTarget.checked) {
-                deselectAllButton.disabled = false;
-            } else {
-                selectAllButton.disabled = false;
-            }
-        });
-    });
     selectAllButton.style.display = "";
-    deselectAllButton.style.display = "";
+    deselectAllButton.style.display = "none";
     selectAllButton.addEventListener("click", () => {
         deSelectModules(true);
     });
@@ -64,8 +54,6 @@ function init() {
     const lis = document.querySelectorAll("article.translator_translations li");
     lis.forEach(li => {
         const clone = editButton.cloneNode(true);
-        // const div = li.lastElementChild;
-        // if (!(div instanceof HTMLDivElement)) return;
         li.appendChild(clone);
         clone.addEventListener("click", () => {
             deSelectModules(false);
@@ -81,7 +69,7 @@ function init() {
         checkboxes.forEach(checkbox => {
             checkbox.checked = select;
         });
-        selectAllButton.disabled = select;
-        deselectAllButton.disabled = !select;
+        selectAllButton.style.display = select ? "none" : "";
+        deselectAllButton.style.display = select ? "" : "none";
     }
 }

@@ -22,7 +22,7 @@ article.translator_translations li label {
 }
 article.translator_translations .translator_controls {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
 }
 
 /* edit */

@@ -33,7 +33,7 @@ if (!defined("CMSIMPLE_XH_VERSION")) {http_response_code(403); exit;}
     <p class="translator_controls">
       <button class="translator_edit" name="action" value="edit"><?=$this->text("label_edit")?></button>
       <button class="translator_select_all" type="button" style="display: none"><?=$this->text('label_select_all')?></button>
-      <button class="translator_deselect_all" type="button" disabled="disabled" style="display: none"><?=$this->text('label_deselect_all')?></button>
+      <button class="translator_deselect_all" type="button" style="display: none"><?=$this->text('label_deselect_all')?></button>
       <label>
         <?=$this->text('label_filename')?>
         <input type="text" name="translator_filename" value="<?=$this->esc($filename)?>" required>.zip
