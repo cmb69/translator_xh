@@ -9,11 +9,15 @@ use Plib\View;
  * @var string $destinationLabel
  * @var list<object{key:string,displayKey:string,className:string,sourceText:string,destinationText:string}> $rows
  * @var string $csrf_token
+ * @var string $error
  */
 ?>
 
 <form id="translator" method="post">
   <h1>Translator – <?=$moduleName?></h1>
+<?php if ($error):?>
+  <?=$this->raw($error)?>
+<?php endif?>
   <button class="submit" name="translator_do"><?=$this->text('label_save')?></button>
   <div>
     <p></p>

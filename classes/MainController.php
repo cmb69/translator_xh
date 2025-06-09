@@ -78,7 +78,7 @@ class MainController
         return Response::create($this->renderMainView($request));
     }
 
-    private function renderMainView(Request $request): string
+    private function renderMainView(Request $request, string $error = ""): string
     {
         $to = ($this->conf["translate_to"] == "") ? $request->language() : $this->conf["translate_to"];
         $filename = $this->sanitize($request->get("translator_filename") ?? "lang_$to");
@@ -91,6 +91,7 @@ class MainController
             "script" => $script,
             "modules" => $this->getModules($modules),
             "filename" => $filename,
+            "error" => $error,
         ]);
     }
 
@@ -120,17 +121,15 @@ class MainController
         }
         $modules = $request->getArray("translator_modules");
         if (empty($modules)) {
-            // TODO error
-            return Response::create($this->renderMainView($request));
+            $error = $this->view->message("fail", "error_no_module");
+            return Response::create($this->renderMainView($request, $error));
         }
         return Response::create($this->renderEditorView($request, $modules));
     }
 
     /** @param non-empty-list<string> $modules */
-    private function renderEditorView(
-        Request $request,
-        array $modules
-    ): string {
+    private function renderEditorView(Request $request, array $modules, string $error = ""): string
+    {
         $module = $this->sanitize($modules[array_key_first($modules)]);
         $from = $this->conf["translate_from"];
         $to = ($this->conf["translate_to"] == "") ? $request->language() : $this->conf["translate_to"];
@@ -140,6 +139,7 @@ class MainController
             "destinationLabel" => $this->languageLabel($to),
             "rows" => $this->getEditorRows($module, $from, $to),
             "csrf_token" => $this->csrfProtector->token(),
+            "error" => $error,
         ]);
     }
 
@@ -206,9 +206,8 @@ class MainController
         $destinationLanguage = ($this->conf["translate_to"] == "") ? $request->language() : $this->conf["translate_to"];
         $destinationL10n = Localization::modify($module, $destinationLanguage, $this->store);
         if ($destinationL10n === null) {
-            $filename = $this->model->filename($module, $destinationLanguage);
-            return Response::create($this->view->message("fail", "error_save", $filename)
-                . $this->renderEditorView($request, $modules));
+            $error = $this->view->message("fail", "error_save", $this->model->filename($module, $destinationLanguage));
+            return Response::create($this->renderEditorView($request, $modules, $error));
         }
         $destinationTexts = [];
         $sourceL10n = Localization::read($module, $sourceLanguage, $this->store);
@@ -225,9 +224,8 @@ class MainController
         $destinationL10n->setTexts($destinationTexts);
         $destinationL10n->setCopyright($this->copyright($request));
         if (!$this->store->commit()) {
-            $filename = $this->model->filename($module, $destinationLanguage);
-            return Response::create($this->view->message("fail", "error_save", $filename)
-                . $this->renderEditorView($request, $modules));
+            $error = $this->view->message("fail", "error_save", $this->model->filename($module, $destinationLanguage));
+            return Response::create($this->renderEditorView($request, $modules, $error));
         }
         return Response::redirect($request->url()->without("action")->absolute());
     }
@@ -253,14 +251,14 @@ class MainController
         $language = ($this->conf["translate_to"] == "") ? $request->language() : $this->conf["translate_to"];
         $modules = $request->getArray("translator_modules");
         if (empty($modules)) {
-            return Response::create($this->view->message("warning", "message_no_module")
-                . $this->renderMainView($request));
+            $error = $this->view->message("fail", "error_no_module");
+            return Response::create($this->renderMainView($request, $error));
         }
         $modules = $this->sanitize($modules);
         $contents = $this->model->zipArchive($modules, $language);
         if ($contents === null) {
-            return Response::create($this->view->message("fail", "error_zip")
-                . $this->renderMainView($request));
+            $error = $this->view->message("fail", "error_zip");
+            return Response::create($this->renderMainView($request, $error));
         }
         $filename = $this->sanitize($request->get("translator_filename") ?? "");
         return Response::create($contents)->withContentType("application/zip")
