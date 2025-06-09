@@ -61,6 +61,7 @@ class InfoController
             $this->checkPhpVersion("7.4.0"),
             $this->checkExtension("zlib"),
             $this->checkXhVersion("1.7.0"),
+            $this->checkPlibVersion("1.10"),
             $this->checkWritabilty($this->languageFolder),
             $this->checkWritabilty($this->pluginsFolder . "translator/css/"),
             $this->checkWritabilty($this->pluginsFolder . "translator/config/"),
@@ -100,6 +101,17 @@ class InfoController
             $state,
             "syscheck_message",
             $this->view->plain("syscheck_xhversion", $version),
+            $this->view->plain("syscheck_$state")
+        );
+    }
+
+    private function checkPlibVersion(string $version): string
+    {
+        $state = $this->systemChecker->checkPlugin("plib", $version) ? "success" : "fail";
+        return $this->view->message(
+            $state,
+            "syscheck_message",
+            $this->view->plain("syscheck_plibversion", $version),
             $this->view->plain("syscheck_$state")
         );
     }

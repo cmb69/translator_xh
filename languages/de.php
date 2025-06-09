@@ -19,6 +19,7 @@ $plugin_tx['translator']['syscheck_extension'] = "die PHP-Extension '%s' geladen
 $plugin_tx['translator']['syscheck_fail'] = "Fehlschlag";
 $plugin_tx['translator']['syscheck_message'] = "Prüfe, dass %1\$s … %2\$s";
 $plugin_tx['translator']['syscheck_phpversion'] = "die PHP-Version mindestens %s ist";
+$plugin_tx['translator']['syscheck_plibversion'] = "die Plib_XH-Version mindestens %s ist";
 $plugin_tx['translator']['syscheck_plugin'] = "das CMSimple_XH-Plugin '%s' installiert ist";
 $plugin_tx['translator']['syscheck_success'] = "Okay";
 $plugin_tx['translator']['syscheck_title'] = "System-Prüfung";
