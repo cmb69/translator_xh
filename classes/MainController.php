@@ -206,7 +206,8 @@ class MainController
         $destinationLanguage = ($this->conf["translate_to"] == "") ? $request->language() : $this->conf["translate_to"];
         $destinationL10n = Localization::modify($module, $destinationLanguage, $this->store);
         if ($destinationL10n === null) {
-            return Response::create($this->saveMessage(false, $this->model->filename($module, $destinationLanguage))
+            $filename = $this->model->filename($module, $destinationLanguage);
+            return Response::create($this->view->message("fail", "error_save", $filename)
                 . $this->renderEditorView($request, $modules));
         }
         $destinationTexts = [];
@@ -225,7 +226,7 @@ class MainController
         $destinationL10n->setCopyright($this->copyright($request));
         if (!$this->store->commit()) {
             $filename = $this->model->filename($module, $destinationLanguage);
-            return Response::create($this->saveMessage(false, $filename)
+            return Response::create($this->view->message("fail", "error_save", $filename)
                 . $this->renderEditorView($request, $modules));
         }
         return Response::redirect($request->url()->without("action")->absolute());
@@ -277,11 +278,5 @@ class MainController
         } else {
             return (string) preg_replace('/[^a-z0-9_-]/i', "", $input);
         }
-    }
-
-    private function saveMessage(bool $success, string $filename): string
-    {
-        $type = $success ? "success" : "fail";
-        return $this->view->message($type, "message_save_{$type}", $filename);
     }
 }
