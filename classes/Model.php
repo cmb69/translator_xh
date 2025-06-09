@@ -85,8 +85,10 @@ class Model
         foreach ($modules as $module) {
             $source = $this->filename($module, $language);
             $destination = ltrim($source, "./");
-            $contents = is_readable($source) ? file_get_contents($source) : "";
-            $zip->addFile($contents, $destination);
+            if (is_readable($source)) {
+                $contents = file_get_contents($source);
+                $zip->addFile($contents, $destination);
+            }
         }
         $contents = $zip->file();
         return $contents;
