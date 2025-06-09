@@ -32,7 +32,7 @@ use Plib\View;
   </p>
   <p>
     <?=$this->text('label_filename')?>
-    <input type="text" name="translator_filename" value="<?=$this->esc($filename)?>">.zip
+    <input type="text" name="translator_filename" value="<?=$this->esc($filename)?>" required>.zip
     <button class="submit" name="action" value="zip"><?=$this->text('label_generate')?></button>
   </p>
 </form>

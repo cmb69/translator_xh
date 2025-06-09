@@ -80,7 +80,8 @@ class MainController
 
     private function renderMainView(Request $request): string
     {
-        $filename = $this->sanitize($request->get("translator_filename") ?? "");
+        $to = ($this->conf["translate_to"] == "") ? $request->language() : $this->conf["translate_to"];
+        $filename = $this->sanitize($request->get("translator_filename") ?? "lang_$to");
         $modules = $this->sanitize($request->getArray("translator_modules") ?? []);
         $script = $this->pluginFolder . "translator.min.js";
         if (!file_exists($script)) {
