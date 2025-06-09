@@ -76,6 +76,13 @@ class MainControllerTest extends TestCase
         Approvals::verifyHtml($response->output());
     }
 
+    public function testEditingNoModuleReportsError(): void
+    {
+        $request = new FakeRequest(["url" => "http://example.com/?&action=edit"]);
+        $response = $this->sut()($request);
+        $this->assertStringContainsString("You must select at least one module!", $response->output());
+    }
+
     public function testSavesTranslation(): void
     {
         $this->csrfProtector->method("check")->willReturn(true);
@@ -102,15 +109,58 @@ class MainControllerTest extends TestCase
         $this->assertSame(403, $response->status());
     }
 
-    public function testDeliversZip(): void
+    public function testSavingNoModuleRedirectsToOverview(): void
     {
         $this->csrfProtector->method("check")->willReturn(true);
         $request = new FakeRequest([
-            "url" => "http://example.com/?&action=zip&translator_lang=de&translator_filename=test"
+            "url" => "http://example.com/?&action=edit",
+            "post" => ["translator_string_default|translation" => "neue Übersetzung", "translator_do" => ""],
+        ]);
+        $response = $this->sut()($request);
+        $this->assertSame("http://example.com/", $response->location());
+    }
+
+    public function testReportsFailureToSave(): void
+    {
+        vfsStream::setQuota(0);
+        $this->csrfProtector->method("check")->willReturn(true);
+        $request = new FakeRequest([
+            "url" => "http://example.com/?&action=edit&translator_modules%5B%5D=translator",
+            "post" => ["translator_string_default|translation" => "neue Übersetzung", "translator_do" => ""],
+        ]);
+        $response = $this->sut()($request);
+        $this->assertStringContainsString(
+            "The file &quot;vfs://root/plugins/translator/languages/de.php&quot; could not be saved!",
+            $response->output()
+        );
+    }
+
+    public function testDeliversZip(): void
+    {
+        $request = new FakeRequest([
+            "url" => "http://example.com/?&action=zip&translator_filename=test"
                 . "&translator_modules[]=translator",
         ]);
         $response = $this->sut()($request);
         $this->assertSame("application/zip", $response->contentType());
         $this->assertSame("test.zip", $response->attachment());
+    }
+
+    public function testZippingNoModuleReportsError(): void
+    {
+        $request = new FakeRequest([
+            "url" => "http://example.com/?&action=zip&translator_filename=test",
+        ]);
+        $response = $this->sut()($request);
+        $this->assertStringContainsString("You must select at least one module!", $response->output());
+    }
+
+    public function testReportsFailureToCreateZip(): void
+    {
+        $request = new FakeRequest([
+            "url" => "http://example.com/?&action=zip&translator_filename=test&translator_modules[]=nope",
+        ]);
+        $response = $this->sut()($request);
+        $this->assertStringContainsString("The ZIP archive could not be created!", $response->output());
     }
 }
