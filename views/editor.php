@@ -6,6 +6,7 @@ if (!defined("CMSIMPLE_XH_VERSION")) {http_response_code(403); exit;}
 
 /**
  * @var View $this
+ * @var string $script
  * @var string $moduleName
  * @var string $from_label
  * @var string $to_label
@@ -15,6 +16,7 @@ if (!defined("CMSIMPLE_XH_VERSION")) {http_response_code(403); exit;}
  */
 ?>
 
+<script type="module" src="<?=$this->esc($script)?>"></script>
 <article class="translator_edit">
   <h1>Translator – <?=$moduleName?></h1>
 <?if ($error):?>
@@ -29,10 +31,10 @@ if (!defined("CMSIMPLE_XH_VERSION")) {http_response_code(403); exit;}
 <?foreach ($rows as $row):?>
       <div class="translator_key"><?=$this->esc($row->displayKey)?></div>
       <div class="translator_from">
-        <textarea rows="2" cols="40" readonly="readonly"><?=$this->esc($row->fromtext)?></textarea>
+        <textarea rows="1" cols="40" disabled><?=$this->esc($row->fromtext)?></textarea>
       </div>
       <div class="translator_to">
-        <textarea name="translator_string_<?=$this->esc($row->key)?>" class="<?=$this->esc($row->className)?>" rows="2" cols="40"><?=$this->esc($row->totext)?></textarea>
+        <textarea name="translator_string_<?=$this->esc($row->key)?>" class="<?=$this->esc($row->className)?>" rows="1" cols="40"><?=$this->esc($row->totext)?></textarea>
       </div>
 <?endforeach?>
     </div>

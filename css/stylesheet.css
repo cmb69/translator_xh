@@ -51,14 +51,10 @@ article.translator_edit textarea {
     padding: 0;
 }
 article.translator_edit  .translator_from textarea {
-    /* adjust the following to your needs */
     width: 100%;
-    height: 4em;
 }
 article.translator_edit .translator_to textarea {
-    /* adjust the following to your needs */
     width: 100%;
-    height: 4em;
 }
 article.translator_edit .translator_new {
     background: yellow;
