@@ -15,7 +15,7 @@ use Plib\View;
 
 <form id="translator" method="post" action="<?=$this->esc($action)?>">
   <h1>Translator – <?=$moduleName?></h1>
-  <input type="submit" class="submit" value="<?=$this->text('label_save')?>">
+  <button class="submit" name="translator_do"><?=$this->text('label_save')?></button>
   <div>
     <p></p>
     <p><?=$this->text('label_translate_from')?> <?=$this->raw($sourceLabel)?></p>
@@ -30,6 +30,6 @@ use Plib\View;
     </div>
 <?php endforeach?>
   </div>
-  <input type="submit" class="submit" value="<?=$this->text('label_save')?>">
+  <button class="submit" name="translator_do"><?=$this->text('label_save')?></button>
   <input type="hidden" name="translator_token" value="<?=$this->esc($csrf_token)?>">
 </form>

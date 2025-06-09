@@ -81,9 +81,9 @@ class MainControllerTest extends TestCase
     {
         $this->csrfProtector->method("check")->willReturn(true);
         $request = new FakeRequest([
-            "url" => "http://example.com/?&action=save&translator_module=translator"
+            "url" => "http://example.com/?&action=edit&translator_module=translator"
                 . "&translator_from=en&translator_to=de",
-            "post" => ["translator_string_default|translation" => "neue Übersetzung"],
+            "post" => ["translator_string_default|translation" => "neue Übersetzung", "translator_do" => ""],
         ]);
         $response = $this->sut()($request);
         $this->assertStringContainsString(
@@ -100,9 +100,9 @@ class MainControllerTest extends TestCase
     {
         $this->csrfProtector->method("check")->willReturn(false);
         $request = new FakeRequest([
-            "url" => "http://example.com/?&action=save&translator_module=translator"
+            "url" => "http://example.com/?&action=edit&translator_module=translator"
                 . "&translator_from=en&translator_to=de",
-            "post" => ["translator_string_default|translation" => "neue Übersetzung"],
+            "post" => ["translator_string_default|translation" => "neue Übersetzung", "translator_do" => ""],
         ]);
         $response = $this->sut()($request);
         $this->assertSame(403, $response->status());

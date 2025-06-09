@@ -68,8 +68,6 @@ class MainController
                 return $this->defaultAction($request);
             case "edit":
                 return $this->editAction($request);
-            case "save":
-                return $this->saveAction($request);
             case "zip":
                 return $this->zipAction($request);
         }
@@ -123,10 +121,13 @@ class MainController
 
     private function editAction(Request $request): Response
     {
+        if ($request->post("translator_do") !== null) {
+            return $this->saveAction($request);
+        }
         $module = $this->sanitize($request->get("translator_module") ?? "");
         $from = $this->conf["translate_from"];
         $to = ($this->conf["translate_to"] == "") ? $request->language() : $this->conf["translate_to"];
-        $url = $request->url()->with("action", "save")->with("translator_module", $module)->relative();
+        $url = $request->url()->with("translator_module", $module)->relative();
         return Response::create($this->prepareEditorView($url, $module, $from, $to));
     }
 
