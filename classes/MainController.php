@@ -75,18 +75,17 @@ class MainController
 
     private function defaultAction(Request $request): Response
     {
-        $url = $request->url()->with("action", "edit");
         $filename = $request->post("translator_filename") !== null
             ? $this->sanitize($request->post("translator_filename"))
             : "";
         $modules = $request->postArray("translator_modules") !== null
             ? $this->sanitize($request->postArray("translator_modules"))
             : [];
-        return Response::create($this->prepareMainView($url, $filename, $modules));
+        return Response::create($this->prepareMainView($filename, $modules));
     }
 
     /** @param list<string> $modules */
-    private function prepareMainView(Url $url, string $filename, array $modules): string
+    private function prepareMainView(string $filename, array $modules): string
     {
         $script = $this->pluginFolder . "translator.min.js";
         if (!file_exists($script)) {
@@ -94,16 +93,16 @@ class MainController
         }
         return $this->view->render("main", [
             "script" => $script,
-            "modules" => $this->getModules($url, $modules),
+            "modules" => $this->getModules($modules),
             "filename" => $filename,
         ]);
     }
 
     /**
      * @param list<string> $modules
-     * @return list<object{module:string,name:string,url:string,checked:string}>
+     * @return list<object{module:string,name:string,checked:string}>
      */
-    private function getModules(Url $url, array $modules): array
+    private function getModules(array $modules): array
     {
         $modules = [];
         foreach ($this->model->modules() as $module) {
@@ -112,7 +111,6 @@ class MainController
             $modules[] = (object) [
                 "module" => $module,
                 "name" => $name,
-                "url" => $url->with("translator_module", $module)->relative(),
                 "checked" => $checked,
             ];
         }
@@ -124,21 +122,23 @@ class MainController
         if ($request->post("translator_do") !== null) {
             return $this->saveAction($request);
         }
-        $module = $this->sanitize($request->get("translator_module") ?? "");
+        $modules = $request->getArray("translator_modules");
+        if (empty($modules)) {
+            // TODO error
+            return $this->defaultAction($request);
+        }
+        $module = $this->sanitize($modules[array_key_first($modules)]);
         $from = $this->conf["translate_from"];
         $to = ($this->conf["translate_to"] == "") ? $request->language() : $this->conf["translate_to"];
-        $url = $request->url()->with("translator_module", $module)->relative();
-        return Response::create($this->prepareEditorView($url, $module, $from, $to));
+        return Response::create($this->prepareEditorView($module, $from, $to));
     }
 
     private function prepareEditorView(
-        string $action,
         string $module,
         string $sourceLanguage,
         string $destinationLanguage
     ): string {
         return $this->view->render("editor", [
-            "action" => $action,
             "moduleName" => ucfirst($module),
             "sourceLabel" => $this->languageLabel($sourceLanguage),
             "destinationLabel" => $this->languageLabel($destinationLanguage),
@@ -201,7 +201,12 @@ class MainController
         if (!$this->csrfProtector->check($request->post("translator_token"))) {
             return Response::error(403);
         }
-        $module = $this->sanitize($request->get("translator_module") ?? "");
+        $modules = $request->getArray("translator_modules");
+        if (empty($modules)) {
+            // TODO error
+            return $this->defaultAction($request);
+        }
+        $module = $this->sanitize($modules[array_key_first($modules)]);
         $sourceLanguage = $this->conf["translate_from"];
         $destinationLanguage = ($this->conf["translate_to"] == "") ? $request->language() : $this->conf["translate_to"];
         $destinationL10n = Localization::modify($module, $destinationLanguage, $this->store);

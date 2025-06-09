@@ -4,6 +4,7 @@ $plugin_tx['translator']['default_translation'] = "*** NEUER SPRACH-TEXT ***";
 $plugin_tx['translator']['label_deselect_all'] = "Alle abwählen";
 $plugin_tx['translator']['label_translate_from'] = "Übersetzen von:";
 $plugin_tx['translator']['label_translate_to'] = "Übersetzen nach:";
+$plugin_tx['translator']['label_edit'] = "Bearbeiten";
 $plugin_tx['translator']['label_filename'] = "Dateiname:";
 $plugin_tx['translator']['label_download_url'] = "Download-URL:";
 $plugin_tx['translator']['label_generate'] = "Sprach-Paket erzeugen";

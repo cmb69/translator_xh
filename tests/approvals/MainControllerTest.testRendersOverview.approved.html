@@ -7,16 +7,17 @@
   <ul>
     <li>
       <input type="checkbox" name="translator_modules[]" value="CORE" >
-      <a href="/?&amp;action=edit&amp;translator_module=CORE">CORE</a>
+      <span>CORE</span>
     </li>
     <li>
       <input type="checkbox" name="translator_modules[]" value="translator" >
-      <a href="/?&amp;action=edit&amp;translator_module=translator">Translator</a>
+      <span>Translator</span>
     </li>
   </ul>
-  <p style="display: none">
-    <button id="translator_select_all" type="button">Select all</button>
-    <button id="translator_deselect_all" type="button" disabled="disabled">Deselect all</button>
+  <p>
+    <button id="translator_select_all" type="button" style="display: none">Select all</button>
+    <button id="translator_deselect_all" type="button" disabled="disabled" style="display: none">Deselect all</button>
+    <button name="action" value="edit">Edit</button>
   </p>
   <p>
     Filename:    <input type="text" name="translator_filename" value="">.zip

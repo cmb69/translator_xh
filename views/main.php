@@ -5,7 +5,7 @@ use Plib\View;
 /**
  * @var View $this
  * @var string $script
- * @var list<object{module:string,name:string,url:string,checked:string}> $modules
+ * @var list<object{module:string,name:string,checked:string}> $modules
  * @var string $filename
  */
 ?>
@@ -18,14 +18,17 @@ use Plib\View;
   <ul>
 <?php foreach ($modules as $module):?>
     <li>
-      <input type="checkbox" name="translator_modules[]" value="<?=$this->esc($module->module)?>" <?=$this->esc($module->checked)?>>
-      <a href="<?=$this->esc($module->url)?>"><?=$this->esc($module->name)?></a>
+      <label>
+        <input type="checkbox" name="translator_modules[]" value="<?=$this->esc($module->module)?>" <?=$this->esc($module->checked)?>>
+        <span><?=$this->esc($module->name)?></span>
+      </label>
     </li>
 <?php endforeach?>
   </ul>
-  <p style="display: none">
-    <button id="translator_select_all" type="button"><?=$this->text('label_select_all')?></button>
-    <button id="translator_deselect_all" type="button" disabled="disabled"><?=$this->text('label_deselect_all')?></button>
+  <p>
+    <button id="translator_select_all" type="button" style="display: none"><?=$this->text('label_select_all')?></button>
+    <button id="translator_deselect_all" type="button" disabled="disabled" style="display: none"><?=$this->text('label_deselect_all')?></button>
+    <button name="action" value="edit"><?=$this->text("label_edit")?></button>
   </p>
   <p>
     <?=$this->text('label_filename')?>

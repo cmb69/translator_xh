@@ -70,7 +70,7 @@ class MainControllerTest extends TestCase
     public function testRendersEditor(): void
     {
         $request = new FakeRequest([
-            "url" => "http://example.com/?&action=edit&translator_module=translator"
+            "url" => "http://example.com/?&action=edit&translator_modules%5B%5D=translator"
                 . "&translator_from=en&translator_to=de",
         ]);
         $response = $this->sut()($request);
@@ -81,7 +81,7 @@ class MainControllerTest extends TestCase
     {
         $this->csrfProtector->method("check")->willReturn(true);
         $request = new FakeRequest([
-            "url" => "http://example.com/?&action=edit&translator_module=translator"
+            "url" => "http://example.com/?&action=edit&translator_modules%5B%5D=translator"
                 . "&translator_from=en&translator_to=de",
             "post" => ["translator_string_default|translation" => "neue Übersetzung", "translator_do" => ""],
         ]);
@@ -100,7 +100,7 @@ class MainControllerTest extends TestCase
     {
         $this->csrfProtector->method("check")->willReturn(false);
         $request = new FakeRequest([
-            "url" => "http://example.com/?&action=edit&translator_module=translator"
+            "url" => "http://example.com/?&action=edit&translator_modules%5B%5D=translator"
                 . "&translator_from=en&translator_to=de",
             "post" => ["translator_string_default|translation" => "neue Übersetzung", "translator_do" => ""],
         ]);

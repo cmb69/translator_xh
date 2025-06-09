@@ -64,7 +64,8 @@
             });
             selectAllButton = document.getElementById("translator_select_all");
             deselectAllButton = document.getElementById("translator_deselect_all");
-            selectAllButton.parentNode.style.display = "block";
+            selectAllButton.style.display = "";
+            deselectAllButton.style.display = "";
             selectAllButton.addEventListener("click", function () {
                 deSelectModules(true);
             });
