@@ -53,7 +53,7 @@ class InfoController
         ]))->withTitle("Translator " . $this->view->esc(Plugin::VERSION));
     }
 
-    /** @return list<object{state:string,label:string,stateLabel:string}> */
+    /** @return list<string> */
     private function checks()
     {
         $model = new Model();
@@ -71,47 +71,47 @@ class InfoController
         return $checks;
     }
 
-    /** @return object{state:string,label:string,stateLabel:string} */
-    private function checkPhpVersion(string $version)
+    private function checkPhpVersion(string $version): string
     {
         $state = $this->systemChecker->checkVersion(PHP_VERSION, $version) ? "success" : "fail";
-        return (object) [
-            "state" => $state,
-            "label" => $this->view->plain("syscheck_phpversion", $version),
-            "stateLabel" => $this->view->plain("syscheck_$state"),
-        ];
+        return $this->view->message(
+            $state,
+            "syscheck_message",
+            $this->view->plain("syscheck_phpversion", $version),
+            $this->view->plain("syscheck_$state")
+        );
     }
 
-    /** @return object{state:string,label:string,stateLabel:string} */
-    private function checkExtension(string $name)
+    private function checkExtension(string $name): string
     {
         $state = $this->systemChecker->checkExtension($name) ? "success" : "fail";
-        return (object) [
-            "state" => $state,
-            "label" => $this->view->plain("syscheck_extension", $name),
-            "stateLabel" => $this->view->plain("syscheck_$state"),
-        ];
+        return $this->view->message(
+            $state,
+            "syscheck_message",
+            $this->view->plain("syscheck_extension", $name),
+            $this->view->plain("syscheck_$state")
+        );
     }
 
-    /** @return object{state:string,label:string,stateLabel:string} */
-    private function checkXhVersion(string $version)
+    private function checkXhVersion(string $version): string
     {
         $state = $this->systemChecker->checkVersion(CMSIMPLE_XH_VERSION, "CMSimple_XH $version") ? "success" : "fail";
-        return (object) [
-            "state" => $state,
-            "label" => $this->view->plain("syscheck_xhversion", $version),
-            "stateLabel" => $this->view->plain("syscheck_$state"),
-        ];
+        return $this->view->message(
+            $state,
+            "syscheck_message",
+            $this->view->plain("syscheck_xhversion", $version),
+            $this->view->plain("syscheck_$state")
+        );
     }
 
-    /** @return object{state:string,label:string,stateLabel:string} */
-    private function checkWritabilty(string $filename)
+    private function checkWritabilty(string $filename): string
     {
         $state = $this->systemChecker->checkWritability($filename) ? "success" : "warning";
-        return (object) [
-            "state" => $state,
-            "label" => $this->view->plain("syscheck_writable", $filename),
-            "stateLabel" => $this->view->plain("syscheck_$state"),
-        ];
+        return $this->view->message(
+            $state,
+            "syscheck_message",
+            $this->view->plain("syscheck_writable", $filename),
+            $this->view->plain("syscheck_$state")
+        );
     }
 }
