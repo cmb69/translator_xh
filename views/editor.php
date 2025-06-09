@@ -5,9 +5,9 @@ use Plib\View;
 /**
  * @var View $this
  * @var string $moduleName
- * @var string $sourceLabel
- * @var string $destinationLabel
- * @var list<object{key:string,displayKey:string,className:string,sourceText:string,destinationText:string}> $rows
+ * @var string $from_label
+ * @var string $to_label
+ * @var list<object{key:string,displayKey:string,className:string,fromtext:string,totext:string}> $rows
  * @var string $csrf_token
  * @var string $error
  */
@@ -21,15 +21,15 @@ use Plib\View;
   <button class="submit" name="translator_do"><?=$this->text('label_save')?></button>
   <div>
     <p></p>
-    <p><?=$this->text('label_translate_from')?> <?=$this->raw($sourceLabel)?></p>
-    <p><?=$this->text('label_translate_to')?> <?=$this->raw($destinationLabel)?></p>
+    <p><?=$this->text('label_translate_from')?> <?=$this->raw($from_label)?></p>
+    <p><?=$this->text('label_translate_to')?> <?=$this->raw($to_label)?></p>
 <?php foreach ($rows as $row):?>
     <div class="translator_key"><?=$this->esc($row->displayKey)?></div>
     <div class="translator_from">
-      <textarea rows="2" cols="40" readonly="readonly"><?=$this->esc($row->sourceText)?></textarea>
+      <textarea rows="2" cols="40" readonly="readonly"><?=$this->esc($row->fromtext)?></textarea>
     </div>
     <div class="translator_to">
-      <textarea name="translator_string_<?=$this->esc($row->key)?>" class="<?=$this->esc($row->className)?>" rows="2" cols="40"><?=$this->esc($row->destinationText)?></textarea>
+      <textarea name="translator_string_<?=$this->esc($row->key)?>" class="<?=$this->esc($row->className)?>" rows="2" cols="40"><?=$this->esc($row->totext)?></textarea>
     </div>
 <?php endforeach?>
   </div>
