@@ -23,7 +23,9 @@ if (!defined("CMSIMPLE_XH_VERSION")) {http_response_code(403); exit;}
   <?=$this->raw($error)?>
 <?endif?>
   <form method="post">
-    <button class="submit" name="translator_do"><?=$this->text('label_save')?></button>
+    <p class="translator_controls">
+      <button class="submit" name="translator_do"><?=$this->text('label_save')?></button>
+    </p>
     <div class="translator_translation">
       <p class="translator_key"></p>
       <p class="translator_from"><?=$this->text('label_translate_from')?> <?=$this->raw($from_label)?></p>
@@ -38,7 +40,9 @@ if (!defined("CMSIMPLE_XH_VERSION")) {http_response_code(403); exit;}
       </div>
 <?endforeach?>
     </div>
-    <button class="submit" name="translator_do"><?=$this->text('label_save')?></button>
+    <p class="translator_controls">
+      <button class="submit" name="translator_do"><?=$this->text('label_save')?></button>
+    </p>
     <input type="hidden" name="translator_token" value="<?=$this->esc($csrf_token)?>">
   </form>
 <article>

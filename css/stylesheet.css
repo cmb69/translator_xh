@@ -62,6 +62,11 @@ article.translator_edit .translator_new {
     background: yellow;
     color: black;
 }
+article.translator_edit .translator_controls {
+    display: flex;
+    justify-content: center;
+    margin: 1em 0;
+}
 
 /* plugin info */
 
