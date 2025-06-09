@@ -1,10 +1,28 @@
 /* translations */
 
 article.translator_translations ul {
+    display: grid;
+    grid-template-columns: 2em auto 5em;
+    justify-content: start;
     list-style: none;
+    margin: 1em 0;
 }
-article.translator_translations input[type="checkbox"] {
-    margin-right: 1em;
+article.translator_translations li {
+    grid-column: 1/4;
+    display: grid;
+    grid-template-columns: subgrid;
+}
+article.translator_translations input[type=checkbox],
+article.translator_translations li .translator_edit,
+article.translator_translations .translator_controls button {
+    margin: auto;
+}
+article.translator_translations li label {
+    margin: auto 1em;
+}
+article.translator_translations .translator_controls {
+    display: flex;
+    justify-content: space-between;
 }
 
 /* edit */

@@ -28,6 +28,10 @@ function init() {
     var selectAllButton;
     /** @type {HTMLButtonElement} */
     var deselectAllButton;
+    /** @type {HTMLButtonElement} */
+    var editButton;
+    /** @type {HTMLButtonElement} */
+    var downloadButton;
 
     checkboxes = /** @type NodeListOf<HTMLInputElement> */
         document.querySelectorAll("article.translator_translations input[type=checkbox]");
@@ -37,18 +41,21 @@ function init() {
     element = document.querySelector("button.translator_deselect_all");
     if (!(element instanceof HTMLButtonElement)) return;
     deselectAllButton = element;
+    element = document.querySelector("button.translator_edit");
+    if (!(element instanceof HTMLButtonElement)) return;
+    editButton = element;
+    element = document.querySelector("button.translator_download");
+    if (!(element instanceof HTMLButtonElement)) return;
+    downloadButton = element;
+
     checkboxes.forEach(checkbox => {
-        checkbox.addEventListener("change", event => {
-            if (!(event.currentTarget instanceof HTMLInputElement)) return;
-            if (event.currentTarget.checked) {
-                deselectAllButton.disabled = false;
-            } else {
-                selectAllButton.disabled = false;
-            }
+        checkbox.addEventListener("click", () => {
+            downloadButton.disabled = !moduleSelected();
         });
-    });
+    })
+
     selectAllButton.style.display = "";
-    deselectAllButton.style.display = "";
+    deselectAllButton.style.display = "none";
     selectAllButton.addEventListener("click", () => {
         deSelectModules(true);
     });
@@ -56,12 +63,39 @@ function init() {
         deSelectModules(false);
     });
 
+    const lis = document.querySelectorAll("article.translator_translations li");
+    lis.forEach(li => {
+        const clone = editButton.cloneNode(true);
+        li.appendChild(clone);
+        clone.addEventListener("click", () => {
+            deSelectModules(false);
+            const checkbox = li.querySelector("input[type=checkbox]");
+            if (!(checkbox instanceof HTMLInputElement)) return;
+            checkbox.checked = true;
+        });
+    });
+    editButton.remove();
+
+    downloadButton.disabled = !moduleSelected();
+
+    function moduleSelected() {
+        let result = false;
+        checkboxes.forEach(checkbox => {
+            if (checkbox.checked) {
+                result = true;
+                return;
+            }
+        });
+        return result;
+    }
+
     /** @param {boolean} select */
     function deSelectModules(select) {
         checkboxes.forEach(checkbox => {
             checkbox.checked = select;
         });
-        selectAllButton.disabled = select;
-        deselectAllButton.disabled = !select;
+        selectAllButton.style.display = select ? "none" : "";
+        deselectAllButton.style.display = select ? "" : "none";
+        downloadButton.disabled = !select;
     }
 }

@@ -18,7 +18,6 @@ $plugin_tx['translator']['label_plugins'] = "Плагины для перево�
 $plugin_tx['translator']['label_translate_from'] = "Исходный язык:";
 $plugin_tx['translator']['label_translate_to'] = "Язык перевода:";
 $plugin_tx['translator']['label_filename'] = "Файл:";
-$plugin_tx['translator']['label_download_url'] = "Ссылка для загрузки:";
 $plugin_tx['translator']['error_no_plugin'] = "Вы должны указать хотя бы один плагин!";
 $plugin_tx['translator']['utf-8-marker'] = "äöüß";
 $plugin_tx['translator']['cf_translate_from'] = "Исходный язык.";

@@ -98,7 +98,7 @@ class MainController
 
     /**
      * @param list<string> $modules
-     * @return list<object{module:string,name:string,checked:string}>
+     * @return list<object{module:string,id:string,name:string,checked:string}>
      */
     private function getModules(array $modules): array
     {
@@ -108,6 +108,7 @@ class MainController
             $checked = in_array($module, $modules) ? "checked" : "";
             $res[] = (object) [
                 "module" => $module,
+                "id" => "translator_module_$module",
                 "name" => $name,
                 "checked" => $checked,
             ];
@@ -284,9 +285,6 @@ class MainController
         }
         $modules = $this->sanitize($modules);
         $contents = $this->model->zipArchive($modules, $language);
-        if ($contents === null) {
-            return $this->respondWithOverview($request, $this->view->message("fail", "error_zip"));
-        }
         $filename = $this->sanitize($request->get("translator_filename") ?? "");
         return Response::create($contents)->withContentType("application/zip")
             ->withAttachment("$filename.zip")->withLength(strlen($contents));

@@ -7,26 +7,22 @@
     <input type="hidden" name="admin" value="plugin_main">
     <ul>
       <li>
-        <label>
-          <input type="checkbox" name="translator_modules[]" value="CORE" >
-          <span>CORE</span>
-        </label>
+        <input type="checkbox" id="translator_module_CORE" name="translator_modules[]" value="CORE" >
+        <label for="translator_module_CORE">CORE</label>
       </li>
       <li>
-        <label>
-          <input type="checkbox" name="translator_modules[]" value="translator" >
-          <span>Translator</span>
-        </label>
+        <input type="checkbox" id="translator_module_translator" name="translator_modules[]" value="translator" >
+        <label for="translator_module_translator">Translator</label>
       </li>
     </ul>
-    <p>
+    <p class="translator_controls">
+      <button class="translator_edit" name="action" value="edit">Edit</button>
       <button class="translator_select_all" type="button" style="display: none">Select all</button>
-      <button class="translator_deselect_all" type="button" disabled="disabled" style="display: none">Deselect all</button>
-      <button name="action" value="edit">Edit</button>
-    </p>
-    <p>
-      Filename:      <input type="text" name="translator_filename" value="lang_de" required>.zip
-      <button class="submit" name="action" value="zip">Generate Language Pack</button>
+      <button class="translator_deselect_all" type="button" style="display: none">Deselect all</button>
+      <label>
+        Filename        <input type="text" name="translator_filename" value="lang_de" required>.zip
+      </label>
+      <button class="translator_download submit" name="action" value="zip" formtarget="_blank">Download</button>
     </p>
   </form>
 </article>

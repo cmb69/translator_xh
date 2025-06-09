@@ -171,13 +171,4 @@ class MainControllerTest extends TestCase
         $response = $this->sut()($request);
         $this->assertStringContainsString("You must select at least one module!", $response->output());
     }
-
-    public function testReportsFailureToCreateZip(): void
-    {
-        $request = new FakeRequest([
-            "url" => "http://example.com/?&action=zip&translator_filename=test&translator_modules[]=nope",
-        ]);
-        $response = $this->sut()($request);
-        $this->assertStringContainsString("The ZIP archive could not be created!", $response->output());
-    }
 }
