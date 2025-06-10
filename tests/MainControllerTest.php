@@ -10,10 +10,12 @@ use Plib\CsrfProtector;
 use Plib\DocumentStore2 as DocumentStore;
 use Plib\FakeRequest;
 use Plib\View;
+use Translator\Model\Service;
 
 class MainControllerTest extends TestCase
 {
     private array $conf;
+    private Service $service;
     /** @var CsrfProtector&Stub */
     private $csrfProtector;
     private DocumentStore $store;
@@ -21,7 +23,7 @@ class MainControllerTest extends TestCase
 
     protected function setUp(): void
     {
-        global $pth, $plugin_cf;
+        global $plugin_cf;
         vfsStream::setup("root", null, [
             "plugins" => [
                 "translator" => ["languages" => [
@@ -42,11 +44,11 @@ class MainControllerTest extends TestCase
                 "images" => ["flags" => ["de.gif" => "", "en.gif" => ""]],
             ]
         ]);
-        $pth = ["folder" => [
-            "downloads" => vfsStream::url("root/userfiles/downloads/"),
-            "flags" => vfsStream::url("root/userfiles/images/flags/"),
-            "plugins" => vfsStream::url("root/plugins/"),
-        ]];
+        $this->service = new Service(
+            vfsStream::url("root/userfiles/images/flags/"),
+            vfsStream::url("root/cmsimple/languages/"),
+            vfsStream::url("root/plugins/")
+        );
         $this->csrfProtector = $this->createStub(CsrfProtector::class);
         $this->csrfProtector->method("token")->willReturn("0123456789ABCDEF");
         $plugin_cf = XH_includeVar("./config/config.php", "plugin_cf");
@@ -57,7 +59,7 @@ class MainControllerTest extends TestCase
 
     private function sut(): MainController
     {
-        return new MainController("./", $this->conf, $this->csrfProtector, $this->store, $this->view);
+        return new MainController("./", $this->conf, $this->service, $this->csrfProtector, $this->store, $this->view);
     }
 
     public function testRendersOverview(): void

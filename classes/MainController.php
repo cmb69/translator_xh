@@ -25,18 +25,18 @@ use Plib\CsrfProtector;
 use Plib\DocumentStore2 as DocumentStore;
 use Plib\Request;
 use Plib\Response;
-use Plib\Url;
 use Plib\View;
 use Translator\Model\Localization;
+use Translator\Model\Service;
 
 class MainController
 {
     private string $pluginFolder;
 
-    private Model $model;
-
     /** @var array<string,string> */
     private array $conf;
+
+    private Service $service;
 
     /** @var CsrfProtector */
     private $csrfProtector;
@@ -49,12 +49,13 @@ class MainController
     public function __construct(
         string $pluginFolder,
         array $conf,
+        Service $service,
         CsrfProtector $csrfProtector,
         DocumentStore $store,
         View $view
     ) {
         $this->pluginFolder = $pluginFolder;
-        $this->model = new Model();
+        $this->service = $service;
         $this->conf = $conf;
         $this->csrfProtector = $csrfProtector;
         $this->store = $store;
@@ -108,7 +109,7 @@ class MainController
     private function getModules(array $modules): array
     {
         $res = [];
-        foreach ($this->model->modules() as $module) {
+        foreach ($this->service->modules() as $module) {
             $name = ucfirst($module);
             $checked = in_array($module, $modules) ? "checked" : "";
             $res[] = (object) [
@@ -210,12 +211,11 @@ class MainController
 
     private function languageLabel(string $language): string
     {
-        $filename = $this->model->flagIconPath($language);
-        if ($filename !== false) {
-            return '<img src="' . $filename . '" alt="' . $language . '" title="' . $language . '">';
-        } else {
+        $filename = $this->service->flagIconPath($language);
+        if ($filename === null) {
             return $language;
         }
+        return '<img src="' . $filename . '" alt="' . $language . '" title="' . $language . '">';
     }
 
     private function saveAction(Request $request): Response
@@ -238,13 +238,13 @@ class MainController
         }
         $totexts = $this->postedTexts($request, $fromtexts);
         if ($tol10n === null) {
-            $error = $this->view->message("fail", "error_save", $this->model->filename($module, $tolang));
+            $error = $this->view->message("fail", "error_save", $this->service->filename($module, $tolang));
             return $this->respondWithEditor($request, $modules, $error, $totexts);
         }
         $tol10n->setTexts($totexts);
         $tol10n->setCopyright($this->copyright($request));
         if (!$this->store->commit()) {
-            $error = $this->view->message("fail", "error_save", $this->model->filename($module, $tolang));
+            $error = $this->view->message("fail", "error_save", $this->service->filename($module, $tolang));
             return $this->respondWithEditor($request, $modules, $error, $totexts);
         }
         return Response::redirect($request->url()->without("action")->absolute());
@@ -290,7 +290,7 @@ class MainController
             return $this->respondWithOverview($request, $this->view->message("fail", "error_no_module"));
         }
         $modules = $this->sanitize($modules);
-        $contents = $this->model->zipArchive($modules, $language);
+        $contents = $this->service->zipArchive($modules, $language);
         $filename = $this->sanitize($request->get("translator_filename") ?? "");
         return Response::create($contents)->withContentType("application/zip")
             ->withAttachment("$filename.zip")->withLength(strlen($contents));

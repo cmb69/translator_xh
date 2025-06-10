@@ -24,22 +24,26 @@ namespace Translator;
 use Plib\Response;
 use Plib\SystemChecker;
 use Plib\View;
+use Translator\Model\Service;
 
 class InfoController
 {
     private string $languageFolder;
     private string $pluginsFolder;
+    private Service $service;
     private SystemChecker $systemChecker;
     private View $view;
 
     public function __construct(
         string $languageFolder,
         string $pluginsFolder,
+        Service $service,
         SystemChecker $systemChecker,
         View $view
     ) {
         $this->languageFolder = $languageFolder;
         $this->pluginsFolder = $pluginsFolder;
+        $this->service = $service;
         $this->systemChecker = $systemChecker;
         $this->view = $view;
     }
@@ -56,7 +60,6 @@ class InfoController
     /** @return list<string> */
     private function checks()
     {
-        $model = new Model();
         $checks = [
             $this->checkPhpVersion("7.4.0"),
             $this->checkExtension("zlib"),
@@ -66,7 +69,7 @@ class InfoController
             $this->checkWritabilty($this->pluginsFolder . "translator/css/"),
             $this->checkWritabilty($this->pluginsFolder . "translator/config/"),
         ];
-        foreach ($model->plugins() as $plugin) {
+        foreach ($this->service->plugins() as $plugin) {
             $checks[] = $this->checkWritabilty($this->pluginsFolder . "$plugin/languages/");
         }
         return $checks;

@@ -18,9 +18,9 @@ require_once "../plib/classes/FakeSystemChecker.php";
 
 require_once "./zip.lib.php";
 require_once "./classes/model/Localization.php";
+require_once "./classes/model/Service.php";
 require_once "./classes/InfoController.php";
 require_once "./classes/MainController.php";
-require_once "./classes/Model.php";
 require_once "./classes/Plugin.php";
 
 const CMSIMPLE_XH_VERSION = "CMSimple_XH 1.7.5";

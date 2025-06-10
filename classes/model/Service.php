@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2011-2017 Christoph M. Becker
+ * Copyright (c) Christoph M. Becker
  *
  * This file is part of Translator_XH.
  *
@@ -19,20 +19,28 @@
  * along with Translator_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Translator;
+namespace Translator\Model;
 
 use zipfile;
 
-class Model
+class Service
 {
-    /** @return string|false */
-    public function flagIconPath(string $language)
-    {
-        global $pth;
+    private string $flagFolder;
+    private string $languageFolder;
+    private string $pluginFolder;
 
-        $filename = $pth["folder"]["flags"] . $language . ".gif";
-        if (!file_exists($filename)) {
-            $filename = false;
+    public function __construct(string $flagFolder, string $languageFolder, string $pluginFolder)
+    {
+        $this->flagFolder = $flagFolder;
+        $this->languageFolder = $languageFolder;
+        $this->pluginFolder = $pluginFolder;
+    }
+
+    public function flagIconPath(string $language): ?string
+    {
+        $filename = $this->flagFolder . $language . ".gif";
+        if (!is_file($filename)) {
+            return null;
         }
         return $filename;
     }
@@ -40,18 +48,14 @@ class Model
     /** @return list<string> */
     public function plugins(): array
     {
-        global $pth;
-
-        $plugins = array();
-        $dir = $pth["folder"]["plugins"];
-        $handle = opendir($dir);
-        if ($handle) {
-            while (($entry = readdir($handle)) !== false) {
-                if ($entry[0] != "." && is_dir($dir . $entry . "/languages/")) {
+        $plugins = [];
+        if (($dir = opendir($this->pluginFolder)) !== false) {
+            while (($entry = readdir($dir)) !== false) {
+                if ($entry[0] !== "." && is_dir("{$this->pluginFolder}$entry/languages/")) {
                     $plugins[] = $entry;
                 }
             }
-            closedir($handle);
+            closedir($dir);
         }
         sort($plugins);
         return $plugins;
@@ -67,20 +71,14 @@ class Model
 
     public function filename(string $module, string $language): string
     {
-        global $pth;
-
-        $filename = ($module == "CORE")
-            ? $pth["folder"]["language"]
-            : $pth["folder"]["plugins"] . $module . "/languages/";
-        $filename .= $language;
-        $filename .= ".php";
-        return $filename;
+        return ($module === "CORE" ? $this->languageFolder : "{$this->pluginFolder}$module/languages/")
+            . "$language.php";
     }
 
     /** @param list<string> $modules */
     public function zipArchive(array $modules, string $language): string
     {
-        include_once __DIR__ . "/../zip.lib.php";
+        include_once __DIR__ . "/../../zip.lib.php";
         $zip = new zipfile();
         foreach ($modules as $module) {
             $source = $this->filename($module, $language);
@@ -90,7 +88,6 @@ class Model
                 $zip->addFile($contents, $destination);
             }
         }
-        $contents = $zip->file();
-        return $contents;
+        return $zip->file();
     }
 }

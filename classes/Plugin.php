@@ -25,6 +25,7 @@ use Plib\CsrfProtector;
 use Plib\DocumentStore2 as DocumentStore;
 use Plib\SystemChecker;
 use Plib\View;
+use Translator\Model\Service;
 
 class Plugin
 {
@@ -36,6 +37,7 @@ class Plugin
         return new InfoController(
             $pth["folder"]["language"],
             $pth["folder"]["plugins"],
+            self::service(),
             new SystemChecker(),
             self::view()
         );
@@ -47,9 +49,20 @@ class Plugin
         return new MainController(
             $pth["folder"]["plugins"] . "translator/",
             $plugin_cf["translator"],
+            self::service(),
             new CsrfProtector(),
             new DocumentStore($pth["folder"]["base"]),
             self::view()
+        );
+    }
+
+    private static function service(): Service
+    {
+        global $pth;
+        return new Service(
+            $pth["folder"]["flags"],
+            $pth["folder"]["language"],
+            $pth["folder"]["plugins"]
         );
     }
 

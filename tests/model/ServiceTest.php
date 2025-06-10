@@ -19,19 +19,17 @@
  * along with Translator_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Translator;
+namespace Translator\Model;
 
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 
-class ModelTest extends TestCase
+class ServiceTest extends TestCase
 {
     private $root;
 
     protected function setUp(): void
     {
-        global $pth;
-
         vfsStream::setup("test", null, [
             "cmsimple" => ["languages" => []],
             "images" => ["flags" => ["en.gif" => ""]],
@@ -41,18 +39,15 @@ class ModelTest extends TestCase
             ],
         ]);
         $this->root = vfsStream::url("test/");
-        $pth = [
-            "folder" => [
-                "flags" => $this->root . "images/flags/",
-                "language" => $this->root . "cmsimple/languages/",
-                "plugins" => $this->root . "plugins/"
-            ],
-        ];
     }
 
-    private function sut(): Model
+    private function sut(): Service
     {
-        return new Model();
+        return new Service(
+            $this->root . "images/flags/",
+            $this->root . "cmsimple/languages/",
+            $this->root . "plugins/"
+        );
     }
 
     public function testFlagIconPath()
@@ -61,7 +56,7 @@ class ModelTest extends TestCase
         $this->assertEquals($this->root . "images/flags/en.gif", $actual);
 
         $actual = $this->sut()->flagIconPath("de");
-        $this->assertFalse($actual);
+        $this->assertNull($actual);
     }
 
     public function testPlugins()
