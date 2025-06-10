@@ -21,91 +21,75 @@
 
 namespace Translator;
 
-use org\bovigo\vfs\vfsStreamWrapper;
-use org\bovigo\vfs\vfsStreamDirectory;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 
-define('CMSIMPLE_XH_VERSION', 'CMSimple_XH 1.5.9');
-
 class ModelTest extends TestCase
 {
-    private $basePath;
+    private $root;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
-        global $pth, $tx, $plugin_cf;
+        global $pth;
 
-        vfsStreamWrapper::register();
-        vfsStreamWrapper::setRoot(new vfsStreamDirectory('test'));
-        $this->basePath = vfsStream::url('test') . '/';
-        $pth = array(
-            'folder' => array(
-                'base' => $this->basePath,
-                'downloads' => $this->basePath . 'downloads/',
-                'flags' => $this->basePath . 'images/flags/',
-                'language' => $this->basePath . 'cmsimple/languages/',
-                'plugins' => $this->basePath . 'plugins/'
-            )
-        );
-        mkdir($pth['folder']['flags'], 0777, true);
-        file_put_contents($pth['folder']['flags'] . 'en.gif', '');
-        mkdir($pth['folder']['language'], 0777, true);
-        mkdir($pth['folder']['plugins'], 0777, true);
-        mkdir($pth['folder']['plugins'] . 'foo/languages', 0777, true);
-        mkdir($pth['folder']['plugins'] . 'bar/languages', 0777, true);
-        $this->texts = array(
-            'a' => 'one',
-            'b' => 'two'
-        );
-        $tx = array(
-            'error' => array(
-                'cntopen' => '', 'cntwriteto' => '', 'notreadable' => ''
-            )
-        );
-        $plugin_cf = XH_includeVar("./config/config.php", "plugin_cf");
-        $this->model = new Model();
+        vfsStream::setup("test", null, [
+            "cmsimple" => ["languages" => []],
+            "images" => ["flags" => ["en.gif" => ""]],
+            "plugins" => [
+                "foo" => ["languages" => []],
+                "bar" => ["languages" => []],
+            ],
+        ]);
+        $this->root = vfsStream::url("test/");
+        $pth = [
+            "folder" => [
+                "flags" => $this->root . "images/flags/",
+                "language" => $this->root . "cmsimple/languages/",
+                "plugins" => $this->root . "plugins/"
+            ],
+        ];
+    }
+
+    private function sut(): Model
+    {
+        return new Model();
     }
 
     public function testFlagIconPath()
     {
-        $expected = $this->basePath . 'images/flags/en.gif';
-        $actual = $this->model->flagIconPath('en');
-        $this->assertEquals($expected, $actual);
+        $actual = $this->sut()->flagIconPath("en");
+        $this->assertEquals($this->root . "images/flags/en.gif", $actual);
 
-        $actual = $this->model->flagIconPath('de');
+        $actual = $this->sut()->flagIconPath("de");
         $this->assertFalse($actual);
     }
 
     public function testPlugins()
     {
-        $expected = array('bar', 'foo');
-        $actual = $this->model->plugins();
-        $this->assertEquals($expected, $actual);
+        $actual = $this->sut()->plugins();
+        $this->assertEquals(["bar", "foo"], $actual);
     }
 
     public function testModules()
     {
-        $expected = array('CORE', 'bar', 'foo');
-        $actual = $this->model->modules();
-        $this->assertEquals($expected, $actual);
-    }
-
-    public function dataForFilename()
-    {
-        return array(
-            array('CORE', 'en', 'cmsimple/languages/en.php'),
-            array('pagemanager', 'da', 'plugins/pagemanager/languages/da.php')
-        );
+        $actual = $this->sut()->modules();
+        $this->assertEquals(["CORE", "bar", "foo"], $actual);
     }
 
     /**
      * @dataProvider dataForFilename
      */
-    public function testFilename($module, $language, $expected)
+    public function testFilename(string $module, string $language, string $expected)
     {
-        $expected = $this->basePath . $expected;
-        $actual = $this->model->filename($module, $language);
-        $this->assertEquals($expected, $actual);
+        $actual = $this->sut()->filename($module, $language);
+        $this->assertEquals($this->root . $expected, $actual);
+    }
+
+    public function dataForFilename(): array
+    {
+        return [
+            ["CORE", "en", "cmsimple/languages/en.php"],
+            ["pagemanager", "da", "plugins/pagemanager/languages/da.php"],
+        ];
     }
 }

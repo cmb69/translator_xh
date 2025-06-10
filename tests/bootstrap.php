@@ -22,3 +22,5 @@ require_once "./classes/InfoController.php";
 require_once "./classes/MainController.php";
 require_once "./classes/Model.php";
 require_once "./classes/Plugin.php";
+
+const CMSIMPLE_XH_VERSION = "CMSimple_XH 1.7.5";
