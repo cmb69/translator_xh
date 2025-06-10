@@ -247,6 +247,9 @@ class MainController
             $error = $this->view->message("fail", "error_save", $this->service->filename($module, $tolang));
             return $this->respondWithEditor($request, $modules, $error, $totexts);
         }
+        if (function_exists("opcache_invalidate")) {
+            opcache_invalidate($this->service->filename($module, $tolang));
+        }
         return Response::redirect($request->url()->without("action")->absolute());
     }
 
