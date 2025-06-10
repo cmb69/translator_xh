@@ -45,4 +45,4 @@ if (!defined("CMSIMPLE_XH_VERSION")) {http_response_code(403); exit;}
     </p>
     <input type="hidden" name="translator_token" value="<?=$this->esc($csrf_token)?>">
   </form>
-<article>
+</article>
