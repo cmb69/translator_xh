@@ -86,20 +86,20 @@ class MainController
         $filename = $this->sanitize($request->get("translator_filename") ?? "lang_$to");
         $modules = $this->sanitize($request->getArray("translator_modules") ?? []);
         return $this->view->render("main", [
-            "script" => $this->script(),
+            "script" => $this->script($request),
             "modules" => $this->getModules($modules),
             "filename" => $filename,
             "error" => $error,
         ]);
     }
 
-    private function script(): string
+    private function script(Request $request): string
     {
-        $script = $this->pluginFolder . "translator.min.js";
-        if (!file_exists($script)) {
-            $script = $this->pluginFolder . "translator.js";
+        $path = $this->pluginFolder . "translator.min.js";
+        if (!file_exists($path)) {
+            $path = $this->pluginFolder . "translator.js";
         }
-        return $script;
+        return $request->url()->path($path)->with("v", Plugin::VERSION)->relative();
     }
 
     /**
@@ -155,7 +155,7 @@ class MainController
         $from = $this->conf["translate_from"];
         $to = ($this->conf["translate_to"] == "") ? $request->language() : $this->conf["translate_to"];
         return $this->view->render("editor", [
-            "script" => $this->script(),
+            "script" => $this->script($request),
             "moduleName" => ucfirst($module),
             "from_label" => $this->languageLabel($from),
             "to_label" => $this->languageLabel($to),
