@@ -34,8 +34,8 @@ if (!defined("CMSIMPLE_XH_VERSION")) {http_response_code(403); exit;}
     <p class="translator_controls">
       <button class="translator_edit" name="action" value="edit"><?=$this->text("label_edit")?></button>
       <label>
-        <?=$this->text('label_filename')?>
-        <input type="text" name="translator_filename" value="<?=$this->esc($filename)?>" required>.zip
+        <span><?=$this->text('label_filename')?></span>
+        <input type="text" name="translator_filename" value="<?=$this->esc($filename)?>" required>
       </label>
       <button class="translator_download submit" name="action" value="zip" formtarget="_blank"><?=$this->text('label_download')?></button>
     </p>
