@@ -85,7 +85,7 @@
     <delete dir="export"/>
     <copy file="dist/config/config.php" tofile="dist/config/defaultconfig.php"/>
     <copy file="dist/languages/en.php" tofile="dist/languages/default.php"/>
-    <zip destfile="Translator_XH-1.0beta8.zip" basedir="dist" prefix="translator/"/>
+    <zip destfile="Translator_XH-1.0.zip" basedir="dist" prefix="translator/"/>
     <delete dir="dist"/>
   </target>
 

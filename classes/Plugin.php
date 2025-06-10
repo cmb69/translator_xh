@@ -29,7 +29,7 @@ use Translator\Model\Service;
 
 class Plugin
 {
-    public const VERSION = "1.0beta8";
+    public const VERSION = "1.0";
 
     public static function infoController(): InfoController
     {
