@@ -268,18 +268,11 @@ class MainController
 
     private function copyright(Request $request): string
     {
-        if ($this->conf["translation_author"] && $this->conf["translation_license"]) {
-            $year = date("Y", $request->time());
-            $license = wordwrap($this->conf["translation_license"], 75, "\n * ");
-            return <<<EOT
-                /**
-                 * Copyright (c) $year {$this->conf["translation_author"]}
-                 *
-                 * $license
-                 */
-                EOT . "\n\n";
-        }
-        return "";
+        return $this->service->copyrightHeader(
+            $this->conf["translation_author"],
+            $this->conf["translation_license"],
+            date("Y", $request->time())
+        );
     }
 
     private function zipAction(Request $request): Response

@@ -75,6 +75,21 @@ class Service
             . "$language.php";
     }
 
+    public function copyrightHeader(string $author, string $license, string $year): string
+    {
+        if ($author === "" || $license === "") {
+            return "";
+        }
+        $license = wordwrap($license, 75, "\n * ");
+        return <<<EOT
+            /**
+             * Copyright (c) $year $author
+             *
+             * $license
+             */
+            EOT . "\n\n";
+    }
+
     /** @param list<string> $modules */
     public function zipArchive(array $modules, string $language): string
     {

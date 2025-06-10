@@ -23,7 +23,6 @@ class MainControllerTest extends TestCase
 
     protected function setUp(): void
     {
-        global $plugin_cf;
         vfsStream::setup("root", null, [
             "plugins" => [
                 "translator" => ["languages" => [
@@ -51,8 +50,7 @@ class MainControllerTest extends TestCase
         );
         $this->csrfProtector = $this->createStub(CsrfProtector::class);
         $this->csrfProtector->method("token")->willReturn("0123456789ABCDEF");
-        $plugin_cf = XH_includeVar("./config/config.php", "plugin_cf");
-        $this->conf = $plugin_cf["translator"];
+        $this->conf = XH_includeVar("./config/config.php", "plugin_cf")["translator"];
         $this->store = new DocumentStore(vfsStream::url("root/"));
         $this->view = new View("./views/", XH_includeVar("./languages/en.php", "plugin_tx")["translator"]);
     }
