@@ -150,7 +150,7 @@ class MainController
         $to = ($this->conf["translate_to"] == "") ? $request->language() : $this->conf["translate_to"];
         return $this->view->render("editor", [
             "script" => $this->script($request),
-            "moduleName" => ucfirst($module),
+            "modulename" => ucfirst($module),
             "from_label" => $this->languageLabel($from),
             "to_label" => $this->languageLabel($to),
             "rows" => $this->getEditorRows($module, $from, $to, $totexts),
@@ -161,7 +161,7 @@ class MainController
 
     /**
      * @param ?array<string,string> $totexts
-     * @return list<object{key:string,displayKey:string,className:string,fromtext:string,totext:string}>
+     * @return list<object{key:string,displaykey:string,classname:string,fromtext:string,totext:string}>
      */
     private function getEditorRows(string $module, string $fromlang, string $tolang, ?array $totexts): array
     {
@@ -183,7 +183,7 @@ class MainController
 
     /**
      * @param array<string,string> $totexts
-     * @return object{key:string,displayKey:string,className:string,fromtext:string,totext:string}
+     * @return object{key:string,displaykey:string,classname:string,fromtext:string,totext:string}
      */
     private function getEditorRow(string $key, string $fromtext, array $totexts)
     {
@@ -196,8 +196,8 @@ class MainController
         }
         return (object) [
             "key" => $key,
-            "displayKey" => str_replace("|", "_", $key),
-            "className" => isset($totexts[$key]) ? "" : "translator_new",
+            "displaykey" => str_replace("|", "_", $key),
+            "classname" => isset($totexts[$key]) ? "" : "translator_new",
             "fromtext" => $fromtext,
             "totext" => $totext,
         ];
