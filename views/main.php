@@ -7,7 +7,8 @@ if (!defined("CMSIMPLE_XH_VERSION")) {http_response_code(403); exit;}
 /**
  * @var View $this
  * @var string $script
- * @var list<object{module:string,id:string,name:string,checked:string}> $modules
+ * @var list<object{module:string,id:string,name:string}> $modules
+ * @var list<string> $checked
  * @var string $filename
  * @var string $error
  */
@@ -25,7 +26,7 @@ if (!defined("CMSIMPLE_XH_VERSION")) {http_response_code(403); exit;}
     <ul>
 <?foreach ($modules as $module):?>
       <li>
-        <input type="checkbox" id="<?=$this->esc($module->id)?>" name="translator_modules[]" value="<?=$this->esc($module->module)?>" <?=$this->esc($module->checked)?>>
+        <input type="checkbox" id="<?=$this->esc($module->id)?>" name="translator_modules[]" value="<?=$this->esc($module->module)?>" <?=$this->checked($module->module, $checked)?>>
         <label for="<?=$this->esc($module->id)?>"><?=$this->esc($module->name)?></label>
       </li>
 <?endforeach?>

@@ -83,12 +83,11 @@ class MainController
     private function renderMainView(Request $request, string $error): string
     {
         $to = ($this->conf["translate_to"] == "") ? $request->language() : $this->conf["translate_to"];
-        $filename = $this->sanitize($request->get("translator_filename") ?? "lang_$to");
-        $modules = $this->sanitize($request->getArray("translator_modules") ?? []);
         return $this->view->render("main", [
             "script" => $this->script($request),
-            "modules" => $this->getModules($modules),
-            "filename" => $filename,
+            "modules" => $this->getModules(),
+            "checked" => $this->sanitize($request->getArray("translator_modules") ?? []),
+            "filename" => $this->sanitize($request->get("translator_filename") ?? "lang_$to"),
             "error" => $error,
         ]);
     }
@@ -102,21 +101,16 @@ class MainController
         return $request->url()->path($path)->with("v", Plugin::VERSION)->relative();
     }
 
-    /**
-     * @param list<string> $modules
-     * @return list<object{module:string,id:string,name:string,checked:string}>
-     */
-    private function getModules(array $modules): array
+    /** @return list<object{module:string,id:string,name:string}> */
+    private function getModules(): array
     {
         $res = [];
         foreach ($this->service->modules() as $module) {
             $name = ucfirst($module);
-            $checked = in_array($module, $modules) ? "checked" : "";
             $res[] = (object) [
                 "module" => $module,
                 "id" => "translator_module_$module",
                 "name" => $name,
-                "checked" => $checked,
             ];
         }
         return $res;
