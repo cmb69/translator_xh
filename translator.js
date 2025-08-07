@@ -51,12 +51,8 @@ function initOverview(article) {
 
     selectAllButton.style.display = "";
     deselectAllButton.style.display = "none";
-    selectAllButton.addEventListener("click", function () {
-        deSelectModules(true);
-    });
-    deselectAllButton.addEventListener("click", function () {
-        deSelectModules(false);
-    });
+    selectAllButton.addEventListener("click", deSelectModules.bind(null, true));
+    deselectAllButton.addEventListener("click", deSelectModules.bind(null, false));
 
     lis = article.querySelectorAll("li");
     lis.forEach(function (li) {
