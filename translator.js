@@ -41,19 +41,21 @@ function initOverview(article) {
     deselectAllButton = article.querySelector("button.translator_deselect_all");
     editButton = article.querySelector("button.translator_edit");
     downloadButton = article.querySelector("button.translator_download");
-
     checkboxes.forEach(function (checkbox) {
         checkbox.onclick = function () {
             downloadButton.disabled = !isModuleSelected();
         };
     });
-
     selectAllButton.hidden = false;
     deselectAllButton.hidden = true;
     selectAllButton.onclick = deSelectModules.bind(null, true);
     deselectAllButton.onclick = deSelectModules.bind(null, false);
+    article.querySelectorAll("li").forEach(initListItem);
+    editButton.remove();
+    downloadButton.disabled = !isModuleSelected();
 
-    article.querySelectorAll("li").forEach(function (li) {
+    /** @param {HTMLLIElement} li */
+    function initListItem(li) {
         var /** @type {HTMLButtonElement} */ clone;
 
         clone = /** @type {HTMLButtonElement} */ (editButton.cloneNode(true));
@@ -65,10 +67,7 @@ function initOverview(article) {
             checkbox = li.querySelector("input[type=checkbox]");
             checkbox.checked = true;
         };
-    });
-    editButton.remove();
-
-    downloadButton.disabled = !isModuleSelected();
+    }
 
     function isModuleSelected() {
         return Array.prototype.some.call(checkboxes, isCheckboxChecked);
