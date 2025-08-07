@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2011-2017 Christoph M. Becker
+ * Copyright (c) 2011-2017 Christoph M. Becker
  *
  * This file is part of Translator_XH.
  *
