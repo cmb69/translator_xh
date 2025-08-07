@@ -17,122 +17,104 @@
  * along with Translator_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// @ts-check
+/* jshint browser:true,strict:implied */
 
-document.querySelectorAll("article.translator_translations").forEach(article => {
-    if (!(article instanceof HTMLElement)) return;
-    initOverview(article);
-});
-
-document.querySelectorAll("article.translator_edit").forEach(article => {
-    if (!(article instanceof HTMLElement)) return;
-    initEditor(article);
-});
+document.querySelectorAll("article.translator_translations").forEach(initOverview);
+document.querySelectorAll("article.translator_edit").forEach(initEditor);
 
 /** @param {HTMLElement} article */
 function initOverview(article) {
-    /** @type {NodeListOf<HTMLInputElement>} */
-    var checkboxes;
-    /** @type {HTMLButtonElement} */
-    var selectAllButton;
-    /** @type {HTMLButtonElement} */
-    var deselectAllButton;
-    /** @type {HTMLButtonElement} */
-    var editButton;
-    /** @type {HTMLButtonElement} */
-    var downloadButton;
+    var /** @type {NodeListOf<HTMLInputElement>} */ checkboxes,
+        /** @type {HTMLTemplateElement} */ template,
+        /** @type {HTMLElement} */ controls,
+        /** @type {HTMLButtonElement} */ selectAllButton,
+        /** @type {HTMLButtonElement} */ deselectAllButton,
+        /** @type {HTMLButtonElement} */ editButton,
+        /** @type {HTMLButtonElement} */ downloadButton;
 
-    checkboxes = /** @type NodeListOf<HTMLInputElement> */
-        article.querySelectorAll("input[type=checkbox]");
-    const template = article.querySelector(".translator_template");
-    if (!(template instanceof HTMLTemplateElement)) return;
-    const controls = article.querySelector(".translator_controls");
-    if (!(controls instanceof HTMLElement)) return;
+    checkboxes = article.querySelectorAll("input[type=checkbox]");
+    template = article.querySelector(".translator_template");
+    controls = article.querySelector(".translator_controls");
     controls.prepend(template.content);
-    let element = article.querySelector("button.translator_select_all");
-    if (!(element instanceof HTMLButtonElement)) return;
-    selectAllButton = element;
-    element = article.querySelector("button.translator_deselect_all");
-    if (!(element instanceof HTMLButtonElement)) return;
-    deselectAllButton = element;
-    element = article.querySelector("button.translator_edit");
-    if (!(element instanceof HTMLButtonElement)) return;
-    editButton = element;
-    element = article.querySelector("button.translator_download");
-    if (!(element instanceof HTMLButtonElement)) return;
-    downloadButton = element;
-
-    checkboxes.forEach(checkbox => {
-        checkbox.addEventListener("click", () => {
-            downloadButton.disabled = !moduleSelected();
-        });
-    })
-
-    selectAllButton.style.display = "";
-    deselectAllButton.style.display = "none";
-    selectAllButton.addEventListener("click", () => {
-        deSelectModules(true);
-    });
-    deselectAllButton.addEventListener("click", () => {
-        deSelectModules(false);
-    });
-
-    const lis = article.querySelectorAll(" li");
-    lis.forEach(li => {
-        const clone = editButton.cloneNode(true);
-        li.appendChild(clone);
-        clone.addEventListener("click", () => {
-            deSelectModules(false);
-            const checkbox = li.querySelector("input[type=checkbox]");
-            if (!(checkbox instanceof HTMLInputElement)) return;
-            checkbox.checked = true;
-        });
-    });
+    selectAllButton = article.querySelector("button.translator_select_all");
+    deselectAllButton = article.querySelector("button.translator_deselect_all");
+    editButton = article.querySelector("button.translator_edit");
+    downloadButton = article.querySelector("button.translator_download");
+    checkboxes.forEach(initCheckbox);
+    selectAllButton.hidden = false;
+    deselectAllButton.hidden = true;
+    selectAllButton.onclick = deSelectModules.bind(null, true);
+    deselectAllButton.onclick = deSelectModules.bind(null, false);
+    article.querySelectorAll("li").forEach(initListItem);
     editButton.remove();
+    downloadButton.disabled = !isModuleSelected();
 
-    downloadButton.disabled = !moduleSelected();
+    /** @param {HTMLInputElement} checkbox */
+    function initCheckbox(checkbox) {
+        checkbox.onclick = function () {
+            downloadButton.disabled = !isModuleSelected();
+        };
+    }
 
-    function moduleSelected() {
-        let result = false;
-        checkboxes.forEach(checkbox => {
-            if (checkbox.checked) {
-                result = true;
-                return;
-            }
-        });
-        return result;
+    /** @param {HTMLLIElement} li */
+    function initListItem(li) {
+        var /** @type {HTMLButtonElement} */ clone;
+
+        clone = /** @type {HTMLButtonElement} */ (editButton.cloneNode(true));
+        li.appendChild(clone);
+        clone.onclick = function () {
+            var /** @type {HTMLInputElement} */ checkbox;
+
+            deSelectModules(false);
+            checkbox = li.querySelector("input[type=checkbox]");
+            checkbox.checked = true;
+        };
+    }
+
+    function isModuleSelected() {
+        return Array.prototype.some.call(checkboxes, isCheckboxChecked);
+
+        /** @param {HTMLInputElement} checkbox */
+        function isCheckboxChecked(checkbox) {
+            return checkbox.checked;
+        }
     }
 
     /** @param {boolean} select */
     function deSelectModules(select) {
-        checkboxes.forEach(checkbox => {
+        checkboxes.forEach(function (checkbox) {
             checkbox.checked = select;
         });
-        selectAllButton.style.display = select ? "none" : "";
-        deselectAllButton.style.display = select ? "" : "none";
+        selectAllButton.hidden = select;
+        deselectAllButton.hidden = !select;
         downloadButton.disabled = !select;
     }
 }
 
 /** @param {HTMLElement} element */
 function initEditor(element) {
-    element.querySelectorAll(".translator_to textarea").forEach(textarea => {
-        if (!(textarea instanceof HTMLTextAreaElement)) return;
-        if (textarea.parentElement === null || textarea.parentElement.previousElementSibling === null) return;
-        const sibling = textarea.parentElement.previousElementSibling.querySelector("textarea");
-        if (sibling === null) return;
-        textarea.addEventListener("focus", () => {
-            const height = Math.max(textarea.scrollHeight, sibling.scrollHeight);
+    var /** @type {HTMLTextAreaElement} */ first;
+
+    element.querySelectorAll(".translator_to textarea").forEach(initTargetTextarea);
+    first = element.querySelector(".translator_to textarea");
+    first.focus();
+
+    /** @param {HTMLTextAreaElement} textarea */
+    function initTargetTextarea(textarea) {
+        var /** @type {HTMLTextAreaElement } */ sibling;
+
+        sibling = textarea.parentElement.previousElementSibling.querySelector("textarea");
+        textarea.onfocus = function () {
+            var /** @type {number} */ height;
+            
+            height = Math.max(textarea.scrollHeight, sibling.scrollHeight);
             textarea.style.height = (height + 1) + "px";
             sibling.style.height = (height + 1) + "px";
             textarea.select();
-        });
-        textarea.addEventListener("blur", () => {
+        };
+        textarea.onblur = function () {
             textarea.style.height = "";
             sibling.style.height = "";
-        });
-    });
-    const first = element.querySelector(".translator_to textarea");
-    if (!(first instanceof HTMLTextAreaElement)) return;
-    first.focus();
+        };
+    }
 }

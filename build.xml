@@ -32,20 +32,20 @@
     </exec>
   </target>
 
-  <target name="check" description="runs all checks" depends="sniff,stan,test"/>
+  <target name="js" description="checks JavaScript">
+    <exec executable="jshint" passthru="true" checkreturn="true">
+      <arg line="translator.js"/>
+    </exec>
+    <exec executable="tsc" passthru="true" checkreturn="true">
+      <arg line="--checkJS --noEmit --noImplicitAny --lib es5,dom translator.js"/>
+    </exec>
+  </target>
+
+  <target name="check" description="runs all checks" depends="sniff,stan,test,js"/>
 
   <target name="coverage" description="generates coverage report">
     <exec executable="phpunit" passthru="true" checkreturn="true">
       <arg line="--colors=always --coverage-html coverage"/>
-    </exec>
-  </target>
-
-  <target name="gen-help" description="builds help.htm from README.md">
-    <exec executable="pandoc" passthru="true" checkreturn="true">
-      <arg line="-s --eol=lf --template=help/template.htm -Vlang=en -Vpagetitle=&quot;User Manual&quot; -o help/help.htm README.md -t html"/>
-    </exec>
-    <exec executable="pandoc" passthru="true" checkreturn="true">
-      <arg line="-s --eol=lf --template=help/template.htm -Vlang=de -Vpagetitle=&quot;Benutzerhandbuch&quot; -o help/help_de.htm README_DE.md -t html"/>
     </exec>
   </target>
 
@@ -58,6 +58,21 @@
     </exec>
   </target>
 
+  <target name="minify" description="minifies JS">
+    <exec executable="uglifyjs" passthru="true" checkreturn="true">
+      <arg line="${dir}/translator.js --module --mangle --compress -o ${dir}/translator.min.js"/>
+    </exec>
+  </target>
+
+  <target name="gen-help" description="builds help.htm from README.md">
+    <exec executable="pandoc" passthru="true" checkreturn="true">
+      <arg line="-s --eol=lf --template=help/template.htm -Vlang=en -Vpagetitle=&quot;User Manual&quot; -o help/help.htm README.md -t html"/>
+    </exec>
+    <exec executable="pandoc" passthru="true" checkreturn="true">
+      <arg line="-s --eol=lf --template=help/template.htm -Vlang=de -Vpagetitle=&quot;Benutzerhandbuch&quot; -o help/help_de.htm README_DE.md -t html"/>
+    </exec>
+  </target>
+
   <target name="build" description="builds distributable ZIP archive">
     <exec executable="git" checkreturn="true">
       <arg line="archive -o export.tar HEAD"/>
@@ -67,11 +82,9 @@
     <phingcall target="postcss">
       <property name="dir" value="export/"/>
     </phingcall>
-    <jsMin targetDir="dist" suffix=".min" failonerror="true">
-      <fileset dir="export">
-        <include name="translator.js"/>
-      </fileset>
-    </jsMin>
+    <phingcall target="minify">
+      <property name="dir" value="export/"/>
+    </phingcall>
     <move todir="dist">
       <fileset dir="export">
         <include name="views/*.php"/>
