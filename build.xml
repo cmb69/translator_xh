@@ -2,6 +2,8 @@
 
 <project name="Translator" default="help">
 
+  <property name="dir" value="${project.basedir}"/>
+
   <target name="help" description="lists available targets">
     <exec executable="phing" outputProperty="help">
       <arg line="-l"/>
@@ -47,12 +49,24 @@
     </exec>
   </target>
 
+  <target name="postcss" description="patches CSS for older browsers">
+    <exec executable="postcss" passthru="true" checkreturn="true">
+      <arg line="${dir}/css -u postcss-preset-env --no-map -r"/>
+    </exec>
+    <exec executable="prettier" passthru="true" checkreturn="true">
+      <arg line="--tab-width 4 ${dir}/css --write"/>
+    </exec>
+  </target>
+
   <target name="build" description="builds distributable ZIP archive">
     <exec executable="git" checkreturn="true">
       <arg line="archive -o export.tar HEAD"/>
     </exec>
     <untar file="export.tar" todir="export"/>
     <delete file="export.tar"/>
+    <phingcall target="postcss">
+      <property name="dir" value="export/"/>
+    </phingcall>
     <jsMin targetDir="dist" suffix=".min" failonerror="true">
       <fileset dir="export">
         <include name="translator.js"/>
