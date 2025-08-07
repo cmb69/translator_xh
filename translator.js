@@ -44,29 +44,29 @@ function initOverview(article) {
     downloadButton = article.querySelector("button.translator_download");
 
     checkboxes.forEach(function (checkbox) {
-        checkbox.addEventListener("click", function () {
+        checkbox.onclick = function () {
             downloadButton.disabled = !moduleSelected();
-        });
+        };
     });
 
     selectAllButton.style.display = "";
     deselectAllButton.style.display = "none";
-    selectAllButton.addEventListener("click", deSelectModules.bind(null, true));
-    deselectAllButton.addEventListener("click", deSelectModules.bind(null, false));
+    selectAllButton.onclick = deSelectModules.bind(null, true);
+    deselectAllButton.onclick = deSelectModules.bind(null, false);
 
     lis = article.querySelectorAll("li");
     lis.forEach(function (li) {
-        var /** @type {Node} */ clone;
+        var /** @type {HTMLButtonElement} */ clone;
 
-        clone = editButton.cloneNode(true);
+        clone = /** @type {HTMLButtonElement} */ (editButton.cloneNode(true));
         li.appendChild(clone);
-        clone.addEventListener("click", function () {
+        clone.onclick = function () {
             var /** @type {HTMLInputElement} */ checkbox;
 
             deSelectModules(false);
             checkbox = li.querySelector("input[type=checkbox]");
             checkbox.checked = true;
-        });
+        };
     });
     editButton.remove();
 
@@ -109,17 +109,17 @@ function initEditor(element) {
         var /** @type {HTMLTextAreaElement } */ sibling;
 
         sibling = textarea.parentElement.previousElementSibling.querySelector("textarea");
-        textarea.addEventListener("focus", function () {
+        textarea.onfocus = function () {
             var /** @type {number} */ height;
             
             height = Math.max(textarea.scrollHeight, sibling.scrollHeight);
             textarea.style.height = (height + 1) + "px";
             sibling.style.height = (height + 1) + "px";
             textarea.select();
-        });
-        textarea.addEventListener("blur", function () {
+        };
+        textarea.onblur = function () {
             textarea.style.height = "";
             sibling.style.height = "";
-        });
+        };
     }
 }
