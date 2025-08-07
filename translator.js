@@ -66,7 +66,7 @@ function initOverview(article) {
         checkbox.addEventListener("click", function () {
             downloadButton.disabled = !moduleSelected();
         });
-    })
+    });
 
     selectAllButton.style.display = "";
     deselectAllButton.style.display = "none";
