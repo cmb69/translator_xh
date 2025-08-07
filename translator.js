@@ -108,10 +108,14 @@ function initOverview(article) {
 function initEditor(element) {
     /** @type {HTMLTextAreaElement} */
     var first;
-    element.querySelectorAll(".translator_to textarea").forEach(function (textarea) {
+    element.querySelectorAll(".translator_to textarea").forEach(initTargetTextarea);
+    first = element.querySelector(".translator_to textarea");
+    first.focus();
+
+    /** @param {HTMLTextAreaElement} textarea */
+    function initTargetTextarea(textarea) {
         /** @type {HTMLTextAreaElement } */
         var sibling;
-        if (!(textarea instanceof HTMLTextAreaElement)) return;
         sibling = textarea.parentElement.previousElementSibling.querySelector("textarea");
         textarea.addEventListener("focus", function () {
             var height = Math.max(textarea.scrollHeight, sibling.scrollHeight);
@@ -123,7 +127,5 @@ function initEditor(element) {
             textarea.style.height = "";
             sibling.style.height = "";
         });
-    });
-    first = element.querySelector(".translator_to textarea");
-    first.focus();
+    }
 }
