@@ -19,15 +19,9 @@
 
 /* jshint browser:true,strict:implied */
 
-document.querySelectorAll("article.translator_translations").forEach(function (article) {
-    if (!(article instanceof HTMLElement)) return;
-    initOverview(article);
-});
+document.querySelectorAll("article.translator_translations").forEach(initOverview);
 
-document.querySelectorAll("article.translator_edit").forEach(function (article) {
-    if (!(article instanceof HTMLElement)) return;
-    initEditor(article);
-});
+document.querySelectorAll("article.translator_edit").forEach(initEditor);
 
 /** @param {HTMLElement} article */
 function initOverview(article) {
@@ -48,8 +42,7 @@ function initOverview(article) {
     /** @type {NodeListOf<HTMLLIElement>} */
     var lis;
 
-    checkboxes = /** @type NodeListOf<HTMLInputElement> */
-        article.querySelectorAll("input[type=checkbox]");
+    checkboxes = article.querySelectorAll("input[type=checkbox]");
     template = article.querySelector(".translator_template");
     controls = article.querySelector(".translator_controls");
     controls.prepend(template.content);
