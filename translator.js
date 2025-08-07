@@ -25,22 +25,14 @@ document.querySelectorAll("article.translator_edit").forEach(initEditor);
 
 /** @param {HTMLElement} article */
 function initOverview(article) {
-    /** @type {NodeListOf<HTMLInputElement>} */
-    var checkboxes;
-    /** @type {HTMLTemplateElement} */
-    var template;
-    /** @type {HTMLElement} */
-    var controls;
-    /** @type {HTMLButtonElement} */
-    var selectAllButton;
-    /** @type {HTMLButtonElement} */
-    var deselectAllButton;
-    /** @type {HTMLButtonElement} */
-    var editButton;
-    /** @type {HTMLButtonElement} */
-    var downloadButton;
-    /** @type {NodeListOf<HTMLLIElement>} */
-    var lis;
+    var /** @type {NodeListOf<HTMLInputElement>} */ checkboxes,
+        /** @type {HTMLTemplateElement} */ template,
+        /** @type {HTMLElement} */ controls,
+        /** @type {HTMLButtonElement} */ selectAllButton,
+        /** @type {HTMLButtonElement} */ deselectAllButton,
+        /** @type {HTMLButtonElement} */ editButton,
+        /** @type {HTMLButtonElement} */ downloadButton,
+        /** @type {NodeListOf<HTMLLIElement>} */ lis;
 
     checkboxes = article.querySelectorAll("input[type=checkbox]");
     template = article.querySelector(".translator_template");
@@ -68,11 +60,13 @@ function initOverview(article) {
 
     lis = article.querySelectorAll("li");
     lis.forEach(function (li) {
-        var clone = editButton.cloneNode(true);
+        var /** @type {Node} */ clone;
+
+        clone = editButton.cloneNode(true);
         li.appendChild(clone);
         clone.addEventListener("click", function () {
-            /** @type {HTMLInputElement} */
-            var checkbox;
+            var /** @type {HTMLInputElement} */ checkbox;
+
             deSelectModules(false);
             checkbox = li.querySelector("input[type=checkbox]");
             checkbox.checked = true;
@@ -83,7 +77,9 @@ function initOverview(article) {
     downloadButton.disabled = !moduleSelected();
 
     function moduleSelected() {
-        var result = false;
+        var /** @type {boolean} */ result;
+        
+        result = false;
         checkboxes.forEach(function (checkbox) {
             if (checkbox.checked) {
                 result = true;
@@ -106,19 +102,21 @@ function initOverview(article) {
 
 /** @param {HTMLElement} element */
 function initEditor(element) {
-    /** @type {HTMLTextAreaElement} */
-    var first;
+    var /** @type {HTMLTextAreaElement} */ first;
+
     element.querySelectorAll(".translator_to textarea").forEach(initTargetTextarea);
     first = element.querySelector(".translator_to textarea");
     first.focus();
 
     /** @param {HTMLTextAreaElement} textarea */
     function initTargetTextarea(textarea) {
-        /** @type {HTMLTextAreaElement } */
-        var sibling;
+        var /** @type {HTMLTextAreaElement } */ sibling;
+
         sibling = textarea.parentElement.previousElementSibling.querySelector("textarea");
         textarea.addEventListener("focus", function () {
-            var height = Math.max(textarea.scrollHeight, sibling.scrollHeight);
+            var /** @type {number} */ height;
+            
+            height = Math.max(textarea.scrollHeight, sibling.scrollHeight);
             textarea.style.height = (height + 1) + "px";
             sibling.style.height = (height + 1) + "px";
             textarea.select();
