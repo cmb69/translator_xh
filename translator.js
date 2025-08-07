@@ -45,7 +45,7 @@ function initOverview(article) {
 
     checkboxes.forEach(function (checkbox) {
         checkbox.onclick = function () {
-            downloadButton.disabled = !moduleSelected();
+            downloadButton.disabled = !isModuleSelected();
         };
     });
 
@@ -70,19 +70,15 @@ function initOverview(article) {
     });
     editButton.remove();
 
-    downloadButton.disabled = !moduleSelected();
+    downloadButton.disabled = !isModuleSelected();
 
-    function moduleSelected() {
-        var /** @type {boolean} */ result;
-        
-        result = false;
-        checkboxes.forEach(function (checkbox) {
-            if (checkbox.checked) {
-                result = true;
-                return;
-            }
-        });
-        return result;
+    function isModuleSelected() {
+        return Array.prototype.some.call(checkboxes, isCheckboxChecked);
+
+        /** @param {HTMLInputElement} checkbox */
+        function isCheckboxChecked(checkbox) {
+            return checkbox.checked;
+        }
     }
 
     /** @param {boolean} select */
