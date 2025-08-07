@@ -49,21 +49,27 @@
     </exec>
   </target>
 
-  <target name="gen-help" description="builds help.htm from README.md">
-    <exec executable="pandoc" passthru="true" checkreturn="true">
-      <arg line="-s --eol=lf --template=help/template.htm -Vlang=en -Vpagetitle=&quot;User Manual&quot; -o help/help.htm README.md -t html"/>
-    </exec>
-    <exec executable="pandoc" passthru="true" checkreturn="true">
-      <arg line="-s --eol=lf --template=help/template.htm -Vlang=de -Vpagetitle=&quot;Benutzerhandbuch&quot; -o help/help_de.htm README_DE.md -t html"/>
-    </exec>
-  </target>
-
   <target name="postcss" description="patches CSS for older browsers">
     <exec executable="postcss" passthru="true" checkreturn="true">
       <arg line="${dir}/css -u postcss-preset-env --no-map -r"/>
     </exec>
     <exec executable="prettier" passthru="true" checkreturn="true">
       <arg line="--tab-width 4 ${dir}/css --write"/>
+    </exec>
+  </target>
+
+  <target name="minify" description="minifies JS">
+    <exec executable="uglifyjs" passthru="true" checkreturn="true">
+      <arg line="${dir}/translator.js --module --mangle --compress -o ${dir}/translator.min.js"/>
+    </exec>
+  </target>
+
+  <target name="gen-help" description="builds help.htm from README.md">
+    <exec executable="pandoc" passthru="true" checkreturn="true">
+      <arg line="-s --eol=lf --template=help/template.htm -Vlang=en -Vpagetitle=&quot;User Manual&quot; -o help/help.htm README.md -t html"/>
+    </exec>
+    <exec executable="pandoc" passthru="true" checkreturn="true">
+      <arg line="-s --eol=lf --template=help/template.htm -Vlang=de -Vpagetitle=&quot;Benutzerhandbuch&quot; -o help/help_de.htm README_DE.md -t html"/>
     </exec>
   </target>
 
@@ -76,11 +82,9 @@
     <phingcall target="postcss">
       <property name="dir" value="export/"/>
     </phingcall>
-    <jsMin targetDir="dist" suffix=".min" failonerror="true">
-      <fileset dir="export">
-        <include name="translator.js"/>
-      </fileset>
-    </jsMin>
+    <phingcall target="minify">
+      <property name="dir" value="export/"/>
+    </phingcall>
     <move todir="dist">
       <fileset dir="export">
         <include name="views/*.php"/>
