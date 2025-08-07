@@ -20,7 +20,6 @@
 /* jshint browser:true,strict:implied */
 
 document.querySelectorAll("article.translator_translations").forEach(initOverview);
-
 document.querySelectorAll("article.translator_edit").forEach(initEditor);
 
 /** @param {HTMLElement} article */
@@ -41,11 +40,7 @@ function initOverview(article) {
     deselectAllButton = article.querySelector("button.translator_deselect_all");
     editButton = article.querySelector("button.translator_edit");
     downloadButton = article.querySelector("button.translator_download");
-    checkboxes.forEach(function (checkbox) {
-        checkbox.onclick = function () {
-            downloadButton.disabled = !isModuleSelected();
-        };
-    });
+    checkboxes.forEach(initCheckbox);
     selectAllButton.hidden = false;
     deselectAllButton.hidden = true;
     selectAllButton.onclick = deSelectModules.bind(null, true);
@@ -53,6 +48,13 @@ function initOverview(article) {
     article.querySelectorAll("li").forEach(initListItem);
     editButton.remove();
     downloadButton.disabled = !isModuleSelected();
+
+    /** @param {HTMLInputElement} checkbox */
+    function initCheckbox(checkbox) {
+        checkbox.onclick = function () {
+            downloadButton.disabled = !isModuleSelected();
+        };
+    }
 
     /** @param {HTMLLIElement} li */
     function initListItem(li) {
