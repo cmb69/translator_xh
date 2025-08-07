@@ -31,8 +31,7 @@ function initOverview(article) {
         /** @type {HTMLButtonElement} */ selectAllButton,
         /** @type {HTMLButtonElement} */ deselectAllButton,
         /** @type {HTMLButtonElement} */ editButton,
-        /** @type {HTMLButtonElement} */ downloadButton,
-        /** @type {NodeListOf<HTMLLIElement>} */ lis;
+        /** @type {HTMLButtonElement} */ downloadButton;
 
     checkboxes = article.querySelectorAll("input[type=checkbox]");
     template = article.querySelector(".translator_template");
@@ -54,8 +53,7 @@ function initOverview(article) {
     selectAllButton.onclick = deSelectModules.bind(null, true);
     deselectAllButton.onclick = deSelectModules.bind(null, false);
 
-    lis = article.querySelectorAll("li");
-    lis.forEach(function (li) {
+    article.querySelectorAll("li").forEach(function (li) {
         var /** @type {HTMLButtonElement} */ clone;
 
         clone = /** @type {HTMLButtonElement} */ (editButton.cloneNode(true));
