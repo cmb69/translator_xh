@@ -48,8 +48,8 @@ function initOverview(article) {
         };
     });
 
-    selectAllButton.style.display = "";
-    deselectAllButton.style.display = "none";
+    selectAllButton.hidden = false;
+    deselectAllButton.hidden = true;
     selectAllButton.onclick = deSelectModules.bind(null, true);
     deselectAllButton.onclick = deSelectModules.bind(null, false);
 
@@ -84,8 +84,8 @@ function initOverview(article) {
         checkboxes.forEach(function (checkbox) {
             checkbox.checked = select;
         });
-        selectAllButton.style.display = select ? "none" : "";
-        deselectAllButton.style.display = select ? "" : "none";
+        selectAllButton.hidden = select;
+        deselectAllButton.hidden = !select;
         downloadButton.disabled = !select;
     }
 }
