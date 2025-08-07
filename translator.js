@@ -19,12 +19,12 @@
 
 // @ts-check
 
-document.querySelectorAll("article.translator_translations").forEach(article => {
+document.querySelectorAll("article.translator_translations").forEach(function (article) {
     if (!(article instanceof HTMLElement)) return;
     initOverview(article);
 });
 
-document.querySelectorAll("article.translator_edit").forEach(article => {
+document.querySelectorAll("article.translator_edit").forEach(function (article) {
     if (!(article instanceof HTMLElement)) return;
     initEditor(article);
 });
@@ -62,26 +62,26 @@ function initOverview(article) {
     if (!(element instanceof HTMLButtonElement)) return;
     downloadButton = element;
 
-    checkboxes.forEach(checkbox => {
-        checkbox.addEventListener("click", () => {
+    checkboxes.forEach(function (checkbox) {
+        checkbox.addEventListener("click", function () {
             downloadButton.disabled = !moduleSelected();
         });
     })
 
     selectAllButton.style.display = "";
     deselectAllButton.style.display = "none";
-    selectAllButton.addEventListener("click", () => {
+    selectAllButton.addEventListener("click", function () {
         deSelectModules(true);
     });
-    deselectAllButton.addEventListener("click", () => {
+    deselectAllButton.addEventListener("click", function () {
         deSelectModules(false);
     });
 
     const lis = article.querySelectorAll(" li");
-    lis.forEach(li => {
+    lis.forEach(function (li) {
         const clone = editButton.cloneNode(true);
         li.appendChild(clone);
-        clone.addEventListener("click", () => {
+        clone.addEventListener("click", function () {
             deSelectModules(false);
             const checkbox = li.querySelector("input[type=checkbox]");
             if (!(checkbox instanceof HTMLInputElement)) return;
@@ -94,7 +94,7 @@ function initOverview(article) {
 
     function moduleSelected() {
         let result = false;
-        checkboxes.forEach(checkbox => {
+        checkboxes.forEach(function (checkbox) {
             if (checkbox.checked) {
                 result = true;
                 return;
@@ -105,7 +105,7 @@ function initOverview(article) {
 
     /** @param {boolean} select */
     function deSelectModules(select) {
-        checkboxes.forEach(checkbox => {
+        checkboxes.forEach(function (checkbox) {
             checkbox.checked = select;
         });
         selectAllButton.style.display = select ? "none" : "";
@@ -116,18 +116,18 @@ function initOverview(article) {
 
 /** @param {HTMLElement} element */
 function initEditor(element) {
-    element.querySelectorAll(".translator_to textarea").forEach(textarea => {
+    element.querySelectorAll(".translator_to textarea").forEach(function (textarea) {
         if (!(textarea instanceof HTMLTextAreaElement)) return;
         if (textarea.parentElement === null || textarea.parentElement.previousElementSibling === null) return;
         const sibling = textarea.parentElement.previousElementSibling.querySelector("textarea");
         if (sibling === null) return;
-        textarea.addEventListener("focus", () => {
+        textarea.addEventListener("focus", function () {
             const height = Math.max(textarea.scrollHeight, sibling.scrollHeight);
             textarea.style.height = (height + 1) + "px";
             sibling.style.height = (height + 1) + "px";
             textarea.select();
         });
-        textarea.addEventListener("blur", () => {
+        textarea.addEventListener("blur", function () {
             textarea.style.height = "";
             sibling.style.height = "";
         });
