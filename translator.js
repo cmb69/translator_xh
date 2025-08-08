@@ -25,7 +25,7 @@ document.querySelectorAll("article.translator_edit").forEach(initEditor);
 /** @param {HTMLElement} article */
 function initOverview(article) {
     var /** @type {NodeListOf<HTMLInputElement>} */ checkboxes,
-        /** @type {HTMLTemplateElement} */ template,
+        /** @type {HTMLScriptElement} */ template,
         /** @type {HTMLElement} */ controls,
         /** @type {HTMLButtonElement} */ selectAllButton,
         /** @type {HTMLButtonElement} */ deselectAllButton,
@@ -35,7 +35,7 @@ function initOverview(article) {
     checkboxes = article.querySelectorAll("input[type=checkbox]");
     template = article.querySelector(".translator_template");
     controls = article.querySelector(".translator_controls");
-    controls.prepend(template.content);
+    controls.insertAdjacentHTML("afterbegin", template.text);
     selectAllButton = article.querySelector("button.translator_select_all");
     deselectAllButton = article.querySelector("button.translator_deselect_all");
     editButton = article.querySelector("button.translator_edit");

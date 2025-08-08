@@ -40,8 +40,8 @@ if (!defined("CMSIMPLE_XH_VERSION")) {http_response_code(403); exit;}
       <button class="translator_download submit" name="action" value="zip" formtarget="_blank"><?=$this->text('label_download')?></button>
     </p>
   </form>
-  <template class="translator_template">
+  <script type="text/x-template" class="translator_template">
     <button class="translator_select_all" type="button"><?=$this->text('label_select_all')?></button>
     <button class="translator_deselect_all" type="button"><?=$this->text('label_deselect_all')?></button>
-  </template>
+  </script>
 </article>
